@@ -41,7 +41,7 @@ services:
       - "80:80"
       - "443:443"
     volumes:
-      - /home/ubuntu/stageThree/minimal_nginx.conf:/etc/nginx/nginx.conf
+      - /home/ubuntu/punchFit/minimal_nginx.conf:/etc/nginx/nginx.conf
       - /etc/letsencrypt:/etc/letsencrypt
     depends_on:
       - web
