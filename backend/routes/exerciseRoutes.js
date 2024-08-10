@@ -11,11 +11,4 @@ router.get('/sections/:sectionId/parts', exerciseControllers.getBodyPartsBySecti
 
 router.get('/parts/:partId/exercises', exerciseControllers.getExercisesByPart)
 
-// Get exercises for a specific part
-// router.get('/api/parts/:partId/exercises', (req, res) => {
-//   const partId = req.params.partId;
-//   const partExercises = exercises[partId] || [];
-//   res.json(partExercises);
-// });
-
 module.exports = router
