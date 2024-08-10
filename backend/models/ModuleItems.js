@@ -1,4 +1,4 @@
-const Sequelize = require('sequelize');
+const Sequelize = require('sequelize')
 module.exports = function (sequelize, DataTypes) {
   const ModuleItems = sequelize.define('ModuleItems', {
     id: {
@@ -56,13 +56,13 @@ module.exports = function (sequelize, DataTypes) {
         ]
       }
     ]
-  });
+  })
 
   // Define associations
   ModuleItems.associate = function (models) {
-    ModuleItems.belongsTo(models.Exercises, { foreignKey: 'exercise_id', as: 'exercise' });
-    ModuleItems.belongsTo(models.Modules, { foreignKey: 'module_id', as: 'module' });
-  };
+    ModuleItems.belongsTo(models.Exercises, { foreignKey: 'exercise_id', as: 'exercise' })
+    ModuleItems.belongsTo(models.Modules, { foreignKey: 'module_id', as: 'module' })
+  }
 
-  return ModuleItems;
-};
+  return ModuleItems
+}

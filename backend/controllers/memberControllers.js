@@ -37,11 +37,10 @@ const authControllers = {
       }
       console.log(member.email)
       const token = jwt.sign({ id: member.id, username: member.username, email: member.email }, SECRET_KEY, { expiresIn: '1h' })
-      console.log("aaaaaaaaaaa", token)
+      console.log('aaaaaaaaaaa', token)
       return res.json({ token })
-      
     } catch (error) {
-      console.error('Error during login process:', error);
+      console.error('Error during login process:', error)
       res.status(500).json({ message: 'Internal server error' })
     }
   },
@@ -54,7 +53,7 @@ const authControllers = {
     try {
       const decoded = jwt.verify(token, SECRET_KEY)
       req.user = decoded
-      console.log("req.user authenticate",req.user)
+      console.log('req.user authenticate', req.user)
       res.json({ data: req.user })
     } catch (error) {
       res.status(401).json({ message: 'Invalid token' })

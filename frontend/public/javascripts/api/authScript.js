@@ -1,6 +1,6 @@
 export async function checkLoginStatus () {
   const token = localStorage.getItem('token')
-  console.log("localStorage token", token)
+  console.log('localStorage token', token)
   if (token) {
     try {
       const response = await fetch('/api/user/auth', {
@@ -17,7 +17,7 @@ export async function checkLoginStatus () {
         throw new Error('Network response was not ok')
       }
       const userData = await response.json()
-      console.log("zzzzz",userData)
+      console.log('zzzzz', userData)
       return {
         isAuthenticated: true,
         user: userData.data // id, username, email
@@ -36,12 +36,12 @@ export async function checkLoginStatus () {
   }
 }
 
-export function loginBtn() {
+export function loginBtn () {
   const loginBtn = document.getElementById('login-register-btn')
   if (loginBtn) {
     loginBtn.onclick = function () {
-      showLoginModal();
-    };
+      showLoginModal()
+    }
   }
 }
 
@@ -65,7 +65,7 @@ async function showLoginModal () {
   }
   console.log(loginModal)
   loginModal.style.display = 'block'
-  //registerModal.style.display = 'none'
+  // registerModal.style.display = 'none'
   passwordInput.value = ''
   msgSpanLogin.innerText = ''
   // registerBtn.addEventListener('click', function () {
@@ -81,12 +81,12 @@ async function closeButtons () {
     btn.addEventListener('click', function (event) {
       console.log(event.target)
       loginModal.style.display = 'none'
-      //registerModal.style.display = 'none'
+      // registerModal.style.display = 'none'
     })
   })
 }
 
-export async function loginformSubmission() {
+export async function loginformSubmission () {
   const signInForm = document.getElementById('signin-form-login')
   const msgSpan = document.getElementById('login-msg')
 
@@ -113,7 +113,7 @@ export async function loginformSubmission() {
         if (response.ok) {
           const responseData = await response.json()
           localStorage.setItem('token', responseData.token)
-          console.log("login successfully!")
+          console.log('login successfully!')
           location.reload()
         } else {
           const errorData = await response.json()
@@ -132,4 +132,3 @@ export async function loginformSubmission() {
     })
   }
 }
-

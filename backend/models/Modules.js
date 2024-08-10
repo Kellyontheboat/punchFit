@@ -1,4 +1,4 @@
-const Sequelize = require('sequelize');
+const Sequelize = require('sequelize')
 module.exports = function (sequelize, DataTypes) {
   const Modules = sequelize.define('Modules', {
     id: {
@@ -20,6 +20,10 @@ module.exports = function (sequelize, DataTypes) {
     section_id: {
       type: DataTypes.INTEGER,
       allowNull: true
+    },
+    module_name: {
+      type: DataTypes.STRING(255),
+      allowNull: true
     }
   }, {
     sequelize,
@@ -35,13 +39,13 @@ module.exports = function (sequelize, DataTypes) {
         ]
       }
     ]
-  });
+  })
 
   // Define associations here if needed
   Modules.associate = function (models) {
-    Modules.belongsTo(models.Sections, { foreignKey: 'section_id', as: 'section' });
-    Modules.belongsTo(models.Members, { foreignKey: 'member_id', as: 'member' });
-  };
+    Modules.belongsTo(models.Sections, { foreignKey: 'section_id', as: 'section' })
+    Modules.belongsTo(models.Members, { foreignKey: 'member_id', as: 'member' })
+  }
 
-  return Modules;
-};
+  return Modules
+}

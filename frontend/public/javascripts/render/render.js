@@ -1,6 +1,6 @@
 // LoginModal
 
-export async function showLoginModal() {
+export async function showLoginModal () {
   const loginModal = document.getElementById('loginModal')
   console.log(loginModal)
   // const registerModal = document.getElementById('registerModal');
@@ -29,7 +29,7 @@ export async function showLoginModal() {
 }
 
 // Close modal when clicking on the close button
-async function closeButtons() {
+async function closeButtons () {
   const closeButtons = document.querySelectorAll('.close')
   closeButtons.forEach(btn => {
     btn.addEventListener('click', function (event) {
@@ -40,20 +40,20 @@ async function closeButtons() {
   })
 }
 
-export function navScheduleBtn(isAuthenticated) {
-  const navScheduleBtn = document.getElementById('my-schedule-btn');
+export function navScheduleBtn (isAuthenticated) {
+  const navScheduleBtn = document.getElementById('my-schedule-btn')
 
   navScheduleBtn.addEventListener('click', () => {
     if (!isAuthenticated) {
-      showLoginModal();
-      return;
+      showLoginModal()
+      return
     }
-    window.location.href = '/schedule';
-    //fetchAndRenderItemsFromDB(username, isAuthenticated);
-  });
+    window.location.href = '/schedule'
+    // fetchAndRenderItemsFromDB(username, isAuthenticated);
+  })
 };
 
-export async function renderSections({ sections, sectionsId }) {
+export async function renderSections ({ sections, sectionsId }) {
   const sectionWrap = document.querySelector('.section-wrap')
   const addModuleBtnContainer = document.querySelector('.add-module-btn-container')
   sections.forEach((section, index) => {
@@ -62,9 +62,9 @@ export async function renderSections({ sections, sectionsId }) {
     const createModuleBtn = document.createElement('div')
     const moduleWrap = document.createElement('div')
     const sectionContainer = document.createElement('div')
-    
+
     const createModuleBtnContainer = document.querySelector('.add-module-btn-container')
-    
+
     sectionDiv.classList.add('section-item')
     moduleDiv.classList.add('module-item')
     createModuleBtn.classList.add('add-module-btn')
@@ -78,15 +78,18 @@ export async function renderSections({ sections, sectionsId }) {
     createModuleBtn.dataset.id = sectionsId[index]
 
     sectionContainer.appendChild(sectionDiv)
-    sectionContainer.appendChild(moduleWrap) 
+    sectionContainer.appendChild(moduleWrap)
     sectionWrap.appendChild(sectionContainer)
     moduleWrap.appendChild(createModuleBtn)
     moduleWrap.appendChild(moduleDiv)
-    
   })
 }
 
-export function renderPartsBySection({ parts, partsId }) {
+// ! export function renderModules() {
+
+// }
+
+export function renderPartsBySection ({ parts, partsId }) {
   const partsContainer = document.querySelector('.parts-container')
   parts.forEach((part, index) => {
     const partDiv = document.createElement('div')
@@ -97,7 +100,7 @@ export function renderPartsBySection({ parts, partsId }) {
   })
 }
 
-export function renderExercisesByPart({ exercises, exercisesId, exercisesImgs }) {
+export function renderExercisesByPart ({ exercises, exercisesId, exercisesImgs }) {
   const exercisesContainer = document.querySelector('.exercises-container')
   exercisesContainer.innerHTML = ''
   exercises.forEach((exercise, index) => {
@@ -116,19 +119,19 @@ export function renderExercisesByPart({ exercises, exercisesId, exercisesImgs })
   })
 }
 
-export async function updateLoginButton() {
-  const loginButton = document.getElementById('login-register-btn');
+export async function updateLoginButton () {
+  const loginButton = document.getElementById('login-register-btn')
   if (loginButton) {
-    loginButton.innerText = '登出系統';
-    loginButton.id = 'logout-btn';
+    loginButton.innerText = '登出系統'
+    loginButton.id = 'logout-btn'
   }
-  const logoutBtn = document.getElementById('logout-btn');
+  const logoutBtn = document.getElementById('logout-btn')
   logoutBtn.addEventListener('click', (event) => {
-    event.preventDefault();
-    localStorage.removeItem('token');
-    hideModals(); // Hide any open modals before reloading
-    setTimeout(() => location.reload(), 100); // Delay reload to ensure modals are hidden
-  });
+    event.preventDefault()
+    localStorage.removeItem('token')
+    hideModals() // Hide any open modals before reloading
+    setTimeout(() => location.reload(), 100) // Delay reload to ensure modals are hidden
+  })
 }
 
-//export function
+// export function

@@ -4,9 +4,9 @@ import { showLoginModal, renderSections, renderPartsBySection, renderExercisesBy
 
 import { checkLoginStatus, loginformSubmission, loginBtn } from './api/authScript.js'
 
-import { addListenerModuleBtn } from './api/scheduleScript.js'
+import { addListenerModuleBtn, addListenerExerciseBtn, getModules } from './api/scheduleScript.js'
 
-//import { navScheduleBtn } from './api/scheduleScript.js'
+// import { navScheduleBtn } from './api/scheduleScript.js'
 
 document.addEventListener('DOMContentLoaded', async function () {
   console.log('DOMContentLoaded event fired.')
@@ -18,18 +18,18 @@ document.addEventListener('DOMContentLoaded', async function () {
   const pageType = pathArray[3]
   console.log(pathArray)
 
-  const { user, isAuthenticated } = await checkLoginStatus()//user:id username email
+  const { user, isAuthenticated } = await checkLoginStatus()// user:id username email
   if (isAuthenticated) {
-    updateLoginButton();
+    updateLoginButton()
   }
-  navScheduleBtn(isAuthenticated);
+  navScheduleBtn(isAuthenticated)
 
-  loginformSubmission() //click submit then login
-  
+  loginformSubmission() // click submit then login
+
   // !Nav btn
   loginBtn()
   navScheduleBtn()
-  
+
   if (pageType === 'parts') {
     const sectionId = pathArray[2]
     console.log(sectionId)
@@ -42,22 +42,23 @@ document.addEventListener('DOMContentLoaded', async function () {
     console.log(bodyPartId)
     const { exercises, exercisesId, exercisesImgs } = await fetchExercisesByPart(bodyPartId)
     renderExercisesByPart({ exercises, exercisesId, exercisesImgs })
+
+    addListenerExerciseBtn()
     return
-  }else{
-    //if homepage
-    console.log("homePage")
+  } else {
+    // if homepage
+    console.log('homePage')
     const sections = await fetchSections()
     await renderSections(sections)
     addListenerModuleBtn(user, isAuthenticated)
+    getModules(user, isAuthenticated)
   }
-
-  
 
   async function fetchSections () {
     try {
       const response = await fetch('/api/sections')
       if (!response.ok) {
-        throw new Error(`Error fetching sections: ${response.statusText}`);
+        throw new Error(`Error fetching sections: ${response.statusText}`)
       }
       const data = await response.json()
 
@@ -132,6 +133,4 @@ document.addEventListener('DOMContentLoaded', async function () {
   }
 
   addSectionListener()
-
-
 })

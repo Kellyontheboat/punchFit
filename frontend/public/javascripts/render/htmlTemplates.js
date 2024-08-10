@@ -1,4 +1,4 @@
-import DOMPurify from '/node_modules/dompurify/dist/purify.es.mjs'
+import DOMPurify from '../../../../../../../../../node_modules/dompurify/dist/purify.es.mjs'
 
 export const navHTML = `
     <nav>
@@ -35,7 +35,7 @@ export const navHTML = `
 
   </nav>
 `
-export const hrHTML = `<hr>`
+export const hrHTML = '<hr>'
 
 // export async function injectHTML (selector, html) {
 //   const sanitizedHTML = DOMPurify.sanitize(html)
@@ -44,13 +44,13 @@ export const hrHTML = `<hr>`
 //   })
 // }
 
-export function injectHTML(selector, html) {
+export function injectHTML (selector, html) {
   return new Promise((resolve) => {
-    const sanitizedHTML = DOMPurify.sanitize(html);
+    const sanitizedHTML = DOMPurify.sanitize(html)
     document.querySelectorAll(selector).forEach(element => {
-      element.innerHTML = sanitizedHTML;
-    });
+      element.innerHTML = sanitizedHTML
+    })
     console.log('HTML injected.')
-    resolve();
-  });
+    resolve()
+  })
 }

@@ -1,5 +1,5 @@
 const express = require('express')
-//const helmet = require('helmet')
+// const helmet = require('helmet')
 const path = require('path')
 const app = express()
 const { sequelize } = require('./models')
@@ -8,8 +8,7 @@ const memberRoutes = require('./routes/memberRoutes')
 const scheduleRoutes = require('./routes/scheduleRoutes')
 const port = 3000
 
-//const cspDirectives = "default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https://raw.githubusercontent.com;";
-
+// const cspDirectives = "default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https://raw.githubusercontent.com;";
 
 // app.use((req, res, next) => {
 //   res.setHeader("Content-Security-Policy", cspDirectives);

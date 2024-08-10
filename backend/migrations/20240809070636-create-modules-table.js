@@ -1,4 +1,4 @@
-'use strict';
+'use strict'
 
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
@@ -9,25 +9,25 @@ module.exports = {
         allowNull: false,
         primaryKey: true,
         defaultValue: 0,
-        autoIncrement: true,
+        autoIncrement: true
       },
       member_id: {
         type: Sequelize.INTEGER,
-        allowNull: true,
+        allowNull: true
       },
       created_at: {
         type: Sequelize.TIMESTAMP,
         allowNull: true,
-        defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
+        defaultValue: Sequelize.literal('CURRENT_TIMESTAMP')
       },
       section_id: {
         type: Sequelize.INTEGER,
-        allowNull: true,
-      },
-    });
+        allowNull: true
+      }
+    })
   },
 
   async down (queryInterface, Sequelize) {
-    await queryInterface.dropTable('Modules');
+    await queryInterface.dropTable('Modules')
   }
-  }
+}

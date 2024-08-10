@@ -1,4 +1,4 @@
-const Sequelize = require('sequelize');
+const Sequelize = require('sequelize')
 module.exports = function (sequelize, DataTypes) {
   const ScheduleModules = sequelize.define('ScheduleModules', {
     id: {
@@ -45,13 +45,13 @@ module.exports = function (sequelize, DataTypes) {
         ]
       }
     ]
-  });
+  })
 
   // Define associations
   ScheduleModules.associate = function (models) {
-    ScheduleModules.belongsTo(models.Schedules, { foreignKey: 'schedule_id', as: 'schedule' });
-    ScheduleModules.belongsTo(models.Modules, { foreignKey: 'module_id', as: 'module' });
-  };
+    ScheduleModules.belongsTo(models.Schedules, { foreignKey: 'schedule_id', as: 'schedule' })
+    ScheduleModules.belongsTo(models.Modules, { foreignKey: 'module_id', as: 'module' })
+  }
 
-  return ScheduleModules;
-};
+  return ScheduleModules
+}
