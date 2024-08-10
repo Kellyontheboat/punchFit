@@ -1,8 +1,35 @@
+import { navHTML, hrHTML, injectHTML } from './render/htmlTemplates.js'
+
+import { showLoginModal, renderSections, renderPartsBySection, renderExercisesByPart, navScheduleBtn, updateLoginButton } from './render/render.js'
+
+import { checkLoginStatus, loginformSubmission, loginBtn } from './api/authScript.js'
+
+import { addListenerModuleBtn } from './api/scheduleScript.js'
+
+//import { navScheduleBtn } from './api/scheduleScript.js'
+
 document.addEventListener('DOMContentLoaded', async function () {
+  console.log('DOMContentLoaded event fired.')
+  // use the Template HTML
+  await injectHTML('.nav-container', navHTML)
+  await injectHTML('.nav-separator', hrHTML)
+
   const pathArray = window.location.pathname.split('/')
   const pageType = pathArray[3]
   console.log(pathArray)
 
+  const { user, isAuthenticated } = await checkLoginStatus()//user:id username email
+  if (isAuthenticated) {
+    updateLoginButton();
+  }
+  navScheduleBtn(isAuthenticated);
+
+  loginformSubmission() //click submit then login
+  
+  // !Nav btn
+  loginBtn()
+  navScheduleBtn()
+  
   if (pageType === 'parts') {
     const sectionId = pathArray[2]
     console.log(sectionId)
@@ -16,17 +43,23 @@ document.addEventListener('DOMContentLoaded', async function () {
     const { exercises, exercisesId, exercisesImgs } = await fetchExercisesByPart(bodyPartId)
     renderExercisesByPart({ exercises, exercisesId, exercisesImgs })
     return
+  }else{
+    //if homepage
+    console.log("homePage")
+    const sections = await fetchSections()
+    await renderSections(sections)
+    addListenerModuleBtn(user, isAuthenticated)
   }
 
-  const sections = await fetchSections()
-  console.log(sections)
-  renderSections(sections)
+  
 
   async function fetchSections () {
     try {
       const response = await fetch('/api/sections')
+      if (!response.ok) {
+        throw new Error(`Error fetching sections: ${response.statusText}`);
+      }
       const data = await response.json()
-      console.log(data)
 
       const sections = []
       const sectionsId = []
@@ -39,18 +72,8 @@ document.addEventListener('DOMContentLoaded', async function () {
       return { sections, sectionsId }
     } catch (error) {
       console.error('Error fetching sections:', error)
+      return { sections: [], sectionsId: [] }
     }
-  }
-
-  function renderSections ({ sections, sectionsId }) {
-    const sectionsContainer = document.querySelector('.sections-container')
-    sections.forEach((section, index) => {
-      const sectionDiv = document.createElement('div')
-      sectionDiv.classList.add('section-item')
-      sectionDiv.textContent = section
-      sectionDiv.dataset.id = sectionsId[index]
-      sectionsContainer.appendChild(sectionDiv)
-    })
   }
 
   function addSectionListener () {
@@ -77,17 +100,6 @@ document.addEventListener('DOMContentLoaded', async function () {
     })
 
     return { parts, partsId }
-  }
-
-  function renderPartsBySection ({ parts, partsId }) {
-    const partsContainer = document.querySelector('.parts-container')
-    parts.forEach((part, index) => {
-      const partDiv = document.createElement('div')
-      partDiv.classList.add('part-item')
-      partDiv.textContent = part
-      partDiv.dataset.id = partsId[index]
-      partsContainer.appendChild(partDiv)
-    })
   }
 
   function addPartListener () {
@@ -119,23 +131,7 @@ document.addEventListener('DOMContentLoaded', async function () {
     return { exercises, exercisesId, exercisesImgs }
   }
 
-  function renderExercisesByPart ({ exercises, exercisesId, exercisesImgs }) {
-    const exercisesContainer = document.querySelector('.exercises-container')
-    exercisesContainer.innerHTML = ''
-    exercises.forEach((exercise, index) => {
-      const exerciseDiv = document.createElement('div')
-      exerciseDiv.classList.add('exercise-item')
-      const nameDiv = document.createElement('div')
-      nameDiv.textContent = exercise
-      exerciseDiv.appendChild(nameDiv)
-      const img = document.createElement('img')
-      img.src = exercisesImgs[index]
-      img.alt = `Image for ${exercise}`
-      img.classList.add('exercise-image')
-      exerciseDiv.appendChild(img)
-      exerciseDiv.dataset.id = exercisesId[index]
-      exercisesContainer.appendChild(exerciseDiv)
-    })
-  }
   addSectionListener()
+
+
 })
