@@ -1,10 +1,10 @@
 import { navHTML, hrHTML, injectHTML } from './render/htmlTemplates.js'
 
-import { showLoginModal, renderSections, renderPartsBySection, renderExercisesByPart, navScheduleBtn, updateLoginButton } from './render/render.js'
+import { showLoginModal, renderSections, renderPartsBySection, renderExercisesByPart, navScheduleBtn, updateLoginButton, renderModules, renderEditModule, renderItemsInModule } from './render/render.js'
 
 import { checkLoginStatus, loginformSubmission, loginBtn } from './api/authScript.js'
 
-import { addListenerModuleBtn, addListenerExerciseBtn, getModules } from './api/scheduleScript.js'
+import { addListenerModuleBtn, addListenerModule, addListenerAddMemoBtn } from './api/moduleScript.js'
 
 // import { navScheduleBtn } from './api/scheduleScript.js'
 
@@ -23,7 +23,6 @@ document.addEventListener('DOMContentLoaded', async function () {
     updateLoginButton()
   }
   navScheduleBtn(isAuthenticated)
-
   loginformSubmission() // click submit then login
 
   // !Nav btn
@@ -34,24 +33,41 @@ document.addEventListener('DOMContentLoaded', async function () {
     const sectionId = pathArray[2]
     console.log(sectionId)
     const { parts, partsId } = await fetchPartsBySection(sectionId)
+    // render the exercises of first bodyPart
+    const firstPartId = partsId[0]
+    console.log(user)
+
+    await renderEditModule(user)
+    const itemContainers = document.querySelectorAll('.module-editing')
+    renderItemsInModule(itemContainers)
+
+    const { exercises, exercisesId, exercisesImgs } = await fetchExercisesByPart(firstPartId)
+    await renderExercisesByPart({ exercises, exercisesId, exercisesImgs, user })
+
     renderPartsBySection({ parts, partsId })
     addPartListener()
-    return
-  } else if (pageType === 'exercises') {
-    const bodyPartId = pathArray[2]
-    console.log(bodyPartId)
-    const { exercises, exercisesId, exercisesImgs } = await fetchExercisesByPart(bodyPartId)
-    renderExercisesByPart({ exercises, exercisesId, exercisesImgs })
+    addListenerAddMemoBtn(user, isAuthenticated)
 
-    addListenerExerciseBtn()
     return
+    // } else if (pageType === 'exercises') {
+    //   const bodyPartId = pathArray[2]
+    //   console.log(bodyPartId)
+    //   const { exercises, exercisesId, exercisesImgs } = await fetchExercisesByPart(bodyPartId)
+    //   renderExercisesByPart({ exercises, exercisesId, exercisesImgs })
+
+  //   addListenerExerciseBtn(user, isAuthenticated)
+  //   return
   } else {
     // if homepage
     console.log('homePage')
     const sections = await fetchSections()
     await renderSections(sections)
-    addListenerModuleBtn(user, isAuthenticated)
-    getModules(user, isAuthenticated)
+    addListenerModuleBtn(user)
+    await renderModules(user, isAuthenticated)
+    addListenerModule()
+    const itemContainers = document.querySelectorAll('.module-item')
+    console.log(itemContainers)
+    renderItemsInModule(itemContainers)
   }
 
   async function fetchSections () {
@@ -103,14 +119,17 @@ document.addEventListener('DOMContentLoaded', async function () {
     return { parts, partsId }
   }
 
-  function addPartListener () {
+  async function addPartListener () {
     const partItems = document.querySelectorAll('.part-item')
 
     partItems.forEach(item => {
       item.addEventListener('click', async () => {
         const partId = item.dataset.id
         console.log(partId)
-        window.location.href = `/parts/${partId}/exercises`
+        const { exercises, exercisesId, exercisesImgs } = await fetchExercisesByPart(partId)
+        renderExercisesByPart({ exercises, exercisesId, exercisesImgs })
+
+        // window.location.href = `/parts/${partId}/exercises`
       })
     })
   }

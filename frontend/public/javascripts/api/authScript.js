@@ -1,3 +1,4 @@
+import { showLoginModal } from '../render/render.js'
 export async function checkLoginStatus () {
   const token = localStorage.getItem('token')
   console.log('localStorage token', token)
@@ -43,47 +44,6 @@ export function loginBtn () {
       showLoginModal()
     }
   }
-}
-
-async function showLoginModal () {
-  // LoginModal
-  const loginModal = document.getElementById('loginModal')
-  const registerModal = document.getElementById('registerModal')
-  // const loginBtn = document.getElementById('login-modal-btn');
-  // const registerBtn = document.getElementById('register-modal-btn');
-  const signInForm = document.getElementById('signin-form-login')
-  const passwordInput = document.getElementById('password')
-  const msgSpanLogin = document.getElementById('login-msg')
-  // const msgSpanRegister = document.getElementById('register-msg');
-
-  const registeredEmail = localStorage.getItem('registeredEmail')
-  // Pre-fill the email input if the user just registered
-  if (registeredEmail) {
-    const emailInput = signInForm.querySelector('input[name="email"]')
-    emailInput.value = registeredEmail
-    localStorage.removeItem('registeredEmail')
-  }
-  console.log(loginModal)
-  loginModal.style.display = 'block'
-  // registerModal.style.display = 'none'
-  passwordInput.value = ''
-  msgSpanLogin.innerText = ''
-  // registerBtn.addEventListener('click', function () {
-  //   showRegisterModal();
-  // });
-  closeButtons()
-}
-
-// Close modal when clicking on the close button
-async function closeButtons () {
-  const closeButtons = document.querySelectorAll('.close')
-  closeButtons.forEach(btn => {
-    btn.addEventListener('click', function (event) {
-      console.log(event.target)
-      loginModal.style.display = 'none'
-      // registerModal.style.display = 'none'
-    })
-  })
 }
 
 export async function loginformSubmission () {

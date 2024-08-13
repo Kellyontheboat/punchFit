@@ -9,10 +9,10 @@ export const navHTML = `
     <span class="nav-item" id="my-schedule-btn">我的紀錄</span>
 
     <!-- Modal: Login -->
-    <div id="loginModal" class="modal">
-      <div class="modal-content">
-        <div class="modal-decorate"></div>
-        <div class="modal-title-container">
+    <div id="loginPopup" class="custom-raw-popup">
+      <div class="popup-content">
+        <div class="popup-decorate"></div>
+        <div class="popup-title-container">
           <h2>登入會員帳號</h2>
           <span class="close">&times;</span>
         </div>
@@ -27,8 +27,8 @@ export const navHTML = `
             <button type="submit">登入帳戶</button>
           </div>
         </form>
-        <span id="login-msg" class="login-modal-item"></span>
-        <span class="login-modal-item" id="register-modal-btn">還沒有帳戶？點此註冊</span>
+        <span id="login-msg" class="login-popup-item"></span>
+        <span class="login-popup-item" id="register-popup-btn">還沒有帳戶？點此註冊</span>
 
       </div>
     </div>

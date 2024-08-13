@@ -7,7 +7,8 @@ body {
   font-family: 'Noto Sans TC', '微軟正黑體', sans-serif;
   justify-content: center;
   align-items: center;
-  color: #666666;
+  color: #fcfbfb;
+  background-color: #333434;
 }
 
 .navbar-container {
@@ -47,7 +48,7 @@ body {
 }
 
 /* ! modal */
-.modal {
+.custom-raw-popup {
   display: none;
   position: fixed;
   z-index: 1;
@@ -61,7 +62,7 @@ body {
   z-index: 20;
 }
 
-.modal-content {
+.popup-content {
   background-color: #fefefe;
   margin: 15% auto;
   margin-top: 80px;
@@ -75,7 +76,7 @@ body {
   position: relative;
 }
 
-#loginModal .modal-content {
+#loginPopup .popup-content {
   min-height: 275px;
   max-height: 80vh;
   /* Limit the maximum height to 80% of viewport height */
@@ -83,13 +84,13 @@ body {
   /* Enable vertical scrolling if content exceeds max-height */
 }
 
-#registerModal .modal-content {
+#registerPopup .popup-content {
   min-height: 275px;
   max-height: 80vh;
   overflow-y: auto;
 }
 
-.modal-decorate {
+.popup-decorate {
   width: 100%;
   height: 10px;
   border-radius: 6px 6px 0 0;
@@ -102,7 +103,7 @@ body {
   left: 0;
 }
 
-.modal-title-container {
+.popup-title-container {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -137,8 +138,8 @@ body {
 
 #to-booking-btn,
 #booking-delete-btn,
-#login-modal-btn:hover,
-#register-modal-btn:hover,
+#login-popup-btn:hover,
+#register-popup-btn:hover,
 #login-register-btn,
 #logout-btn,
 .close:hover,
@@ -146,7 +147,7 @@ button {
   cursor: pointer;
 }
 
-.modal h2 {
+.custom-raw-popup h2 {
   font-size: 24px;
   font-weight: 700;
   color: #666666;
@@ -160,25 +161,25 @@ button {
   /* Add spacing between form groups */
 }
 
-.modal input,
-.modal button {
+.custom-raw-popup input,
+.custom-raw-popup button {
   width: 310px;
   height: 47px;
   box-sizing: border-box;
 }
 
-.modal input {
+.custom-raw-popup input {
   border: 0.5px solid rgb(216, 216, 214);
   border-radius: 5px;
   font-size: 16px;
   padding-left: 10px;
 }
 
-.modal input:focus {
+.custom-raw-popup input:focus {
   border-color: #3f4040;
 }
 
-.modal button {
+.custom-raw-popup button {
   font-size: 19px;
 }
 
@@ -207,8 +208,8 @@ button {
 
 .module-item {
   width: 400px;
-  height: 110px;
-  background-color: #337788;
+  height: 200px;
+  background-color: #4b4b4b;
 }
 
 .add-module-btn-container {
@@ -219,8 +220,19 @@ button {
 .add-module-btn {
   width: 300px;
   height: 40px;
-  background-color: #e5e2e2;
+  background-color: #8c8a8a;
   z-index: 10
+}
+
+.module-editing {
+  width: 1000px;
+    height: 300px;
+    background-color: #fad12d;
+}
+
+.exercise-item-detail {
+  color: #909090;
+  font-size: 22px;
 }
 
 .week-container {
@@ -234,6 +246,10 @@ button {
   width: 80px;
     height: 80px;
     background-color: #19b7d0;
+}
+
+.card-body {
+  background-color: #3f4040;
 }
 
 .before-footer {
