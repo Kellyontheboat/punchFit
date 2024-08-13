@@ -1,6 +1,5 @@
 import { getModules, getModuleBySection, getExerciseInModule } from '../api/moduleScript.js'
 
-
 export async function showLoginModal () {
   const loginModal = document.getElementById('loginPopup')
   console.log(loginModal)
@@ -95,7 +94,7 @@ export function renderPartsBySection ({ parts, partsId }) {
   })
 }
 
-export async function renderExercisesByPart({ exercises, exercisesId, exercisesImgs, user }) {
+export async function renderExercisesByPart ({ exercises, exercisesId, exercisesImgs, user }) {
   const exercisesContainer = document.querySelector('.exercises-container')
   exercisesContainer.innerHTML = ''
 
@@ -153,9 +152,8 @@ export async function renderExercisesByPart({ exercises, exercisesId, exercisesI
       btn.setAttribute('data-bs-toggle', 'modal')
       btn.setAttribute('data-bs-target', '#exerciseModal')
       cardBodyDiv.appendChild(btn)
-
     }
-    
+
     cardDiv.appendChild(cardBodyDiv)
     colDiv.appendChild(cardDiv)
     rowDiv.appendChild(colDiv)
@@ -180,9 +178,9 @@ export async function updateLoginButton () {
   })
 }
 
-function hideModals() {
-  loginModal.style.display = 'none';
-  registerModal.style.display = 'none';
+function hideModals () {
+  loginModal.style.display = 'none'
+  registerModal.style.display = 'none'
 }
 
 // render all modules has been created by a user in index page
@@ -201,7 +199,7 @@ export async function renderModules (user, isAuthenticated) {
       return
     }
 
-    //render each module in modules which has already been created
+    // render each module in modules which has already been created
     modules.forEach(module => {
       const sectionId = module.section_id
       const moduleId = module.id
@@ -214,7 +212,7 @@ export async function renderModules (user, isAuthenticated) {
         const moduleSpace = moduleWrap.querySelector('.module-item')
         if (moduleSpace) {
           const dataId = moduleSpace.dataset.id
-          // render module is created 
+          // render module is created
           moduleSpace.style.backgroundColor = '#f7d352'
           console.log(moduleSpace)
           moduleSpace.style.color = '#bf3b3b'
@@ -235,10 +233,10 @@ export async function renderModules (user, isAuthenticated) {
 }
 
 export async function renderEditModule (user) {
-  if(!user) return
+  if (!user) return
 
   const { modules } = await getModuleBySection(user) // modules[index].section_id/module_name/member_id
-  if (modules.length === 0) {return}
+  if (modules.length === 0) { return }
   //! temp for one module in a section
   const module = modules[0]
   console.log(modules)
@@ -254,36 +252,36 @@ export async function renderEditModule (user) {
   navElement.insertAdjacentElement('afterend', moduleDiv)
 }
 
-export async function renderItemsInModule(itemContainers) {
+export async function renderItemsInModule (itemContainers) {
   console.log(itemContainers)
   for (const container of itemContainers) {
-    console.log(container);
-    const moduleId = container.dataset.id;
+    console.log(container)
+    const moduleId = container.dataset.id
     if (!moduleId) continue
 
-    const items = await getExerciseInModule(moduleId);
+    const items = await getExerciseInModule(moduleId)
 
     // Clear the container before rendering items
-    if (items.length !== 0){
-      container.innerText = '';
+    if (items.length !== 0) {
+      container.innerText = ''
     }
 
     items.forEach(item => {
-      const itemDiv = document.createElement('div');
-      const detailDiv = document.createElement('div');
+      const itemDiv = document.createElement('div')
+      const detailDiv = document.createElement('div')
 
-      const exerciseName = item.exercise.name;
-      const exerciseId = item.exercise_id;
-      const { reps, sets, weight } = item;
+      const exerciseName = item.exercise.name
+      const exerciseId = item.exercise_id
+      const { reps, sets, weight } = item
 
-      itemDiv.classList.add('exercise-item');
-      itemDiv.dataset.id = exerciseId;
+      itemDiv.classList.add('exercise-item')
+      itemDiv.dataset.id = exerciseId
 
-      detailDiv.classList.add('exercise-item-detail');
-      detailDiv.innerText = `*${exerciseName} ${reps} reps ${sets} sets ${weight} kg`;
+      detailDiv.classList.add('exercise-item-detail')
+      detailDiv.innerText = `*${exerciseName} ${reps} reps ${sets} sets ${weight} kg`
 
-      container.appendChild(itemDiv);
-      itemDiv.appendChild(detailDiv);
-    });
+      container.appendChild(itemDiv)
+      itemDiv.appendChild(detailDiv)
+    })
   }
 }

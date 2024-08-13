@@ -1,14 +1,12 @@
 import { checkLoginStatus } from './authScript.js'
 import { showLoginModal, renderPartsBySection, renderEditModule } from '../render/render.js'
 
-//create new module by clicking add new
+// create new module by clicking add new
 // Btn to create new module using sectionId+memberId
 export async function addListenerModuleBtn (user) {
-
   document.querySelectorAll('.add-module-btn').forEach(button => {
     console.log(button)
     button.addEventListener('click', function () {
-
       const sectionId = this.getAttribute('data-id')
       if (!user) {
         showLoginModal()
@@ -64,13 +62,13 @@ export async function getModules (user, isAuthenticated) {
     }
 
     const modules = await response.json()
-    return modules //array
+    return modules // array
   } catch (error) {
     console.error('Error:', error)
   }
 }
 
-//Enter module editing mode by clicking module
+// Enter module editing mode by clicking module
 export async function addListenerModule () {
   document.querySelectorAll('.module-item').forEach(module => {
     // module need to be created first to be given the data-id(id of module)
@@ -90,12 +88,14 @@ export async function getModuleBySection (user) {
   if (!user) {
     return
   }
+  const token = localStorage.getItem('token')
   const sectionId = window.location.pathname.split('/')[2]
   const memberId = user.id
 
   const response = await fetch(`/api/sections/${sectionId}/modules?memberId=${memberId}`, {
     method: 'GET',
     headers: {
+      Authorization: `Bearer ${token}`,
       'Content-Type': 'application/json'
     }
   })
@@ -107,16 +107,13 @@ export async function getModuleBySection (user) {
   return { modules, moduleId }
 }
 
-export async function getExerciseByModuleId (moduleId) {
-  const exercises = await fetch('/modules/:moduleId/exercises')
-}
-
 export async function addExerciseToModule (user, exerciseId) {
   const modules = await getModuleBySection(user)
   console.log(modules)
 
+  const token = localStorage.getItem('token')
   // temp for one module for each section
-  //userId+sectionId to get the modules
+  // userId+sectionId to get the modules
   const module = modules.modules[0]
   console.log(module)
   const moduleId = module.id
@@ -125,6 +122,7 @@ export async function addExerciseToModule (user, exerciseId) {
   fetch(`/api/modules/${moduleId}/exercises`, {
     method: 'POST',
     headers: {
+      Authorization: `Bearer ${token}`,
       'Content-Type': 'application/json'
     },
     body: JSON.stringify(data)
@@ -142,9 +140,8 @@ export async function addExerciseToModule (user, exerciseId) {
     })
 }
 
-//add Exercise into memo 
-export async function addListenerAddMemoBtn (user, isAuthenticated) { 
-  
+// add Exercise into memo
+export async function addListenerAddMemoBtn (user, isAuthenticated) {
   const addBtn = document.querySelectorAll('.add-into-memo')
   addBtn.forEach(btn => {
     const exerciseId = btn.closest('.card').getAttribute('data-id')
@@ -159,7 +156,14 @@ export async function addListenerAddMemoBtn (user, isAuthenticated) {
 }
 
 export async function getExerciseInModule (moduleId) {
-  const response = await fetch(`/api/modules/${moduleId}/exercises`)
+  const token = localStorage.getItem('token')
+  const response = await fetch(`/api/modules/${moduleId}/exercises`, {
+    method: 'GET',
+    headers: {
+      Authorization: `Bearer ${token}`,
+      ContentType: 'application/json'
+    }
+  })
   const exercises = await response.json()
   return exercises
 }
