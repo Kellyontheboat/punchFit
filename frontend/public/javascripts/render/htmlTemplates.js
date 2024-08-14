@@ -33,6 +33,35 @@ export const navHTML = `
       </div>
     </div>
 
+
+  <!-- Modal: Register -->
+    <div id="registerPopup" class="custom-raw-popup">
+  <div class="popup-content">
+    <div class="popup-decorate"></div>
+    <div class="popup-title-container">
+      <h2>註冊會員帳號</h2>
+      <span class="close">&times;</span>
+    </div>
+    <form id="signin-form-register" novalidate>
+      <div class="form-group">
+        <input type="text" id="name" name="username" placeholder="輸入姓名" required>
+      </div>
+      <div class="form-group">
+        <input type="email" id="register-email" name="email" placeholder="輸入電子郵件" required>
+      </div>
+      <div class="form-group">
+        <input type="password" id="register-password" name="password" placeholder="輸入密碼" required>
+      </div>
+      <div class="form-group">
+        <button type="submit">註冊新帳戶</button>
+      </div>
+    </form>
+    <span id="register-msg"></span>
+    <span class="register-popup-item" id="login-popup-btn">已經有帳戶了？點此登入</span>
+
+  </div>
+</div>
+
   </nav>
 `
 export const hrHTML = '<hr>'

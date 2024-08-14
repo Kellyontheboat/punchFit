@@ -1,11 +1,13 @@
 import { checkLoginStatus } from './authScript.js'
-import { showLoginModal, renderPartsBySection, renderEditModule } from '../render/render.js'
+import { showLoginModal } from '../render/navRender.js'
 
+import { renderPartsBySection } from '../render/exerciseRender.js'
+
+import { renderEditModule } from '../render/moduleRender.js'
 // create new module by clicking add new
 // Btn to create new module using sectionId+memberId
 export async function addListenerModuleBtn (user) {
   document.querySelectorAll('.add-module-btn').forEach(button => {
-    console.log(button)
     button.addEventListener('click', function () {
       const sectionId = this.getAttribute('data-id')
       if (!user) {
@@ -14,7 +16,7 @@ export async function addListenerModuleBtn (user) {
       }
       const data = {
         section_id: sectionId,
-        member_id: userId
+        member_id: user.id
       }
 
       fetch('/api/modules', {
@@ -75,7 +77,6 @@ export async function addListenerModule () {
     const moduleId = module.getAttribute('data-id')
     const sectionId = module.getAttribute('data-section-id')
     const sectionName = module.getAttribute('data-section-name')
-    console.log(moduleId)
     module.addEventListener('click', function () {
       window.location.href = `/sections/${sectionId}/parts`
       console.log('addListenerModule', moduleId)
@@ -109,13 +110,11 @@ export async function getModuleBySection (user) {
 
 export async function addExerciseToModule (user, exerciseId) {
   const modules = await getModuleBySection(user)
-  console.log(modules)
 
   const token = localStorage.getItem('token')
   // temp for one module for each section
   // userId+sectionId to get the modules
   const module = modules.modules[0]
-  console.log(module)
   const moduleId = module.id
   const data = { exerciseId }
 
@@ -141,18 +140,21 @@ export async function addExerciseToModule (user, exerciseId) {
 }
 
 // add Exercise into memo
-export async function addListenerAddMemoBtn (user, isAuthenticated) {
-  const addBtn = document.querySelectorAll('.add-into-memo')
-  addBtn.forEach(btn => {
-    const exerciseId = btn.closest('.card').getAttribute('data-id')
+export async function addListenerAddMemoBtn (user) {
+  const addBtn = document.querySelectorAll('.add-into-memo');
+
+  addBtn.forEach((btn, index) => {
+    if (!btn) {
+      console.error(`Button at index ${index} is null or undefined.`);
+      return;
+    }
+
+    const exerciseId = btn.closest('.card').getAttribute('data-id');
+
     btn.addEventListener('click', () => {
-      if (!isAuthenticated) {
-        showLoginModal()
-        return
-      }
-      addExerciseToModule(user, exerciseId)
-    })
-  })
+      addExerciseToModule(user, exerciseId);
+    });
+  });
 }
 
 export async function getExerciseInModule (moduleId) {

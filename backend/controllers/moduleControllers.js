@@ -1,12 +1,11 @@
 const db = require('../models')
 const { Sections, Parts, Exercises, Modules, ScheduleModules, ModuleItems } = db
 
-const scheduleControllers = {
+const moduleControllers = {
   createModule: async (req, res) => {
     const { section_id, member_id } = req.body
 
     try {
-      console.log('createModule', member_id)
       const newModule = await Modules.create({
         section_id,
         member_id
@@ -87,7 +86,6 @@ const scheduleControllers = {
     const { exerciseId } = req.body
     const moduleId = req.params.moduleId
     try {
-      console.log('createModuleItem', moduleId)
       const newModuleItem = await ModuleItems.create({
         module_id: moduleId,
         exercise_id: exerciseId
@@ -126,4 +124,4 @@ const scheduleControllers = {
   }
 }
 
-module.exports = scheduleControllers
+module.exports = moduleControllers

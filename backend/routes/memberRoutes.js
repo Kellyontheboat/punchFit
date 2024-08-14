@@ -9,9 +9,6 @@ router.get('/user/auth', authenticateToken, memberControllers.authenticate)
 
 router.put('/user/auth', memberControllers.login)
 
-// // Get parts for a specific section
-// router.get('/sections/:sectionId/parts', exerciseControllers.getBodyPartsBySections)
-
-// router.get('/parts/:partId/exercises', exerciseControllers.getExercisesByPart)
+router.post('/user', memberControllers.register)
 
 module.exports = router
