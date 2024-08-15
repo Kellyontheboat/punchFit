@@ -1,7 +1,7 @@
 import { renderExercisesByPart } from '../render/exerciseRender.js'
 
 import { addListenerAddMemoBtn } from './moduleScript.js'
-export async function fetchSections() {
+export async function fetchSections () {
   try {
     const response = await fetch('/api/sections')
     if (!response.ok) {
@@ -24,7 +24,7 @@ export async function fetchSections() {
   }
 }
 
-export function addSectionListener() {
+export function addSectionListener () {
   const sectionItems = document.querySelectorAll('.section-item')
 
   sectionItems.forEach(item => {
@@ -35,7 +35,7 @@ export function addSectionListener() {
   })
 }
 
-export async function fetchPartsBySection(sectionId) {
+export async function fetchPartsBySection (sectionId) {
   const response = await fetch(`/api/sections/${sectionId}/parts`)
   const data = await response.json()
   console.log(data)
@@ -51,7 +51,7 @@ export async function fetchPartsBySection(sectionId) {
 }
 
 //! check if need reload or add new route to each part
-export async function addPartListener(user) {
+export async function addPartListener (user) {
   const partItems = document.querySelectorAll('.part-item')
 
   partItems.forEach(item => {
@@ -66,7 +66,7 @@ export async function addPartListener(user) {
   })
 }
 
-export async function fetchExercisesByPart(partId) {
+export async function fetchExercisesByPart (partId) {
   const response = await fetch(`/api/parts/${partId}/exercises`)
   const data = await response.json()
   console.log(data)
@@ -82,4 +82,3 @@ export async function fetchExercisesByPart(partId) {
 
   return { exercises, exercisesId, exercisesImgs }
 }
-

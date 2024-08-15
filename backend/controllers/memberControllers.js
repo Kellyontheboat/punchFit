@@ -10,31 +10,31 @@ const SECRET_KEY = process.env.SECRET_KEY
 
 const authControllers = {
   register: async (req, res) => {
-    const errors = validationResult(req);
+    const errors = validationResult(req)
     if (!errors.isEmpty()) {
-      return res.status(400).json({ errors: errors.array() });
+      return res.status(400).json({ errors: errors.array() })
     }
 
-    const { name, email, password } = req.body;
+    const { name, email, password } = req.body
 
     try {
       // Check if the email is already registered
-      const existingMember = await Members.findOne({ where: { email } });
+      const existingMember = await Members.findOne({ where: { email } })
       if (existingMember) {
-        return res.status(400).json({ message: 'Email has been registered!' });
+        return res.status(400).json({ message: 'Email has been registered!' })
       }
 
       // Hash the password
-      const hashedPassword = await bcrypt.hash(password, 10);
+      const hashedPassword = await bcrypt.hash(password, 10)
       // Create the new member
       await Members.create({
-        username: name, 
-        email: email, 
+        username: name,
+        email,
         password: hashedPassword
-      });
-      res.status(201).send('User registered successfully');
+      })
+      res.status(201).send('User registered successfully')
     } catch (error) {
-      res.status(500).json({ message: 'Internal server error' });
+      res.status(500).json({ message: 'Internal server error' })
     }
   },
   login: async (req, res) => {

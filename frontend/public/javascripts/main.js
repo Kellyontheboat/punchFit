@@ -1,16 +1,18 @@
 import { navHTML, hrHTML, injectHTML } from './render/htmlTemplates.js'
 
-import { showLoginModal, navScheduleBtn, updateLoginButton,  initializeModals } from './render/navRender.js'
+import { showLoginModal, navScheduleBtn, updateLoginButton, initializeModals } from './render/navRender.js'
 
 import { renderSections, renderPartsBySection, renderExercisesByPart } from './render/exerciseRender.js'
 
 import { renderModules, renderEditModule, renderItemsInModule } from './render/moduleRender.js'
 
+// import { renderCalendar } from './render/scheduleRender.js'
+
 import { checkLoginStatus, loginformSubmission, registerformSubmission, loginBtn } from './api/authScript.js'
 
 import { addListenerModuleBtn, addListenerModule, addListenerAddMemoBtn } from './api/moduleScript.js'
 
-import { fetchSections, addSectionListener, fetchPartsBySection, addPartListener, fetchExercisesByPart  } from './api/exerciseScript.js'
+import { fetchSections, addSectionListener, fetchPartsBySection, addPartListener, fetchExercisesByPart } from './api/exerciseScript.js'
 
 document.addEventListener('DOMContentLoaded', async function () {
   console.log('DOMContentLoaded event fired.')
@@ -26,7 +28,7 @@ document.addEventListener('DOMContentLoaded', async function () {
   if (isAuthenticated) {
     updateLoginButton()
   }
-  
+
   // !Nav btn
   loginBtn()
   navScheduleBtn()
@@ -56,7 +58,6 @@ document.addEventListener('DOMContentLoaded', async function () {
     addPartListener(user)
     addListenerAddMemoBtn(user, isAuthenticated)
 
-    return
     // } else if (pageType === 'exercises') {
     //   const bodyPartId = pathArray[2]
     //   console.log(bodyPartId)
@@ -75,5 +76,6 @@ document.addEventListener('DOMContentLoaded', async function () {
     addListenerModule()
     const itemContainers = document.querySelectorAll('.module-item')
     renderItemsInModule(itemContainers)
+    // renderCalendar()
   }
 })

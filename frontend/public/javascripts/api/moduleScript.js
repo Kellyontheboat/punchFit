@@ -141,20 +141,20 @@ export async function addExerciseToModule (user, exerciseId) {
 
 // add Exercise into memo
 export async function addListenerAddMemoBtn (user) {
-  const addBtn = document.querySelectorAll('.add-into-memo');
+  const addBtn = document.querySelectorAll('.add-into-memo')
 
   addBtn.forEach((btn, index) => {
     if (!btn) {
-      console.error(`Button at index ${index} is null or undefined.`);
-      return;
+      console.error(`Button at index ${index} is null or undefined.`)
+      return
     }
 
-    const exerciseId = btn.closest('.card').getAttribute('data-id');
+    const exerciseId = btn.closest('.card').getAttribute('data-id')
 
     btn.addEventListener('click', () => {
-      addExerciseToModule(user, exerciseId);
-    });
-  });
+      addExerciseToModule(user, exerciseId)
+    })
+  })
 }
 
 export async function getExerciseInModule (moduleId) {

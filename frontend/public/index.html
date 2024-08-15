@@ -6,7 +6,15 @@
   <title>Sections</title>
   <link href="./stylesheets/bootstrap.min.css" rel="stylesheet">
   <link rel="stylesheet" href="./stylesheets/styles.css">
+
+      <script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.15/index.global.min.js'></script>
+
   <script type="module" src="/javascripts/main.js" defer></script>
+  <script type="module" src="/javascripts/render/scheduleRender.js">
+
+    
+
+  </script>
 </head>
 <body>
   <nav class="nav-container">
@@ -27,6 +35,73 @@
   <!-- <div class="modules-container">
     
   </div> -->
+<div id="calendar"></div>
+
+
+
+
+  <!-- ! calendar -->
+  <!-- Button to trigger the modal -->
+  <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#scheduleModal" data-bs-theme="dark">
+    Schedule Module
+  </button>
+  
+  <!-- Modal -->
+  <div class="modal fade"  tabindex="-1" role="dialog" aria-labelledby="scheduleModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="scheduleModalLabel">Schedule Module</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <form id="scheduleForm">
+          <div class="modal-body">
+            <div class="form-group">
+              <label for="scheduleDate">Choose Date</label>
+              <input type="date" class="form-control" id="scheduleDate" name="date" required>
+            </div>
+            <input type="hidden" id="moduleId" name="moduleId" value="MODULE_ID_HERE">
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            <button type="submit" class="btn btn-primary">Schedule</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+
+
+
+  <div class="modal" id="scheduleModal" tabindex="-1" data-bs-theme="dark">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Schedule</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <form id="scheduleForm">
+            <div class="modal-body">
+              <div class="form-group">
+                <label for="scheduleDate">Choose Date</label>
+                <input type="date" class="form-control" id="scheduleDate" name="date" required>
+              </div>
+              <input type="hidden" id="moduleId" name="moduleId" value="MODULE_ID_HERE">
+            </div>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+          <button type="button" class="btn btn-primary">Save changes</button>
+        </div>
+      </div>
+    </div>
+  </div>
 
   <div class="week-container">
     <div class="week-item">Mon.</div>

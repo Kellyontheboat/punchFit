@@ -1,4 +1,4 @@
-'use strict';
+'use strict'
 
 module.exports = {
   up: async (queryInterface, Sequelize) => {
@@ -8,7 +8,7 @@ module.exports = {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true
-      }, 
+      },
       member_id: {
         type: Sequelize.INTEGER,
         allowNull: false
@@ -17,8 +17,8 @@ module.exports = {
         type: Sequelize.INTEGER,
         allowNull: false,
         references: {
-          model: 'Exercises', 
-          key: 'id'           
+          model: 'Exercises',
+          key: 'id'
         },
         onUpdate: 'CASCADE',
         onDelete: 'CASCADE'
@@ -31,7 +31,7 @@ module.exports = {
       sets: {
         type: Sequelize.INTEGER,
         allowNull: false,
-        defaultValue: 4 
+        defaultValue: 4
       },
       weight: {
         type: Sequelize.DECIMAL(5, 2),
@@ -57,10 +57,10 @@ module.exports = {
         allowNull: false,
         defaultValue: Sequelize.fn('NOW')
       }
-    });
+    })
   },
 
   down: async (queryInterface, Sequelize) => {
-    await queryInterface.dropTable('ScheduleItems');
+    await queryInterface.dropTable('ScheduleItems')
   }
-};
+}

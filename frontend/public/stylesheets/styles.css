@@ -48,6 +48,9 @@ body {
 }
 
 /* ! modal */
+.modal-content {
+  background-color: #333434;
+}
 .custom-raw-popup {
   display: none;
   position: fixed;
