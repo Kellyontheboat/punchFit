@@ -57,15 +57,6 @@ document.addEventListener('DOMContentLoaded', async function () {
     renderPartsBySection({ parts, partsId })
     addPartListener(user)
     addListenerAddMemoBtn(user, isAuthenticated)
-
-    // } else if (pageType === 'exercises') {
-    //   const bodyPartId = pathArray[2]
-    //   console.log(bodyPartId)
-    //   const { exercises, exercisesId, exercisesImgs } = await fetchExercisesByPart(bodyPartId)
-    //   renderExercisesByPart({ exercises, exercisesId, exercisesImgs })
-
-  //   addListenerExerciseBtn(user, isAuthenticated)
-  //   return
   } else {
     // if homepage
     console.log('homePage')
@@ -79,3 +70,12 @@ document.addEventListener('DOMContentLoaded', async function () {
     // renderCalendar()
   }
 })
+
+// } else if (pageType === 'exercises') {
+//   const bodyPartId = pathArray[2]
+//   console.log(bodyPartId)
+//   const { exercises, exercisesId, exercisesImgs } = await fetchExercisesByPart(bodyPartId)
+//   renderExercisesByPart({ exercises, exercisesId, exercisesImgs })
+
+//   addListenerExerciseBtn(user, isAuthenticated)
+//   return

@@ -27,11 +27,11 @@ export function renderSections ({ sections, sectionsId }) {
     moduleWrap.appendChild(createModuleBtn)
     moduleWrap.appendChild(moduleDiv)
 
-    scheduleBtn.innerHTML = scheduleBtn.innerHTML = `
-    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#scheduleModal" data-bs-theme="dark">
-      Schedule Module
-    </button>
-`
+    //     scheduleBtn.innerHTML = scheduleBtn.innerHTML = `
+    //     <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#scheduleModal" data-bs-theme="dark">
+    //       Schedule Module
+    //     </button>
+    // `
   })
 }
 

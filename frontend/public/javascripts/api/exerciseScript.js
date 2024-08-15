@@ -1,6 +1,29 @@
 import { renderExercisesByPart } from '../render/exerciseRender.js'
 
 import { addListenerAddMemoBtn } from './moduleScript.js'
+// export async function fetchSections () {
+//   try {
+//     const response = await fetch('/api/sections')
+//     if (!response.ok) {
+//       throw new Error(`Error fetching sections: ${response.statusText}`)
+//     }
+//     const data = await response.json()
+
+//     const sections = []
+//     const sectionsId = []
+
+//     data.forEach(section => {
+//       sections.push(section.section_name)
+//       sectionsId.push(section.id)
+//     })
+
+//     return { sections, sectionsId }
+//   } catch (error) {
+//     console.error('Error fetching sections:', error)
+//     return { sections: [], sectionsId: [] }
+//   }
+// }
+
 export async function fetchSections () {
   try {
     const response = await fetch('/api/sections')
@@ -16,6 +39,10 @@ export async function fetchSections () {
       sections.push(section.section_name)
       sectionsId.push(section.id)
     })
+
+    // Store sections and section IDs in localStorage
+    localStorage.setItem('sections', JSON.stringify(sections))
+    localStorage.setItem('sectionsId', JSON.stringify(sectionsId))
 
     return { sections, sectionsId }
   } catch (error) {

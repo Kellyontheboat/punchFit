@@ -1,7 +1,6 @@
 import { showLoginModal } from '../render/navRender.js'
 export async function checkLoginStatus () {
   const token = localStorage.getItem('token')
-  console.log('localStorage token', token)
   if (token) {
     try {
       const response = await fetch('/api/user/auth', {

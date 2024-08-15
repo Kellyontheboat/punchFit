@@ -238,6 +238,11 @@ button {
   font-size: 22px;
 }
 
+/* !calendar */
+#calendar {
+  width: 80%;
+}
+
 .week-container {
   display: flex;
     flex-direction: row;
