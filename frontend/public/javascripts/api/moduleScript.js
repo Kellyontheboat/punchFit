@@ -85,15 +85,14 @@ export async function addListenerModule () {
   })
 }
 
-export async function getModuleBySection (user) {
-  if (!user) {
-    return
-  }
+//!decode token to get memberId instead
+export async function getModuleBySection () {
+  
   const token = localStorage.getItem('token')
   const sectionId = window.location.pathname.split('/')[2]
-  const memberId = user.id
+  
 
-  const response = await fetch(`/api/sections/${sectionId}/modules?memberId=${memberId}`, {
+  const response = await fetch(`/api/sections/${sectionId}/modules`, {
     method: 'GET',
     headers: {
       Authorization: `Bearer ${token}`,
@@ -108,9 +107,9 @@ export async function getModuleBySection (user) {
   return { modules, moduleId }
 }
 
-export async function addExerciseToModule (user, exerciseId) {
-  const modules = await getModuleBySection(user)
-
+export async function addExerciseToModule(exerciseId, isAuthenticated) {
+  const modules = await getModuleBySection()
+  console.log(modules)
   const token = localStorage.getItem('token')
   // temp for one module for each section
   // userId+sectionId to get the modules
@@ -152,7 +151,7 @@ export async function addListenerAddMemoBtn (user) {
     const exerciseId = btn.closest('.card').getAttribute('data-id')
 
     btn.addEventListener('click', () => {
-      addExerciseToModule(user, exerciseId)
+      addExerciseToModule(exerciseId)
     })
   })
 }

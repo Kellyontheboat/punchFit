@@ -47,7 +47,7 @@ document.addEventListener('DOMContentLoaded', async function () {
     const firstPartId = partsId[0]
     console.log(user)
 
-    await renderEditModule(user)
+    await renderEditModule(isAuthenticated)
     const itemContainers = document.querySelectorAll('.module-editing')
     renderItemsInModule(itemContainers)
 

@@ -18,7 +18,7 @@ const moduleControllers = {
     }
   },
   getModules: async (req, res) => {
-    const memberId = req.params.memberId
+    const memberId = req.memberId
     const modules = await Modules.findAll({
       where: { member_id: memberId }
     })
@@ -27,7 +27,7 @@ const moduleControllers = {
   },
   getModuleBySection: async (req, res) => {
     try {
-      const { memberId } = req.query
+      const memberId = req.memberId
       const sectionId = req.params.sectionId
 
       const module = await Modules.findAll({
@@ -49,7 +49,7 @@ const moduleControllers = {
   },
   getModuleByPart: async (req, res) => {
     try {
-      const { memberId } = req.body
+      const memberId = req.memberId
       const partId = req.params.partId
 
       const part = await Parts.findAll({

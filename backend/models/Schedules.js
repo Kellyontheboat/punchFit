@@ -12,12 +12,12 @@ module.exports = function (sequelize, DataTypes) {
       allowNull: false
     },
     member_id: {
-      type: DataTypes.INTEGER,
+      type: DataTypes.BIGINT,
       allowNull: true,
       references: {
         model: 'Members',
         key: 'id'
-      },
+      }, 
       onUpdate: 'CASCADE',
       onDelete: 'SET NULL'
     },
@@ -25,6 +25,10 @@ module.exports = function (sequelize, DataTypes) {
       type: DataTypes.DATE,
       allowNull: true,
       defaultValue: Sequelize.literal('CURRENT_TIMESTAMP')
+    },
+    schedule_name: {
+      type: DataTypes.STRING(255),
+      allowNull: false
     }
   }, {
     sequelize,
@@ -44,6 +48,7 @@ module.exports = function (sequelize, DataTypes) {
 
   Schedules.associate = function (models) {
     Schedules.belongsTo(models.Members, { foreignKey: 'member_id', as: 'member' })
+    Schedules.hasMany(models.ScheduleItems, { foreignKey: 'schedule_id', as: 'items' })
   }
 
   return Schedules

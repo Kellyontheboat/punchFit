@@ -12,6 +12,7 @@ function authenticateToken (req, res, next) {
     if (err) return res.sendStatus(403)
 
     req.user = user // Store the user info in the request object
+    req.memberId = user.id; // Attach the memberId to the request
     next() // authenticate pass call the next middleware or route handler
   })
 }

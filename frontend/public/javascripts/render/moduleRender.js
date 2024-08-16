@@ -44,10 +44,10 @@ export async function renderModules (user, isAuthenticated) {
   }
 }
 
-export async function renderEditModule (user) {
-  if (!user) return
+export async function renderEditModule(isAuthenticated) {
+  if (!isAuthenticated) return
 
-  const { modules } = await getModuleBySection(user) // modules[index].section_id/module_name/member_id
+  const { modules } = await getModuleBySection(isAuthenticated) // modules[index].section_id/module_name/member_id
   if (modules.length === 0) { return }
   //! temp for one module in a section
   const module = modules[0]

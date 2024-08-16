@@ -41,6 +41,7 @@ module.exports = function (sequelize, DataTypes) {
   })
 
   Members.associate = function (models) {
+    Members.hasMany(models.Modules, { foreignKey: 'member_id', as: 'modules' })
     Members.hasMany(models.Schedules, { foreignKey: 'member_id', as: 'schedules' })
   }
 
