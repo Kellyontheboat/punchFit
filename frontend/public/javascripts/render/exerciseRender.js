@@ -4,34 +4,23 @@ export function renderSections ({ sections, sectionsId }) {
   sections.forEach((section, index) => {
     const sectionDiv = document.createElement('div')
     const moduleDiv = document.createElement('div')
-    const createModuleBtn = document.createElement('div')
     const moduleWrap = document.createElement('div')
     const sectionContainer = document.createElement('div')
-    const scheduleBtn = document.createElement('div')
 
     sectionDiv.classList.add('section-item')
     moduleDiv.classList.add('module-item')
-    createModuleBtn.classList.add('add-module-btn')
     moduleWrap.classList.add('module-wrap')
     sectionContainer.classList.add('section-container')
 
     sectionDiv.textContent = section
-    createModuleBtn.textContent = `Create new memo for ${section}`
+
     sectionDiv.dataset.id = sectionsId[index]
     moduleDiv.dataset.sectionId = sectionsId[index]
-    createModuleBtn.dataset.id = sectionsId[index]
 
     sectionContainer.appendChild(sectionDiv)
     sectionContainer.appendChild(moduleWrap)
     sectionWrap.appendChild(sectionContainer)
-    moduleWrap.appendChild(createModuleBtn)
     moduleWrap.appendChild(moduleDiv)
-
-    //     scheduleBtn.innerHTML = scheduleBtn.innerHTML = `
-    //     <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#scheduleModal" data-bs-theme="dark">
-    //       Schedule Module
-    //     </button>
-    // `
   })
 }
 

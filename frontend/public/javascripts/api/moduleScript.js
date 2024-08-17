@@ -1,57 +1,56 @@
 import { checkLoginStatus } from './authScript.js'
-import { showLoginModal } from '../render/navRender.js'
 
-import { renderPartsBySection } from '../render/exerciseRender.js'
-
-import { renderEditModule } from '../render/moduleRender.js'
 // create new module by clicking add new
 // Btn to create new module using sectionId+memberId
-export async function addListenerModuleBtn (user) {
-  document.querySelectorAll('.add-module-btn').forEach(button => {
-    button.addEventListener('click', function () {
-      const sectionId = this.getAttribute('data-id')
-      if (!user) {
-        showLoginModal()
-        return
-      }
-      const data = {
-        section_id: sectionId,
-        member_id: user.id
-      }
+const sectionId = parseInt(window.location.pathname.split('/')[2], 10)
+const token = localStorage.getItem('token')
 
-      fetch('/api/modules', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(data)
-      })
-        .then(response => response.json())
-        .then(result => {
-          if (result.success) {
-            console.log('Module created successfully')
-          } else {
-            console.error('Failed to add module:', result.error)
-          }
-        })
-        .catch(error => {
-          console.error('Error:', error)
-        })
+export async function createModule () {
+  const token = localStorage.getItem('token')
+
+  const data = {
+    section_id: sectionId
+  }
+
+  try {
+    const response = await fetch('/api/modules', {
+      method: 'POST',
+      headers: {
+        Authorization: `Bearer ${token}`,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(data)
     })
-  })
+
+    if (!response.ok) {
+      const errorText = await response.text()
+      throw new Error(errorText)
+    }
+
+    const result = await response.json()
+
+    if (result.success) {
+      console.log('Module created successfully:', result)
+      const moduleId = result.module.id
+      return moduleId
+    } else {
+      console.error('Failed to add module:', result.error)
+    }
+  } catch (error) {
+    console.error('Error:', error.message)
+  }
 }
 
 // Get all modules of a member by memberId+token
-export async function getModules (user, isAuthenticated) {
+export async function getModules (isAuthenticated) {
   if (!isAuthenticated) {
     return
   }
 
-  const memberId = user.id
   const token = localStorage.getItem('token')
 
   try {
-    const response = await fetch(`/api/members/${memberId}/modules`, {
+    const response = await fetch('/api/modules', {
       method: 'GET',
       headers: {
         Authorization: `Bearer ${token}`,
@@ -73,7 +72,7 @@ export async function getModules (user, isAuthenticated) {
 // Enter module editing mode by clicking module
 export async function addListenerModule () {
   document.querySelectorAll('.module-item').forEach(module => {
-    // module need to be created first to be given the data-id(id of module)
+    // module need to be created first then to be given the data-id(id of module)
     const moduleId = module.getAttribute('data-id')
     const sectionId = module.getAttribute('data-section-id')
     const sectionName = module.getAttribute('data-section-name')
@@ -85,12 +84,9 @@ export async function addListenerModule () {
   })
 }
 
-//!decode token to get memberId instead
 export async function getModuleBySection () {
-  
   const token = localStorage.getItem('token')
   const sectionId = window.location.pathname.split('/')[2]
-  
 
   const response = await fetch(`/api/sections/${sectionId}/modules`, {
     method: 'GET',
@@ -107,39 +103,82 @@ export async function getModuleBySection () {
   return { modules, moduleId }
 }
 
-export async function addExerciseToModule(exerciseId, isAuthenticated) {
-  const modules = await getModuleBySection()
+export async function addExerciseToModule (exerciseId, exerciseName) {
+  let funcModuleId = ''
+  const { moduleId, modules } = await getModuleBySection()
   console.log(modules)
-  const token = localStorage.getItem('token')
-  // temp for one module for each section
-  // userId+sectionId to get the modules
-  const module = modules.modules[0]
-  const moduleId = module.id
+
+  // if there is not yet a module
+  if (modules.length === 0) {
+    funcModuleId = await createModule()
+    console.log(funcModuleId)
+  } else {
+    console.log(modules)
+    // temp for one module for each section
+    // userId+sectionId to get the modules
+    const module = modules[0]
+    funcModuleId = module.id
+    console.log(funcModuleId)
+  }
+
   const data = { exerciseId }
 
-  fetch(`/api/modules/${moduleId}/exercises`, {
-    method: 'POST',
-    headers: {
-      Authorization: `Bearer ${token}`,
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify(data)
-  })
-    .then(response => response.json())
-    .then(result => {
-      if (result.success) {
-        console.log('Module added successfully')
-      } else {
-        console.error('Failed to add module:', result.error)
+  try {
+    const response = await fetch(`/api/modules/${funcModuleId}/exercises`, {
+      method: 'POST',
+      headers: {
+        Authorization: `Bearer ${token}`,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(data)
+    })
+
+    const result = await response.json()
+    if (result.success) {
+      console.log('Exercise added into module successfully')
+      const exercise = result.moduleItem
+      const { reps, sets, weight } = exercise
+      const name = exerciseName
+
+      console.log(exercise)
+      //! move to renderjs
+      // Find the module container in the DOM
+      let moduleContainer = document.querySelector(`[data-id="${funcModuleId}"]`)
+      if (!moduleContainer) {
+        const existingElement = document.querySelector(`.module-item[data-section-id="${sectionId}"]`)
+
+        // Create the new moduleContainer
+        moduleContainer = document.createElement('div')
+        moduleContainer.classList.add('module-editing')
+        moduleContainer.dataset.id = funcModuleId
+
+        // Replace the existing element with the new moduleContainer
+        existingElement.replaceWith(moduleContainer)
       }
-    })
-    .catch(error => {
-      console.error('Error:', error)
-    })
+      console.log(moduleContainer)
+      // Create new DOM elements for the exercise item
+      const itemDiv = document.createElement('div')
+      const detailDiv = document.createElement('div')
+
+      itemDiv.classList.add('exercise-item')
+      itemDiv.dataset.id = exerciseId
+
+      detailDiv.classList.add('exercise-item-detail')
+      detailDiv.innerText = `*${name} ${reps} reps ${sets} sets ${weight} kg`
+
+      // Append the new exercise item to the module container
+      moduleContainer.appendChild(itemDiv)
+      itemDiv.appendChild(detailDiv)
+    } else {
+      console.error('Failed to add module:', result.error)
+    }
+  } catch (error) {
+    console.error('Error:', error)
+  }
 }
 
 // add Exercise into memo
-export async function addListenerAddMemoBtn (user) {
+export async function addListenerAddMemoBtn () {
   const addBtn = document.querySelectorAll('.add-into-memo')
 
   addBtn.forEach((btn, index) => {
@@ -151,7 +190,10 @@ export async function addListenerAddMemoBtn (user) {
     const exerciseId = btn.closest('.card').getAttribute('data-id')
 
     btn.addEventListener('click', () => {
-      addExerciseToModule(exerciseId)
+      const cardBody = btn.closest('.card-body')
+      const exerciseName = cardBody.querySelector('.card-title').innerText
+      console.log('start to add exercise into module')
+      addExerciseToModule(exerciseId, exerciseName)
     })
   })
 }

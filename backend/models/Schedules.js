@@ -17,7 +17,7 @@ module.exports = function (sequelize, DataTypes) {
       references: {
         model: 'Members',
         key: 'id'
-      }, 
+      },
       onUpdate: 'CASCADE',
       onDelete: 'SET NULL'
     },

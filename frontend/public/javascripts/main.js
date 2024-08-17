@@ -10,7 +10,7 @@ import { renderModules, renderEditModule, renderItemsInModule } from './render/m
 
 import { checkLoginStatus, loginformSubmission, registerformSubmission, loginBtn } from './api/authScript.js'
 
-import { addListenerModuleBtn, addListenerModule, addListenerAddMemoBtn } from './api/moduleScript.js'
+import { addListenerModule, addListenerAddMemoBtn } from './api/moduleScript.js' // addListenerModuleBtn,
 
 import { fetchSections, addSectionListener, fetchPartsBySection, addPartListener, fetchExercisesByPart } from './api/exerciseScript.js'
 
@@ -38,6 +38,7 @@ document.addEventListener('DOMContentLoaded', async function () {
   registerformSubmission()
 
   addSectionListener()
+  await fetchSections()
 
   if (pageType === 'parts') {
     const sectionId = pathArray[2]
@@ -56,13 +57,13 @@ document.addEventListener('DOMContentLoaded', async function () {
 
     renderPartsBySection({ parts, partsId })
     addPartListener(user)
-    addListenerAddMemoBtn(user, isAuthenticated)
+    addListenerAddMemoBtn()
   } else {
     // if homepage
     console.log('homePage')
     const sections = await fetchSections()
     await renderSections(sections)
-    addListenerModuleBtn(user)
+    // addListenerModuleBtn(user)
     await renderModules(user, isAuthenticated)
     addListenerModule()
     const itemContainers = document.querySelectorAll('.module-item')

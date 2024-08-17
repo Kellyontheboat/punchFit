@@ -1,9 +1,12 @@
 const db = require('../models')
 const { Sections, Parts, Exercises, Modules, ScheduleModules, ModuleItems } = db
 
+//! memberId
 const moduleControllers = {
   createModule: async (req, res) => {
-    const { section_id, member_id } = req.body
+    const { section_id } = req.body
+    const member_id = req.memberId
+    console.log('WWW', section_id)
 
     try {
       const newModule = await Modules.create({

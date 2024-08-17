@@ -6,6 +6,8 @@ const { sequelize } = require('./models')
 const exerciseRoutes = require('./routes/exerciseRoutes')
 const memberRoutes = require('./routes/memberRoutes')
 const moduleRoutes = require('./routes/moduleRoutes')
+const scheduleRoutes = require('./routes/scheduleRoutes')
+
 const port = 3000
 
 // const cspDirectives = "default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https://raw.githubusercontent.com;";
@@ -29,7 +31,7 @@ app.use('/parts/:partId', express.static(path.join(__dirname, '../frontend/publi
 app.use('/user/:memberId', express.static(path.join(__dirname, '../frontend/public')))
 
 // !API routes
-app.use('/api', exerciseRoutes, memberRoutes, moduleRoutes)
+app.use('/api', exerciseRoutes, memberRoutes, moduleRoutes, scheduleRoutes)
 
 // Frontend routes
 app.get('/', (req, res) => {

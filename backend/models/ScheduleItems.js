@@ -66,35 +66,35 @@ module.exports = function (sequelize, DataTypes) {
     timestamps: true,
     indexes: [
       {
-        name: "PRIMARY",
+        name: 'PRIMARY',
         unique: true,
-        using: "BTREE",
+        using: 'BTREE',
         fields: [
-          { name: "id" },
+          { name: 'id' }
         ]
       },
       {
-        name: "exercise_id",
-        using: "BTREE",
+        name: 'exercise_id',
+        using: 'BTREE',
         fields: [
-          { name: "exercise_id" },
+          { name: 'exercise_id' }
         ]
       },
       {
-        name: "section_id",
-        using: "BTREE",
+        name: 'section_id',
+        using: 'BTREE',
         fields: [
-          { name: "section_id" },
+          { name: 'section_id' }
         ]
-      },
+      }
     ]
-  });
+  })
 
   ScheduleItems.associate = function (models) {
     ScheduleItems.belongsTo(models.Sections, { foreignKey: 'section_id', as: 'section' })
-    ScheduleItems.belongsTo(models.Members, { foreignKey: 'member_id', as: 'member' })
     ScheduleItems.belongsTo(models.Schedules, { foreignKey: 'schedule_id', as: 'schedule' })
+    ScheduleItems.belongsTo(models.Exercises, { foreignKey: 'exercise_id', as: 'exercise' })
   }
 
   return ScheduleItems
-};
+}

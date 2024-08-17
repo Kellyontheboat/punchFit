@@ -6,13 +6,15 @@ export async function renderModules (user, isAuthenticated) {
   }
 
   try {
-    const modules = await getModules(user, isAuthenticated)
+    const modules = await getModules(isAuthenticated)
     if (!modules) {
       console.error('Modules is undefined:', modules)
       return
     }
 
     // render each module in modules which has already been created
+    // only the created modules have id
+    console.log(modules)
     modules.forEach(module => {
       const sectionId = module.section_id
       const moduleId = module.id
@@ -44,20 +46,35 @@ export async function renderModules (user, isAuthenticated) {
   }
 }
 
-export async function renderEditModule(isAuthenticated) {
+export async function renderEditModule (isAuthenticated) {
   if (!isAuthenticated) return
 
   const { modules } = await getModuleBySection(isAuthenticated) // modules[index].section_id/module_name/member_id
-  if (modules.length === 0) { return }
+  if (modules.length === 0) {
+    const sectionId = parseInt(window.location.pathname.split('/')[2], 10)
+    const sections = JSON.parse(localStorage.getItem('sections'))
+    const section = sections[sectionId - 1]
+
+    const moduleDiv = document.createElement('div')
+    moduleDiv.classList.add('module-item')
+
+    moduleDiv.textContent = `Select exercises for training ${section}`
+    moduleDiv.dataset.sectionId = sectionId
+
+    const hrElement = document.querySelector('hr')
+    hrElement.insertAdjacentElement('afterend', moduleDiv)
+    return
+  }
   //! temp for one module in a section
+
   const module = modules[0]
   console.log(modules)
-  const moduleName = module.module_name
   const moduleId = module.id
+
   const moduleDiv = document.createElement('div')
   moduleDiv.classList.add('module-editing')
   moduleDiv.dataset.id = moduleId
-  moduleDiv.innerText = `Let's select exercises into ${moduleName} memo!`
+  moduleDiv.innerText = 'Let\'s select exercises into memo!'
 
   const navElement = document.querySelector('nav')
   navElement.insertAdjacentElement('afterend', moduleDiv)
