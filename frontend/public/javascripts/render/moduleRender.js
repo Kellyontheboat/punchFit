@@ -22,7 +22,7 @@ export async function renderModules (user, isAuthenticated) {
       const moduleWrap = document.querySelector(`.section-item[data-id="${sectionId}"]`)
         .closest('.section-container')
         .querySelector('.module-wrap')
-
+      console.log(moduleWrap)
       if (moduleWrap) {
         const moduleSpace = moduleWrap.querySelector('.module-item')
         if (moduleSpace) {

@@ -1,75 +1,46 @@
-// import { checkLoginStatus } from '../api/authScript.js'
-
-// const { user, isAuthenticated } = await checkLoginStatus()
-let calendar
+import { checkLoginStatus } from '../api/authScript.js'
 const token = localStorage.getItem('token')
-function renderCalendar (schedules) {
-  console.log(schedules)
-  const calendarEl = document.getElementById('calendar')
-  calendar = new FullCalendar.Calendar(calendarEl, {
-    initialView: 'dayGridMonth',
-    events: schedules.map(schedule => ({
-      title: schedule.schedule_name,
-      start: schedule.schedule_date,
-      extendedProps: {
-        scheduleId: schedule.id
-      }
-    })),
-    dateClick: function (info) {
-      // day modal
-      showModal(info.dateStr)
-    },
-    eventClick: async function (info) {
-      const scheduleId = info.event.extendedProps.scheduleId
-      const scheduleItems = await getSchedulesItems(scheduleId)
-      console.log(scheduleItems)
-      showScheduleItemsModal(scheduleItems)
+let calendar
+
+document.addEventListener('DOMContentLoaded', async function () {
+  const { user, isAuthenticated, token } = await checkLoginStatus()
+  console.log(user)
+
+  if (!isAuthenticated) {
+    console.log('User is not authenticated')
+  } else {
+    const token = localStorage.getItem('token')
+
+    function renderCalendar (schedules) {
+      console.log(schedules)
+      const calendarEl = document.getElementById('calendar')
+      calendar = new FullCalendar.Calendar(calendarEl, {
+        initialView: 'dayGridMonth',
+        events: schedules.map(schedule => ({
+          title: schedule.schedule_name,
+          start: schedule.schedule_date,
+          extendedProps: {
+            scheduleId: schedule.id
+          }
+        })),
+        dateClick: function (info) {
+          showModal(info.dateStr)
+        },
+        eventClick: async function (info) {
+          const scheduleId = info.event.extendedProps.scheduleId
+          const scheduleItems = await getSchedulesItems(scheduleId)
+          console.log(scheduleItems)
+          showScheduleItemsModal(scheduleItems)
+        }
+      })
+      calendar.render()
     }
-  })
-  calendar.render()
-}
-function showModal (date) {
-  // Fetch sections and section IDs from localStorage
-  const sections = JSON.parse(localStorage.getItem('sections')) || []
-  const sectionsId = JSON.parse(localStorage.getItem('sectionsId')) || []
 
-  // Create the modal content
-  let modalContent = `
-    <form id="planForm">
-      <div class="form-group">
-        <label>Select Sections</label>`
-
-  sections.forEach((sectionName, index) => {
-    const sectionId = sectionsId[index] // sectionsId:array of sectionId
-    modalContent += `
-      <div class="form-check">
-        <input class="form-check-input" type="checkbox" name="sections" value="${sectionId}" id="section${sectionId}">
-        <label class="form-check-label" for="section${sectionId}">${sectionName}</label>
-      </div>`
-  })
-
-  modalContent += `
-      </div>
-      <div class="form-group">
-        <label for="planName">Plan Name</label>
-        <input type="text" class="form-control" id="planName" name="planName" required>
-      </div>
-      <button type="submit" class="btn btn-primary">Create Plan on ${date}!</button>
-    </form>`
-
-  // Insert modal content into modal
-  document.getElementById('modalBody').innerHTML = modalContent
-
-  $('#myModal').modal('show')
-
-  // Handle form submission
-  document.getElementById('planForm').addEventListener('submit', async function (event) {
-    event.preventDefault()
-    const { sectionIds, scheduleName } = await planFormSubmission(date)
-    console.log(sectionIds)
-    $('#myModal').modal('hide')
-  })
-}
+    const { schedules } = await getSchedules()
+    renderCalendar(schedules)
+    getSchedulesItems()
+  }
+})
 
 function showScheduleItemsModal (scheduleItems) {
   let modalContent = `
@@ -93,7 +64,7 @@ function showScheduleItemsModal (scheduleItems) {
   $('#scheduleItemModal').modal('show')
 }
 
-export async function planFormSubmission (date) {
+async function planFormSubmission (date) {
   // Get the form data from the modal
   const form = document.getElementById('planForm')
   const formData = new FormData(form)
@@ -118,7 +89,6 @@ export async function planFormSubmission (date) {
       scheduleId
     }
   })
-
   return data
 }
 
@@ -148,7 +118,7 @@ async function postSchedule ({ scheduleName, date }) {
 }
 
 // sectionIds>modules>exercises
-export async function addItemsIntoSchedule ({ sectionIds, scheduleId }) {
+async function addItemsIntoSchedule ({ sectionIds, scheduleId }) {
   console.log({ sectionIds, scheduleId })
   const token = localStorage.getItem('token')
   try {
@@ -172,7 +142,7 @@ export async function addItemsIntoSchedule ({ sectionIds, scheduleId }) {
 }
 
 // get schedules of current member
-export async function getSchedules () {
+async function getSchedules () {
   const response = await fetch('/api/schedules', {
     method: 'GET',
     headers: {
@@ -190,7 +160,7 @@ export async function getSchedules () {
   return { scheduleIds, schedules }
 }
 
-export async function getSchedulesItems (scheduleId = null) {
+async function getSchedulesItems (scheduleId = null) {
   const token = localStorage.getItem('token')
   let scheduleIdsArray = []
 
@@ -238,11 +208,45 @@ export async function getSchedulesItems (scheduleId = null) {
   return allExercises
 }
 
-// Ensure the DOM is fully loaded before rendering the calendar
-document.addEventListener('DOMContentLoaded', async function () {
-  console.log('schedule Dom loaded')
-  const { schedules } = await getSchedules()
-  console.log(schedules)
-  renderCalendar(schedules)
-  getSchedulesItems()
-})
+function showModal (date) {
+  // Fetch sections and section IDs from localStorage
+  const sections = JSON.parse(localStorage.getItem('sections')) || []
+  const sectionsId = JSON.parse(localStorage.getItem('sectionsId')) || []
+
+  // Create the modal content
+  let modalContent = `
+  <form id="planForm">
+    <div class="form-group">
+      <label>Select Sections</label>`
+
+  sections.forEach((sectionName, index) => {
+    const sectionId = sectionsId[index] // sectionsId:array of sectionId
+    modalContent += `
+    <div class="form-check">
+      <input class="form-check-input" type="checkbox" name="sections" value="${sectionId}" id="section${sectionId}">
+      <label class="form-check-label" for="section${sectionId}">${sectionName}</label>
+    </div>`
+  })
+
+  modalContent += `
+    </div>
+    <div class="form-group">
+      <label for="planName">Plan Name</label>
+      <input type="text" class="form-control" id="planName" name="planName" required>
+    </div>
+    <button type="submit" class="btn btn-primary">Create Plan on ${date}!</button>
+  </form>`
+
+  // Insert modal content into modal
+  document.getElementById('modalBody').innerHTML = modalContent
+
+  $('#myModal').modal('show')
+
+  // Handle form submission
+  document.getElementById('planForm').addEventListener('submit', async function (event) {
+    event.preventDefault()
+    const { sectionIds, scheduleName } = await planFormSubmission(date)
+    console.log(sectionIds)
+    $('#myModal').modal('hide')
+  })
+}

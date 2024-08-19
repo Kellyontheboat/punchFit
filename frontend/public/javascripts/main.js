@@ -65,7 +65,7 @@ document.addEventListener('DOMContentLoaded', async function () {
     await renderSections(sections)
     // addListenerModuleBtn(user)
     await renderModules(user, isAuthenticated)
-    addListenerModule()
+    addListenerModule(isAuthenticated)
     const itemContainers = document.querySelectorAll('.module-item')
     renderItemsInModule(itemContainers)
     // renderCalendar()

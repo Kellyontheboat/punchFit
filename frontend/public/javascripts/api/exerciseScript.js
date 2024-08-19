@@ -30,7 +30,13 @@ export async function fetchSections () {
 }
 
 export function addSectionListener () {
-  const sectionContainers = document.querySelectorAll('.section-container')
+  const sectionContainersImg = document.querySelectorAll('.section-container-img')
+  const sectionContainersModule = document.querySelectorAll('.section-container')
+
+  const sectionContainers = [
+    ...document.querySelectorAll('.section-container-img'),
+    ...document.querySelectorAll('.section-container')
+  ]
 
   sectionContainers.forEach(container => {
     container.addEventListener('click', (event) => {

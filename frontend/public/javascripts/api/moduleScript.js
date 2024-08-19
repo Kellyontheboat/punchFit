@@ -69,20 +69,60 @@ export async function getModules (isAuthenticated) {
   }
 }
 
+// export async function addListenerSectionImg () {
+//   document.querySelectorAll('.section-card-item').forEach(card => {
+//     const
+//   })
+// }
+
 // Enter module editing mode by clicking module
-export async function addListenerModule () {
-  document.querySelectorAll('.module-item').forEach(module => {
+export async function addListenerModule (isAuthenticated) {
+  const sectionImg = document.querySelectorAll('.col-md-3')
+  const sectionModule = document.querySelectorAll('.module-item')
+  let goToSectionBtn = ''
+  if (!isAuthenticated) {
+    goToSectionBtn = sectionImg
+    console.log(goToSectionBtn)
+  } else {
+    goToSectionBtn = [
+      ...sectionImg,
+      ...sectionModule
+    ]
+  }
+
+  goToSectionBtn.forEach(module => {
+    console.log(module)
     // module need to be created first then to be given the data-id(id of module)
-    const moduleId = module.getAttribute('data-id')
-    const sectionId = module.getAttribute('data-section-id')
-    const sectionName = module.getAttribute('data-section-name')
+    // const moduleId = module.getAttribute('data-id')
+    let sectionId = ''
+    if (module.classList.contains('col-md-3')) {
+      sectionId = module.getAttribute('data-id')
+    } else {
+      sectionId = module.getAttribute('data-section-id')
+    }
+    // const sectionId = module.getAttribute('data-section-id')
+    // const sectionName = module.getAttribute('data-section-name')
     module.addEventListener('click', function () {
       window.location.href = `/sections/${sectionId}/parts`
-      console.log('addListenerModule', moduleId)
-      return { moduleId, sectionName }
+      // console.log('addListenerModule', moduleId)
+      // return { moduleId, sectionName }
     })
   })
 }
+
+//   if (!isAuthenticated) return
+//   document.querySelectorAll('.module-item').forEach(module => {
+//     // module need to be created first then to be given the data-id(id of module)
+//     const moduleId = module.getAttribute('data-id')
+//     const sectionId = module.getAttribute('data-section-id')
+//     const sectionName = module.getAttribute('data-section-name')
+//     module.addEventListener('click', function () {
+//       window.location.href = `/sections/${sectionId}/parts`
+//       console.log('addListenerModule', moduleId)
+//       return { moduleId, sectionName }
+//     })
+//   })
+// }
 
 export async function getModuleBySection () {
   const token = localStorage.getItem('token')

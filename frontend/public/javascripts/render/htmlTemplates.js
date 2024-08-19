@@ -1,13 +1,16 @@
 import DOMPurify from '../../../../../../../../../node_modules/dompurify/dist/purify.es.mjs'
 
 export const navHTML = `
-    <nav>
+  <div class="navbar-container">
+    <div class="navbar">
+    
     <a href="/" class="homepage-link">
-      <span>打卡健身 PunchFit</span>
+      <span class="nav-title">PunchFit  打卡健身</span>
     </a>
-    <span class="nav-item" id="login-register-btn">登入/註冊</span>
-    <span class="nav-item" id="my-schedule-btn">我的紀錄</span>
-
+    <span class="nav-item-container">
+      <span class="nav-item" id="login-register-btn">登入/註冊</span>
+      <span class="nav-item" id="my-schedule-btn">我的紀錄</span>
+    <span>
     <!-- Modal: Login -->
     <div id="loginPopup" class="custom-raw-popup">
       <div class="popup-content">
@@ -62,7 +65,9 @@ export const navHTML = `
   </div>
 </div>
 
-  </nav>
+  
+    </div>
+</div>
 `
 export const hrHTML = '<hr>'
 

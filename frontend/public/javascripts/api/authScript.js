@@ -20,7 +20,8 @@ export async function checkLoginStatus () {
       console.log('zzzzz', userData)
       return {
         isAuthenticated: true,
-        user: userData.data // id, username, email
+        user: userData.data, // id, username, email
+        token
       }
     } catch (error) {
       console.error('Error fetching user data:', error)

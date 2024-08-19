@@ -26,8 +26,18 @@ export function renderSections ({ sections, sectionsId }) {
 
 export function renderPartsBySection ({ parts, partsId }) {
   const partsContainer = document.querySelector('.parts-container')
+  // parts.forEach((part, index) => {
+  //   const partDiv = document.createElement('div')
+  //   partDiv.classList.add('part-item')
+  //   partDiv.textContent = part
+  //   partDiv.dataset.id = partsId[index]
+  //   partsContainer.appendChild(partDiv)
+  // })
+
   parts.forEach((part, index) => {
-    const partDiv = document.createElement('div')
+    const partDiv = document.createElement('button')
+    partDiv.type = 'button'
+    partDiv.className = 'btn btn-outline-warning'
     partDiv.classList.add('part-item')
     partDiv.textContent = part
     partDiv.dataset.id = partsId[index]
