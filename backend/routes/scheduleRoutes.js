@@ -12,4 +12,6 @@ router.post('/scheduleItems', authenticateToken, scheduleControllers.addIntoSche
 
 router.get('/schedules/:scheduleId/items', authenticateToken, scheduleControllers.getItemsInSchedule)
 
+router.put('/scheduleItems/update', authenticateToken, scheduleControllers.updateSchedule)
+
 module.exports = router
