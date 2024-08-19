@@ -110,42 +110,51 @@ const scheduleControllers = {
     }
   },
   updateSchedule: async (req, res) => {
-    const { updatedItems } = req.body;
+    const { updatedItems, itemsToDelete } = req.body
 
     try {
+      // Handle updates
       for (const item of updatedItems) {
-        const { scheduleId, exerciseId, sets, reps, weight } = item;
+        const { scheduleId, exerciseId, sets, reps, weight } = item
 
-        //use schedule_id and exercise_id to retrieve the scheduleItems
         const scheduleItem = await ScheduleItems.findOne({
           where: {
             schedule_id: scheduleId,
             exercise_id: exerciseId
           }
-        });
+        })
 
         if (!scheduleItem) {
-          return res.status(404).json({ message: `Schedule item not found for exerciseId: ${exerciseId}` });
+          return res.status(404).json({ message: `Schedule item not found for exerciseId: ${exerciseId}` })
         }
 
-        // Update only the fields that were provided in the request
-        const updatedFields = {};
-        if (sets !== undefined) updatedFields.sets = sets;
-        if (reps !== undefined) updatedFields.reps = reps;
-        if (weight !== undefined) updatedFields.weight = weight;
+        const updatedFields = {}
+        if (sets !== undefined) updatedFields.sets = sets
+        if (reps !== undefined) updatedFields.reps = reps
+        if (weight !== undefined) updatedFields.weight = weight
 
         await ScheduleItems.update(updatedFields, {
           where: {
             schedule_id: scheduleId,
             exercise_id: exerciseId
           }
-        });
+        })
       }
 
-      res.json({ success: true, message: 'Schedule items updated successfully' });
+      // Handle deletions
+      for (const exerciseId of itemsToDelete) {
+        await ScheduleItems.destroy({
+          where: {
+            schedule_id: updatedItems[0].scheduleId, // Use the scheduleId from the first item
+            exercise_id: exerciseId
+          }
+        })
+      }
+
+      res.json({ success: true, message: 'Schedule items updated and deleted successfully' })
     } catch (error) {
-      console.error('Error updating schedule items:', error);
-      res.status(500).json({ success: false, message: 'Server error' });
+      console.error('Error updating schedule items:', error)
+      res.status(500).json({ success: false, message: 'Server error' })
     }
   }
 }

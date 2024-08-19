@@ -42,28 +42,6 @@ document.addEventListener('DOMContentLoaded', async function () {
   }
 })
 
-// function showScheduleItemsModal (scheduleItems) {
-//   let modalContent = `
-//     <ul class="list-group">`
-
-//   scheduleItems.forEach(item => {
-//     modalContent += `
-//       <li class="list-group-item">
-//         <strong>${item.name}</strong><br>
-//         Reps: ${item.reps}, Sets: ${item.sets}, Weight: ${item.weight}
-//       </li>`
-//   })
-
-//   modalContent += `
-//     </ul>`
-
-//   // Update the modal body content
-//   document.querySelector('#scheduleItemModal .modal-body').innerHTML = modalContent
-
-//   // Show the modal
-//   $('#scheduleItemModal').modal('show')
-// }
-
 async function planFormSubmission (date) {
   // Get the form data from the modal
   const form = document.getElementById('planForm')
@@ -251,14 +229,18 @@ function showModal (date) {
   })
 }
 
+function showScheduleItemsModal (scheduleItems, scheduleId) {
+  // Reset the modal buttons to their initial state
+  const editButton = document.getElementById('editButton')
+  const submitButton = document.getElementById('submitButton')
+  editButton.classList.remove('d-none')
+  submitButton.classList.add('d-none')
 
-
-function showScheduleItemsModal(scheduleItems, scheduleId) {
-  let modalContent = `<input type="hidden" name="scheduleId" value="${scheduleId}">`; // Hidden input for schedule_id
+  let modalContent = `<input type="hidden" name="scheduleId" value="${scheduleId}">`
 
   scheduleItems.forEach((item, index) => {
     modalContent += `
-      <div class="form-group">
+      <div class="form-group" id="item-${item.id}">
         <label for="exercise${index}">Exercise: ${item.name}</label>
         <input type="hidden" name="exerciseIds[]" value="${item.id}">
         <div class="form-row">
@@ -274,69 +256,72 @@ function showScheduleItemsModal(scheduleItems, scheduleId) {
             <label for="weight${index}">Weight</label>
             <input type="text" class="form-control" name="weight[]" id="weight${index}" value="${item.weight}" disabled required>
           </div>
+          <div class="col">
+            <button type="button" class="btn btn-danger delete-btn d-none" data-exercise-id="${item.id}">Delete</button>
+          </div>
         </div>
-      </div>`;
-  });
+      </div>`
+  })
 
-  // Insert modal content into modal
-  document.querySelector('#scheduleItemModal .modal-body').innerHTML = modalContent;
+  document.querySelector('#scheduleItemModal .modal-body').innerHTML = modalContent
 
-  $('#scheduleItemModal').modal('show');
+  $('#scheduleItemModal').modal('show')
 
-  // Handle switching to edit mode
-  const editButton = document.getElementById('editButton');
-  const submitButton = document.getElementById('submitButton');
+  const deleteButtons = document.querySelectorAll('.delete-btn')
+  const itemsToDelete = new Set()
 
   editButton.addEventListener('click', function () {
-    // Enable form fields for editing
     document.querySelectorAll('#editScheduleForm input[type="number"], #editScheduleForm input[type="text"]').forEach(input => {
-      input.disabled = false;
-    });
+      input.disabled = false
+    })
+    deleteButtons.forEach(button => button.classList.remove('d-none'))
+    editButton.classList.add('d-none')
+    submitButton.classList.remove('d-none')
+  })
 
-    // Hide the Edit button and show the Submit button
-    editButton.classList.add('d-none');
-    submitButton.classList.remove('d-none');
-  });
+  deleteButtons.forEach(button => {
+    button.addEventListener('click', function () {
+      const exerciseId = this.getAttribute('data-exercise-id')
+      itemsToDelete.add(exerciseId)
+      document.getElementById(`item-${exerciseId}`).remove() // Remove item from modal
+    })
+  })
 
-  // Handle edit schedule form submission
   document.getElementById('editScheduleForm').addEventListener('submit', async function (event) {
-    event.preventDefault();
+    event.preventDefault()
 
-    const form = document.getElementById('editScheduleForm');
-    const formData = new FormData(form);
+    const form = document.getElementById('editScheduleForm')
+    const formData = new FormData(form)
 
-    // Prepare the data for submission
-    const scheduleId = formData.get('scheduleId'); // Retrieve the scheduleId
-    console.log(scheduleId)
-    const updatedItems = [];
-    const exerciseIds = formData.getAll('exerciseIds[]');
-    const reps = formData.getAll('reps[]');
-    const sets = formData.getAll('sets[]');
-    const weights = formData.getAll('weight[]');
+    const scheduleId = formData.get('scheduleId')
+    const updatedItems = []
+    const exerciseIds = formData.getAll('exerciseIds[]')
+    const reps = formData.getAll('reps[]')
+    const sets = formData.getAll('sets[]')
+    const weights = formData.getAll('weight[]')
 
     for (let i = 0; i < exerciseIds.length; i++) {
-      updatedItems.push({
-        exerciseId: exerciseIds[i],
-        reps: reps[i],
-        sets: sets[i],
-        weight: weights[i],
-        scheduleId: scheduleId // Include the scheduleId in each item
-      });
+      if (!itemsToDelete.has(exerciseIds[i])) {
+        updatedItems.push({
+          exerciseId: exerciseIds[i],
+          reps: reps[i],
+          sets: sets[i],
+          weight: weights[i],
+          scheduleId
+        })
+      }
     }
 
-    console.log('Updated Items:', updatedItems);
+    console.log('Updated Items:', updatedItems)
+    console.log('Items to Delete:', Array.from(itemsToDelete))
 
-    // Assume updateScheduleItems is a function to send updated data to the backend
-    await updateScheduleItems(updatedItems);
+    await updateScheduleItems(updatedItems, Array.from(itemsToDelete))
 
-    // Close the modal
-    $('#scheduleItemModal').modal('hide');
-  });
+    $('#scheduleItemModal').modal('hide')
+  })
 }
 
-async function updateScheduleItems(updatedItems) {
-  const token = localStorage.getItem('token');
-  console.log(updatedItems)
+async function updateScheduleItems (updatedItems, itemsToDelete) {
   try {
     const response = await fetch('/api/scheduleItems/update', {
       method: 'PUT',
@@ -344,15 +329,15 @@ async function updateScheduleItems(updatedItems) {
         Authorization: `Bearer ${token}`,
         'Content-Type': 'application/json'
       },
-      body: JSON.stringify({ updatedItems })
-    });
+      body: JSON.stringify({ updatedItems, itemsToDelete })
+    })
 
     if (!response.ok) {
-      throw new Error('Failed to update schedule items');
+      throw new Error('Failed to update schedule items')
     }
 
-    console.log('Schedule items updated successfully');
+    console.log('Schedule items updated successfully')
   } catch (error) {
-    console.error('Error updating schedule items:', error);
+    console.error('Error updating schedule items:', error)
   }
 }
