@@ -24,6 +24,50 @@ export function renderSections ({ sections, sectionsId }) {
   })
 }
 
+export function sectionCheckBox () {
+  document.querySelectorAll('.section-card').forEach(card => {
+    card.addEventListener('click', function () {
+      console.log('Card clicked')
+      const checkbox = card.querySelector('.section-checkbox')
+      if (checkbox) {
+        checkbox.checked = !checkbox.checked // Toggle the checkbox state
+        console.log('Checkbox state:', checkbox.checked)
+
+        // Trigger change event manually
+        checkbox.dispatchEvent(new Event('change'))
+      }
+    })
+  })
+
+  const checkboxes = document.querySelectorAll('.section-checkbox')
+  const startButtonContainer = document.getElementById('startButtonContainer')
+  const form = document.getElementById('sectionForm')
+
+  checkboxes.forEach(checkbox => {
+    checkbox.addEventListener('change', function () {
+      if (Array.from(checkboxes).some(checkbox => checkbox.checked)) {
+        startButtonContainer.classList.remove('d-none')
+      } else {
+        startButtonContainer.classList.add('d-none')
+      }
+    })
+  })
+
+  submitSectionForm(form, checkboxes)
+}
+
+async function submitSectionForm (form, checkboxes) {
+  form.addEventListener('submit', function (event) {
+    event.preventDefault() // Prevent the default form submission
+    const selectedSections = Array.from(checkboxes)
+      .filter(checkbox => checkbox.checked)
+      .map(checkbox => checkbox.value)
+
+    console.log('Selected Sections:', selectedSections)
+    // Here you can handle the form submission, e.g., send data via AJAX or redirect to another page
+  })
+};
+
 export function renderPartsBySection ({ parts, partsId }) {
   const partsContainer = document.querySelector('.parts-container')
   // parts.forEach((part, index) => {

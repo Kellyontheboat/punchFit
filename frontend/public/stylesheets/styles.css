@@ -384,6 +384,31 @@ button {
       font-size: 20px;
 }
 
+
+/* !training section */
+.section-card {
+  position: relative;
+}
+
+.section-checkbox {
+  position: absolute;
+  top: 10px;
+  right: 20px;
+  width: 1em;
+  /* Control the size of the checkbox */
+  height: 1em;
+  transform: scale(2);
+  cursor: pointer;
+}
+
+.section-checkbox:checked {
+  background-color: rgb(247, 211, 82);
+  /* Background color when checked */
+  border-color: rgb(247, 211, 82);
+  opacity: 1;
+    /* z-index: 1; */
+}
+
 .before-footer {
   width: 100%;
   background-color: #333434;

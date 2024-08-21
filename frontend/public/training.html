@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sections</title>
+  <link href="./stylesheets/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="./stylesheets/styles.css">
+
+
+  <!-- Load jQuery before Bootstrap JS -->
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <!-- <script src="/javascripts/bootstrap.bundle.min.js"></script> -->
+
+  
+  <script type="module" src="/javascripts/main.js" defer></script>
+  
+
+
+</head>
+
+<body>
+
+  <nav class="nav-container">
+    <!-- templateJs -->
+  </nav>
+  
+  <div class="nav-separator">
+    <!-- templateJs -->
+  </div>
+  
+  <div class="welcome">
+    Which body parts would you like to train today?
+  </div>
+
+<form id="sectionForm">
+  <div class="section-img-container">
+    <div class="row g-2 section-img">
+      <div class="col-md-3" data-id="1">
+        <div class="section-card mb-2"
+          style="background-image: url('https://i.pinimg.com/736x/a7/9c/ac/a79cac76ba4145d0616e7bb0437b6b7c.jpg');">
+          <div class="overlay"></div>
+          <div class="section-name section-card-item" data-id="1">Arm</div>
+          <input type="checkbox" name="section" value="1" class="section-checkbox mt-2">
+        </div>
+      </div>
+
+      <div class="col-md-3" data-id="2">
+        <div class="section-card mb-2"
+          style="background-image: url('https://images.unsplash.com/photo-1532029837206-abbe2b7620e3?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1740&q=80');">
+          <div class="overlay"></div>
+          <div class="section-name section-card-item" data-id="2">Shoulder</div>
+          <input type="checkbox" name="section" value="2" class="section-checkbox mt-2">
+
+        </div>
+      </div>
+
+      <div class="col-md-3" data-id="3">
+        <div class="section-card mb-2"
+          style="background-image: url('https://images.unsplash.com/photo-1571019614242-c5c5dee9f50b?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1740&q=80');">
+          <div class="overlay"></div>
+          <div class="section-name section-card-item" data-id="3">Chest</div>
+          <input type="checkbox" name="section" value="3" class="section-checkbox mt-2">
+        </div>
+      </div>
+
+      <div class="col-md-3 row-span-2" data-id="7">
+        <div class="section-card h-100"
+          style="background-image: url('https://i.pinimg.com/564x/e6/64/e9/e664e96a14098f43639f295f5670a842.jpg');">
+          <div class="overlay"></div>
+          <div class="section-name section-card-item" data-id="7">Leg</div>
+          <input type="checkbox" name="section" value="7" class="section-checkbox mt-2">
+        </div>
+      </div>
+
+      <div class="col-md-3" data-id="4">
+        <div class="section-card"
+          style="background-image: url('https://images.unsplash.com/photo-1603287681836-b174ce5074c2?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fDA%3D&auto=format&fit=crop&w=500&q=60');">
+          <div class="overlay"></div>
+          <div class="section-name section-card-item" data-id="4">Back</div>
+          <input type="checkbox" name="section" value="4" class="section-checkbox mt-2">
+        </div>
+      </div>
+
+      <div class="col-md-3" data-id="5">
+        <div class="section-card"
+          style="background-image: url('https://i.pinimg.com/564x/64/4f/1a/644f1ac255c5595594ea77704103ca18.jpg');">
+          <div class="overlay"></div>
+          <div class="section-name section-card-item" data-id="5">Core</div>
+          <input type="checkbox" name="section" value="5" class="section-checkbox mt-2">
+        </div>
+      </div>
+
+      <div class="col-md-3" data-id="6">
+        <div class="section-card"
+          style="background-image: url('https://i.pinimg.com/564x/d2/20/f9/d220f958ecc6001f7b1494c344b45e9f.jpg');">
+          <div class="overlay"></div>
+          <div class="section-name section-card-item" data-id="6">Gluteal</div>
+          <input type="checkbox" name="section" value="6" class="section-checkbox mt-2">
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="startButtonContainer" class="text-center mt-3 d-none">
+    <button type="submit" class="btn btn-primary">Let's Start!</button>
+  </div>
+  
+</form>
+</body>

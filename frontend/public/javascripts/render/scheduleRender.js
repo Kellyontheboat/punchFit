@@ -24,7 +24,18 @@ document.addEventListener('DOMContentLoaded', async function () {
           }
         })),
         dateClick: function (info) {
-          showModal(info.dateStr)
+          const selectedDate = new Date(info.dateStr)
+          const today = new Date()
+
+          // Clear the time part of both dates to compare only the date portion
+          selectedDate.setHours(0, 0, 0, 0)
+          today.setHours(0, 0, 0, 0)
+
+          if (selectedDate > today) {
+            alert('You can only create records for today or past dates!')
+          } else {
+            showModal(info.dateStr)
+          }
         },
         eventClick: async function (info) {
           const scheduleId = info.event.extendedProps.scheduleId

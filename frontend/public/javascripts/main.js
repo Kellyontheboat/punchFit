@@ -2,7 +2,7 @@ import { navHTML, hrHTML, injectHTML } from './render/htmlTemplates.js'
 
 import { showLoginModal, navScheduleBtn, updateLoginButton, initializeModals } from './render/navRender.js'
 
-import { renderSections, renderPartsBySection, renderExercisesByPart } from './render/exerciseRender.js'
+import { renderSections, renderPartsBySection, renderExercisesByPart, sectionCheckBox } from './render/exerciseRender.js'
 
 import { renderModules, renderEditModule, renderItemsInModule } from './render/moduleRender.js'
 
@@ -40,7 +40,10 @@ document.addEventListener('DOMContentLoaded', async function () {
   addSectionListener()
   await fetchSections()
 
-  if (pageType === 'parts') {
+  if (pathArray[1] === 'training') {
+    console.log(pathArray[1])
+    sectionCheckBox()
+  } else if (pageType === 'parts') {
     const sectionId = pathArray[2]
     console.log(sectionId)
     const { parts, partsId } = await fetchPartsBySection(sectionId)

@@ -38,6 +38,10 @@ app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, '../frontend/public/index.html'))
 })
 
+app.get('/training', (req, res) => {
+  res.sendFile(path.join(__dirname, '../frontend/public/training.html'))
+})
+
 app.get('/sections/:sectionId/parts', (req, res) => {
   res.sendFile(path.join(__dirname, '../frontend/public/parts.html'))
 })
