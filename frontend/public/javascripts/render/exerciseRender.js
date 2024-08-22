@@ -1,4 +1,24 @@
-export function renderSections ({ sections, sectionsId }) {
+import { submitSectionForm } from '../api/exerciseScript.js'
+import { showLoginModal } from './navRender.js'
+
+export function addTrainingRecordBtn (isAuthenticated) {
+  const welcomeContainer = document.querySelector('.welcome')
+  welcomeContainer.innerText = ''
+  document.createElement('button')
+  const trainingButton = document.createElement('button')
+  trainingButton.innerText = 'Add Training Record—>'
+  trainingButton.classList.add('btn', 'btn-primary') // Example Bootstrap classes
+  trainingButton.addEventListener('click', function () {
+    if (!isAuthenticated) {
+      showLoginModal()
+      return
+    }
+    window.location.href = '/training'
+  })
+  welcomeContainer.appendChild(trainingButton)
+}
+
+export async function renderSections ({ sections, sectionsId }) {
   const sectionWrap = document.querySelector('.section-wrap')
   const addModuleBtnContainer = document.querySelector('.add-module-btn-container')
   sections.forEach((section, index) => {
@@ -56,27 +76,8 @@ export function sectionCheckBox () {
   submitSectionForm(form, checkboxes)
 }
 
-async function submitSectionForm (form, checkboxes) {
-  form.addEventListener('submit', function (event) {
-    event.preventDefault() // Prevent the default form submission
-    const selectedSections = Array.from(checkboxes)
-      .filter(checkbox => checkbox.checked)
-      .map(checkbox => checkbox.value)
-
-    console.log('Selected Sections:', selectedSections)
-    // Here you can handle the form submission, e.g., send data via AJAX or redirect to another page
-  })
-};
-
 export function renderPartsBySection ({ parts, partsId }) {
   const partsContainer = document.querySelector('.parts-container')
-  // parts.forEach((part, index) => {
-  //   const partDiv = document.createElement('div')
-  //   partDiv.classList.add('part-item')
-  //   partDiv.textContent = part
-  //   partDiv.dataset.id = partsId[index]
-  //   partsContainer.appendChild(partDiv)
-  // })
 
   parts.forEach((part, index) => {
     const partDiv = document.createElement('button')

@@ -2,11 +2,12 @@ import { navHTML, hrHTML, injectHTML } from './render/htmlTemplates.js'
 
 import { showLoginModal, navScheduleBtn, updateLoginButton, initializeModals } from './render/navRender.js'
 
-import { renderSections, renderPartsBySection, renderExercisesByPart, sectionCheckBox } from './render/exerciseRender.js'
+import { addTrainingRecordBtn, renderSections, renderPartsBySection, renderExercisesByPart, sectionCheckBox } from './render/exerciseRender.js'
 
-import { renderModules, renderEditModule, renderItemsInModule } from './render/moduleRender.js'
+import { renderModules, renderItemsInModule, renderEditModule } from './render/moduleRender.js'
 
-// import { renderCalendar } from './render/scheduleRender.js'
+import { renderModulesBySections, renderMenuModules, renderItemsInMenuModule } from './render/menuRender.js'
+import { addListenerEditMenuBtn } from './api/menuScript.js'
 
 import { checkLoginStatus, loginformSubmission, registerformSubmission, loginBtn } from './api/authScript.js'
 
@@ -14,15 +15,15 @@ import { addListenerModule, addListenerAddMemoBtn } from './api/moduleScript.js'
 
 import { fetchSections, addSectionListener, fetchPartsBySection, addPartListener, fetchExercisesByPart } from './api/exerciseScript.js'
 
+addListenerEditMenuBtn
+
 document.addEventListener('DOMContentLoaded', async function () {
-  console.log('DOMContentLoaded event fired.')
   // use the Template HTML
   await injectHTML('.nav-container', navHTML)
   await injectHTML('.nav-separator', hrHTML)
 
   const pathArray = window.location.pathname.split('/')
   const pageType = pathArray[3]
-  console.log(pathArray)
 
   const { user, isAuthenticated } = await checkLoginStatus()// user:id username email
   if (isAuthenticated) {
@@ -39,17 +40,23 @@ document.addEventListener('DOMContentLoaded', async function () {
 
   addSectionListener()
   await fetchSections()
+  const sections = await fetchSections()
 
-  if (pathArray[1] === 'training') {
-    console.log(pathArray[1])
+  if (pathArray[1] === 'menu') {
+    if (!isAuthenticated) {
+      window.location.href('/')
+    }
+    await renderModulesBySections()
+    const itemContainers = document.querySelectorAll('.module-editing')
+    await renderItemsInMenuModule(itemContainers)
+    addListenerEditMenuBtn()
+  } else if (pathArray[1] === 'training') {
     sectionCheckBox()
   } else if (pageType === 'parts') {
     const sectionId = pathArray[2]
-    console.log(sectionId)
     const { parts, partsId } = await fetchPartsBySection(sectionId)
     // render the exercises of first bodyPart
     const firstPartId = partsId[0]
-    console.log(user)
 
     await renderEditModule(isAuthenticated)
     const itemContainers = document.querySelectorAll('.module-editing')
@@ -63,8 +70,7 @@ document.addEventListener('DOMContentLoaded', async function () {
     addListenerAddMemoBtn()
   } else {
     // if homepage
-    console.log('homePage')
-    const sections = await fetchSections()
+    addTrainingRecordBtn(isAuthenticated)
     await renderSections(sections)
     // addListenerModuleBtn(user)
     await renderModules(user, isAuthenticated)

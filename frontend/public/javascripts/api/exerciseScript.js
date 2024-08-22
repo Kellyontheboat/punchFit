@@ -96,3 +96,15 @@ export async function fetchExercisesByPart (partId) {
 
   return { exercises, exercisesId, exercisesImgs }
 }
+
+export async function submitSectionForm (form, checkboxes) {
+  form.addEventListener('submit', function (event) {
+    event.preventDefault()
+    const selectedSections = Array.from(checkboxes)
+      .filter(checkbox => checkbox.checked)
+      .map(checkbox => checkbox.value)
+
+    console.log('Selected Sections:', selectedSections)
+    window.location.href = `/menu?sectionIds=${selectedSections.join(',')}`
+  })
+};

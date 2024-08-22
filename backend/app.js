@@ -42,6 +42,11 @@ app.get('/training', (req, res) => {
   res.sendFile(path.join(__dirname, '../frontend/public/training.html'))
 })
 
+app.get('/menu', (req, res) => {
+  const sectionIds = req.query.sectionIds ? req.query.sectionIds.split(',') : []
+  res.sendFile(path.join(__dirname, '../frontend/public/menu.html'))
+})
+
 app.get('/sections/:sectionId/parts', (req, res) => {
   res.sendFile(path.join(__dirname, '../frontend/public/parts.html'))
 })

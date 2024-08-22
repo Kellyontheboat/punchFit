@@ -67,6 +67,8 @@ async function planFormSubmission (date) {
 
   const data = { sectionIds, scheduleName, date }
   console.log(data)
+
+  // *add a layer for user to edit the items in menu first
   const scheduleId = await postSchedule({ scheduleName, date })
   await addItemsIntoSchedule({ sectionIds, scheduleId })
 

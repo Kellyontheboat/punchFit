@@ -50,6 +50,28 @@ const moduleControllers = {
       res.status(500).json({ error: 'Server error' })
     }
   },
+  getModulesBySections: async (req, res) => {
+    try {
+      const memberId = req.memberId
+      const sectionIds = req.query.sectionIds ? req.query.sectionIds.split(',') : []
+
+      const modules = await Modules.findAll({
+        where: {
+          member_id: memberId,
+          section_id: sectionIds
+        }
+      })
+
+      if (!modules || modules.length === 0) {
+        return res.status(404).json({ message: 'Modules not found' })
+      }
+
+      res.json(modules)
+    } catch (error) {
+      console.error('Error fetching modules:', error)
+      res.status(500).json({ error: 'Server error' })
+    }
+  },
   getModuleByPart: async (req, res) => {
     try {
       const memberId = req.memberId

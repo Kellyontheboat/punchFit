@@ -71,20 +71,12 @@ export const navHTML = `
 `
 export const hrHTML = '<hr>'
 
-// export async function injectHTML (selector, html) {
-//   const sanitizedHTML = DOMPurify.sanitize(html)
-//   document.querySelectorAll(selector).forEach(element => {
-//     element.innerHTML = sanitizedHTML
-//   })
-// }
-
 export function injectHTML (selector, html) {
   return new Promise((resolve) => {
     const sanitizedHTML = DOMPurify.sanitize(html)
     document.querySelectorAll(selector).forEach(element => {
       element.innerHTML = sanitizedHTML
     })
-    console.log('HTML injected.')
     resolve()
   })
 }

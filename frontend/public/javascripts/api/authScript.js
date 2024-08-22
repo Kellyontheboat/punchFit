@@ -75,7 +75,7 @@ export async function loginformSubmission () {
           const responseData = await response.json()
           localStorage.setItem('token', responseData.token)
           console.log('login successfully!')
-          location.reload()
+          window.location.href = '/training'
         } else {
           const errorData = await response.json()
           console.log(errorData)

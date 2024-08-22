@@ -48,35 +48,32 @@ export async function renderModules (user, isAuthenticated) {
 
 export async function renderEditModule (isAuthenticated) {
   if (!isAuthenticated) return
+  const sectionId = parseInt(window.location.pathname.split('/')[2], 10)
+  const { modules } = await getModuleBySection(sectionId) // modules[index].section_id/module_name/member_id
+  console.log(modules)
+  const sections = JSON.parse(localStorage.getItem('sections'))
+  const section = sections[sectionId - 1]
+  const moduleDiv = document.createElement('div')
 
-  const { modules } = await getModuleBySection(isAuthenticated) // modules[index].section_id/module_name/member_id
   if (modules.length === 0) {
-    const sectionId = parseInt(window.location.pathname.split('/')[2], 10)
-    const sections = JSON.parse(localStorage.getItem('sections'))
-    const section = sections[sectionId - 1]
-
-    const moduleDiv = document.createElement('div')
     moduleDiv.classList.add('module-item')
 
-    moduleDiv.textContent = `Select exercises for training ${section}`
+    moduleDiv.textContent = `Let\'s select exercises into ${section} module!`
     moduleDiv.dataset.sectionId = sectionId
 
     const hrElement = document.querySelector('hr')
     hrElement.insertAdjacentElement('afterend', moduleDiv)
     return
   }
-  //! temp for one module in a section
 
   const module = modules[0]
   console.log(modules)
   const moduleId = module.id
 
-  const moduleDiv = document.createElement('div')
   moduleDiv.classList.add('module-editing')
   moduleDiv.dataset.id = moduleId
-  moduleDiv.innerText = 'Let\'s select exercises into memo!'
 
-  const navElement = document.querySelector('nav')
+  const navElement = document.querySelector('hr')
   navElement.insertAdjacentElement('afterend', moduleDiv)
 }
 
@@ -110,4 +107,30 @@ export async function renderItemsInModule (itemContainers) {
       itemDiv.appendChild(detailDiv)
     })
   }
+}
+
+export function renderExerciseToModuleContainer ({ funcModuleId, exerciseId, exerciseName, reps, sets, weight }) {
+  let moduleContainer = document.querySelector(`[data-id="${funcModuleId}"]`)
+  if (!moduleContainer) {
+    const existingElement = document.querySelector('.module-item')
+
+    moduleContainer = document.createElement('div')
+    moduleContainer.classList.add('module-editing')
+    moduleContainer.offsetHeight// Force reflow (read a property to trigger reflow)
+    moduleContainer.dataset.id = funcModuleId
+    console.log(existingElement)
+    existingElement.replaceWith(moduleContainer)
+  }
+
+  const itemDiv = document.createElement('div')
+  const detailDiv = document.createElement('div')
+
+  itemDiv.classList.add('exercise-item')
+  itemDiv.dataset.id = exerciseId
+
+  detailDiv.classList.add('exercise-item-detail')
+  detailDiv.innerText = `*${exerciseName} ${reps} reps ${sets} sets ${weight} kg`
+
+  moduleContainer.appendChild(itemDiv)
+  itemDiv.appendChild(detailDiv)
 }
