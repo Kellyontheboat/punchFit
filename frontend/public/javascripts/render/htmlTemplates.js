@@ -8,8 +8,16 @@ export const navHTML = `
       <span class="nav-title">PunchFit  打卡健身</span>
     </a>
     <span class="nav-item-container">
-      <span class="nav-item" id="login-register-btn">登入/註冊</span>
-      <span class="nav-item" id="my-schedule-btn">我的紀錄</span>
+      <span class="nav-item" id="login-register-btn">Login/Register</span>
+    <a href="/module?sectionIds=1,2,3,4,5,6,7" class="module-link">
+      <span class="nav-item" id="my-module-btn">Module</span>
+    </a>
+
+    <a href="/schedules" class="module-link">
+      <span class="nav-item" id="my-schedule-btn">Schedule</span>
+    </a>
+
+
     <span>
     <!-- Modal: Login -->
     <div id="loginPopup" class="custom-raw-popup">

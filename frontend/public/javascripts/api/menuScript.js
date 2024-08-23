@@ -1,7 +1,6 @@
-import { fetchPartsBySection, fetchExercisesByPart, addPartListener } from './exerciseScript.js'
+import { postSchedule, addItemsIntoSchedule } from '../render/scheduleRender.js'
 
-import { addListenerAddMemoBtn } from './moduleScript.js'
-import { renderExercisesByPart, renderPartsBySection } from '../render/exerciseRender.js'
+import { renderSubmitMenuBtn } from '../render/menuRender.js'
 
 const token = localStorage.getItem('token')
 export async function getModulesBySections (sectionIds) {
@@ -27,36 +26,53 @@ export async function addListenerEditMenuBtn () {
   const EditMenuBtn = document.querySelectorAll('.edit-menu-module')
 
   for (const btn of EditMenuBtn) {
+    const sectionId = btn.closest('.module-wrap').querySelector('.menu-section-item').dataset.sectionId
+    console.log(sectionId)
     btn.addEventListener('click', async function (event) {
-      const sectionId = event.target.closest('.module-editing').dataset.sectionId
-
-      const partsContainer = document.createElement('div')
-      const exercisesContainer = document.createElement('div')
-      partsContainer.classList = ('parts-container')
-      exercisesContainer.classList = ('exercises-container')
-
-      const moduleWrap = event.target.closest('.module-wrap')
-      if (moduleWrap) {
-        moduleWrap.insertAdjacentElement('afterend', partsContainer)
-        partsContainer.insertAdjacentElement('afterend', exercisesContainer)
-      }
-
-      const { parts, partsId } = await fetchPartsBySection(sectionId)
-      // render the exercises of first bodyPart
-      const firstPartId = partsId[0]
-
-      const { exercises, exercisesId, exercisesImgs } = await fetchExercisesByPart(firstPartId)
-      const user = true
-      await renderExercisesByPart({ exercises, exercisesId, exercisesImgs, user })
-
-      renderPartsBySection({ parts, partsId })
-      addPartListener(user)
-      addListenerAddMemoBtn()
+      // Save the current URL as the last URL before navigating
+      sessionStorage.setItem('lastUrl', window.location.href)
+      window.location.href = `/sections/${sectionId}/parts`
     })
   }
 }
 
-//   EditMenuBtn.forEach(btn => {
+// save into Schedule
+export async function addListenerSubmitMenu () {
+  const SubmitMenuBtn = await renderSubmitMenuBtn()
+  console.log(SubmitMenuBtn)
+  SubmitMenuBtn.addEventListener('click', function (event) {
+    event.preventDefault()
+    submitMenu()
 
-//   })
-// }
+    const lastUrl = sessionStorage.getItem('lastUrl')
+
+    const saveSuccessAlert = document.getElementById('saveSuccessAlert')
+    saveSuccessAlert.classList.remove('d-none')
+
+    // Redirect after a short delay
+    setTimeout(() => {
+      if (lastUrl) {
+        sessionStorage.removeItem('lastUrl')
+        window.location.href = lastUrl
+      } else {
+        window.location.href = '/schedules' // Fallback if no last URL is stored
+      }
+    }, 500) // 2-second delay
+  })
+}
+
+// submit to Schedule
+export async function submitMenu () {
+  const params = new URLSearchParams(window.location.search)
+  const sectionIds = params.get('sectionIds') ? params.get('sectionIds').split(',').map(Number) : []
+  const today = new Date()
+  const currentDate = today.toLocaleDateString('en-CA')
+  console.log(currentDate)
+  const scheduleName = `${currentDate} workout`
+  console.log(scheduleName)
+
+  const scheduleId = await postSchedule({ scheduleName, date: currentDate })
+  console.log(scheduleId)
+  addItemsIntoSchedule({ sectionIds, scheduleId })
+  console.log(sectionIds)
+}

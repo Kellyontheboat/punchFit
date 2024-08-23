@@ -11,6 +11,12 @@ body {
   background-color: #333434;
 }
 
+.alert {
+  width: 500px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
 .navbar-container {
   display: flex;
   justify-content: center;
@@ -56,7 +62,7 @@ body {
   display: flex;
     justify-content: space-between;
   align-items: center;
-  width: 150px;
+  width: 250px;
 }
 
 .nav-separator hr {
@@ -207,9 +213,34 @@ button {
 .welcome {
   width:90vw;
   margin-right: auto;
-  margin-left: auto;
+    margin-left: auto;
   margin-bottom: 20px;
 }
+
+.welcome.btn {
+  padding: 0;
+  margin-right: auto;
+    margin-left: auto;
+  display: flex;
+  flex-direction: column;
+  
+}
+
+.welcome.btn
+button {
+  width: 300px;
+    height: 50px;
+    margin-top: 30px;
+    margin-bottom: 30px;
+}
+
+.welcome.btn 
+div {
+  font-size: large;
+  color: #f2efee;
+  text-align: left;
+}
+
 
 /* ! img section */
 .row{
@@ -336,8 +367,6 @@ button {
 }
 
 .module-editing {
-  width: 1000px;
-    height: 300px;
     background-color: #fad12d;
 }
 
@@ -346,6 +375,32 @@ button {
   font-size: 22px;
 }
 
+/* !exercise in module */
+
+.exercise-details {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  /* Adjusts the space between inputs and button */
+}
+
+.exercise-details .form-control {
+  width: 60px;
+  /* Adjust width as needed */
+  margin-right: 5px;
+}
+
+.exercise-details .delete-menu-item {
+  margin-left: auto;
+  /* Push the delete button to the far right */
+}
+
+.edit-menu-module {
+  width:100px;
+  margin-top: 20px;
+  margin-left: auto;
+  margin-right: auto;
+}
 /* !calendar */
 #calendar {
   width: 90vw;
@@ -434,7 +489,8 @@ button {
   background-color: rgb(247, 211, 82);
 }
 
-.list-group {
+.module-editing.list-group
+{
   margin-left: auto;
   margin-right: auto;
   margin-bottom: 10px;

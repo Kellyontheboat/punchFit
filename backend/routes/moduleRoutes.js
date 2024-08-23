@@ -17,6 +17,6 @@ router.get('/sections/:sectionId/modules', authenticateToken, moduleControllers.
 
 router.get('/modules/:moduleId/exercises', authenticateToken, moduleControllers.getExerciseInModule)
 
-router.post('/modules/:moduleId/exercises', authenticateToken, moduleControllers.addExerciseToModule)
+router.patch('/modules/:moduleId/exercises', authenticateToken, moduleControllers.updateExerciseInModule)
 
 module.exports = router

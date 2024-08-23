@@ -11,7 +11,7 @@ document.addEventListener('DOMContentLoaded', async function () {
   } else {
     const token = localStorage.getItem('token')
 
-    function renderCalendar (schedules) {
+    async function renderCalendar (schedules) {
       console.log(schedules)
       const calendarEl = document.getElementById('calendar')
       calendar = new FullCalendar.Calendar(calendarEl, {
@@ -48,8 +48,8 @@ document.addEventListener('DOMContentLoaded', async function () {
     }
 
     const { schedules } = await getSchedules()
-    renderCalendar(schedules)
-    getSchedulesItems()
+    await renderCalendar(schedules)
+    await getSchedulesItems()
   }
 })
 
@@ -83,9 +83,10 @@ async function planFormSubmission (date) {
   return data
 }
 
-async function postSchedule ({ scheduleName, date }) {
+export async function postSchedule ({ scheduleName, date }) {
   const token = localStorage.getItem('token')
   const data = { scheduleName, date }
+  console.log(date)
   try {
     const response = await fetch('/api/schedules', {
       method: 'POST',
@@ -109,11 +110,12 @@ async function postSchedule ({ scheduleName, date }) {
 }
 
 // sectionIds>modules>exercises
-async function addItemsIntoSchedule ({ sectionIds, scheduleId }) {
+export async function addItemsIntoSchedule ({ sectionIds, scheduleId }) {
   console.log({ sectionIds, scheduleId })
   const token = localStorage.getItem('token')
   try {
     const data = { sectionIds, scheduleId }
+    console.log(sectionIds)
     const response = await fetch('/api/scheduleItems', {
       method: 'POST',
       headers: {
@@ -251,30 +253,21 @@ function showScheduleItemsModal (scheduleItems, scheduleId) {
 
   let modalContent = `<input type="hidden" name="scheduleId" value="${scheduleId}">`
 
-  scheduleItems.forEach((item, index) => {
+  // Create a simple list of schedule items
+  modalContent += '<ul class="list-group">'
+  scheduleItems.forEach((item) => {
     modalContent += `
-      <div class="form-group" id="item-${item.id}">
-        <label for="exercise${index}">Exercise: ${item.name}</label>
-        <input type="hidden" name="exerciseIds[]" value="${item.id}">
-        <div class="form-row">
-          <div class="col">
-            <label for="reps${index}">Reps</label>
-            <input type="number" class="form-control" name="reps[]" id="reps${index}" value="${item.reps}" disabled required>
-          </div>
-          <div class="col">
-            <label for="sets${index}">Sets</label>
-            <input type="number" class="form-control" name="sets[]" id="sets${index}" value="${item.sets}" disabled required>
-          </div>
-          <div class="col">
-            <label for="weight${index}">Weight</label>
-            <input type="text" class="form-control" name="weight[]" id="weight${index}" value="${item.weight}" disabled required>
-          </div>
-          <div class="col">
-            <button type="button" class="btn btn-danger delete-btn d-none" data-exercise-id="${item.id}">Delete</button>
-          </div>
+      <li class="list-group-item" id="item-${item.id}">
+      <div><strong>Exercise:</strong> ${item.name}</div></br>
+        <div class="d-flex">
+          <div><strong>Reps:</strong> ${item.reps}</div>
+          <div><strong>Sets:</strong> ${item.sets}</div>
+          <div><strong>Weight:</strong> ${item.weight} kg</div>
         </div>
-      </div>`
+        <button type="button" class="btn btn-danger btn-sm delete-btn d-none mt-2" data-exercise-id="${item.id}">Delete</button>
+      </li>`
   })
+  modalContent += '</ul>'
 
   document.querySelector('#scheduleItemModal .modal-body').innerHTML = modalContent
 
@@ -284,9 +277,6 @@ function showScheduleItemsModal (scheduleItems, scheduleId) {
   const itemsToDelete = new Set()
 
   editButton.addEventListener('click', function () {
-    document.querySelectorAll('#editScheduleForm input[type="number"], #editScheduleForm input[type="text"]').forEach(input => {
-      input.disabled = false
-    })
     deleteButtons.forEach(button => button.classList.remove('d-none'))
     editButton.classList.add('d-none')
     submitButton.classList.remove('d-none')
@@ -353,4 +343,11 @@ async function updateScheduleItems (updatedItems, itemsToDelete) {
   } catch (error) {
     console.error('Error updating schedule items:', error)
   }
+}
+
+export async function welcomeMessage () {
+  const welcomeContainer = document.querySelector('.welcome')
+  const messageContainer = document.querySelector('.welcome-message')
+  welcomeContainer.innerText = ''
+  messageContainer.innerText = 'Your Record'
 }

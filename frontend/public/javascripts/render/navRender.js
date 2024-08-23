@@ -60,19 +60,20 @@ async function closeButtons () {
 export function navScheduleBtn (isAuthenticated) {
   const navScheduleBtn = document.getElementById('my-schedule-btn')
 
-  navScheduleBtn.addEventListener('click', () => {
-    if (!isAuthenticated) {
+  navScheduleBtn.addEventListener('click', (event) => {
+    if (isAuthenticated) {
+      window.location.href = '/schedules'
+    } else {
+      event.preventDefault()
       showLoginModal()
-      return
     }
-    window.location.href = '/schedule'
   })
 }
 
 export async function updateLoginButton () {
   const loginButton = document.getElementById('login-register-btn')
   if (loginButton) {
-    loginButton.innerText = '登出系統'
+    loginButton.innerText = 'Logout'
     loginButton.id = 'logout-btn'
   }
   const logoutBtn = document.getElementById('logout-btn')

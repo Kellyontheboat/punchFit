@@ -1,13 +1,20 @@
 import { submitSectionForm } from '../api/exerciseScript.js'
 import { showLoginModal } from './navRender.js'
 
-export function addTrainingRecordBtn (isAuthenticated) {
+export async function addTrainingRecordBtn (isAuthenticated) {
   const welcomeContainer = document.querySelector('.welcome')
   welcomeContainer.innerText = ''
-  document.createElement('button')
+  welcomeContainer.classList.add('btn')
+  const scrollSectionImgBtn = document.createElement('div')
   const trainingButton = document.createElement('button')
-  trainingButton.innerText = 'Add Training Record—>'
+
+  trainingButton.innerText = 'Let\'s Add Training Record For Today'
+  scrollSectionImgBtn.innerText = 'Or click below to edit your modules:'
+
   trainingButton.classList.add('btn', 'btn-primary') // Example Bootstrap classes
+
+  scrollSectionImgBtn.classList.add('scroll-to-section')
+
   trainingButton.addEventListener('click', function () {
     if (!isAuthenticated) {
       showLoginModal()
@@ -16,6 +23,7 @@ export function addTrainingRecordBtn (isAuthenticated) {
     window.location.href = '/training'
   })
   welcomeContainer.appendChild(trainingButton)
+  welcomeContainer.appendChild(scrollSectionImgBtn)
 }
 
 export async function renderSections ({ sections, sectionsId }) {

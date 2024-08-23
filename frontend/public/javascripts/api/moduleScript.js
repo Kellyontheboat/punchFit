@@ -89,14 +89,13 @@ export async function addListenerModule (isAuthenticated) {
       sectionId = module.getAttribute('data-section-id')
     }
     module.addEventListener('click', function () {
+      sessionStorage.setItem('lastUrl', window.location.href)
       window.location.href = `/sections/${sectionId}/parts`
     })
   })
 }
 
 export async function getModuleBySection (sectionId) {
-  // const sectionId = window.location.pathname.split('/')[2]
-
   const response = await fetch(`/api/sections/${sectionId}/modules`, {
     method: 'GET',
     headers: {
@@ -120,44 +119,25 @@ export async function addExerciseToModule (exerciseId, exerciseName) {
   let funcModuleId = ''
   const { moduleId, modules } = await getModuleBySection(sectionId)
   const moduleEdit = document.querySelector('.module-editing')
+  console.log(modules)
   if (modules.length === 0 && !moduleEdit) {
     funcModuleId = await createModule()
   } else {
     const module = modules[0]
     funcModuleId = module.id
   }
-
-  const data = { exerciseId }
-
-  try {
-    const response = await fetch(`/api/modules/${funcModuleId}/exercises`, {
-      method: 'POST',
-      headers: {
-        Authorization: `Bearer ${token}`,
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(data)
-    })
-
-    const result = await response.json()
-    if (result.success) {
-      const exercise = result.moduleItem
-      const { reps, sets, weight } = exercise
-
-      renderExerciseToModuleContainer({
-        funcModuleId,
-        exerciseId,
-        exerciseName,
-        reps,
-        sets,
-        weight
-      })
-    } else {
-      console.error('Failed to add module:', result.error)
-    }
-  } catch (error) {
-    console.error('Error:', error)
-  }
+  // render default value
+  const reps = 12
+  const sets = 4
+  const weight = 5
+  renderExerciseToModuleContainer({
+    funcModuleId,
+    exerciseId,
+    exerciseName,
+    reps,
+    sets,
+    weight
+  })
 }
 
 // add Exercise into memo
@@ -191,4 +171,99 @@ export async function getExerciseInModule (moduleId) {
   })
   const exercises = await response.json()
   return exercises
+}
+
+export async function collectModuleData () {
+  const moduleContainer = document.querySelector('.module-editing')
+  const moduleId = moduleContainer.getAttribute('data-id') // Retrieve the moduleId
+  const items = moduleContainer.querySelectorAll('.menu-module-item')
+
+  const updatedItems = []
+  const updatedItemIds = []
+
+  items.forEach(item => {
+    const itemId = item.dataset.id // Existing item ID (could be undefined for new items)
+    const exerciseId = item.dataset.exerciseId // Exercise ID
+    const reps = item.querySelector('.reps-input').value
+    const sets = item.querySelector('.sets-input').value
+    const weight = item.querySelector('.weight-input').value
+
+    if (itemId) {
+      updatedItemIds.push(itemId) // Collect existing item IDs
+    }
+
+    updatedItems.push({
+      itemId, // This could be undefined for new items
+      exerciseId, // Always present
+      reps: parseInt(reps, 10),
+      sets: parseInt(sets, 10),
+      weight: parseFloat(weight),
+      moduleId // This is the module ID for creating new items
+    })
+    console.log(updatedItems)
+  })
+
+  return { moduleId, updatedItems, updatedItemIds }
+}
+
+export async function addListenerSaveModuleBtn () {
+  console.log('save module')
+  const saveBtn = document.querySelector('.save-menu-module')
+  if (!saveBtn) return
+
+  saveBtn.addEventListener('click', async function () {
+    const { moduleId, updatedItems, updatedItemIds } = await collectModuleData() // Collect data from the module-editing section
+    console
+    const requestBody = {
+      updatedItems,
+      existingItemIds: updatedItemIds // Send the current item IDs to the backend
+    }
+
+    console.log('Saving module with data:', requestBody)
+
+    try {
+      const response = await fetch(`/api/modules/${moduleId}/exercises`, {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`
+        },
+        body: JSON.stringify(requestBody)
+      })
+
+      const result = await response.json()
+      if (result.success) {
+        console.log('Exercises updated successfully')
+        const lastUrl = sessionStorage.getItem('lastUrl')
+
+        const saveSuccessAlert = document.getElementById('saveSuccessAlert')
+        saveSuccessAlert.classList.remove('d-none')
+
+        // Redirect after a short delay
+        setTimeout(() => {
+          if (lastUrl) {
+            sessionStorage.removeItem('lastUrl')
+            window.location.href = lastUrl
+          } else {
+            window.location.href = '/' // Fallback if no last URL is stored
+          }
+        }, 500) // 2-second delay
+      } else {
+        console.error('Failed to update exercises:', result.message)
+      }
+    } catch (error) {
+      console.error('Error updating exercises:', error)
+    }
+  })
+}
+
+export function addListenerDeleteModuleItem (listGroup) {
+  const deleteButtons = listGroup.querySelectorAll('.delete-menu-item')
+
+  deleteButtons.forEach(button => {
+    button.addEventListener('click', function () {
+      const listItem = button.closest('li')
+      listItem.remove()
+    })
+  })
 }

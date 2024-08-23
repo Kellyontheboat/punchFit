@@ -5,7 +5,7 @@ const scheduleControllers = {
   createSchedule: async (req, res) => {
     const memberId = req.memberId
     const { scheduleName, date } = req.body
-
+    console.log('date to write in:', date)
     try {
       const newSchedule = await Schedules.create({
         schedule_name: scheduleName,
@@ -72,7 +72,6 @@ const scheduleControllers = {
 
   getMemberSchedules: async (req, res) => {
     const memberId = req.memberId
-    console.log('gggggg', memberId)
     const schedules = await Schedules.findAll({
       where: { member_id: memberId }
     })
