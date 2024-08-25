@@ -135,11 +135,11 @@ export async function renderExercisesByPart ({ exercises, exercisesId, exercises
     titleH4.textContent = exercise
     cardBodyDiv.appendChild(titleH4)
 
-    // Add a placeholder card text
-    const cardTextP = document.createElement('p')
-    cardTextP.classList.add('card-text')
-    cardTextP.textContent = 'Click to see more details or add this exercise into the Memo.'
-    cardBodyDiv.appendChild(cardTextP)
+    // // Add a placeholder card text
+    // const cardTextP = document.createElement('p')
+    // cardTextP.classList.add('card-text')
+    // cardTextP.textContent = 'Click to see more details or add this exercise into the Memo.'
+    // cardBodyDiv.appendChild(cardTextP)
 
     // button to trigger detail modal
     const exerciseDetailBtn = document.createElement('a')
@@ -147,6 +147,7 @@ export async function renderExercisesByPart ({ exercises, exercisesId, exercises
     exerciseDetailBtn.textContent = 'detail'
     exerciseDetailBtn.setAttribute('data-bs-toggle', 'modal')
     exerciseDetailBtn.setAttribute('data-bs-target', '#exerciseModal')
+    exerciseDetailBtn.dataset.id = exercisesId[index]
     cardBodyDiv.appendChild(exerciseDetailBtn)
 
     // button to add new exercise to the module
@@ -154,8 +155,6 @@ export async function renderExercisesByPart ({ exercises, exercisesId, exercises
       const btn = document.createElement('a')
       btn.classList.add('btn', 'btn-primary', 'add-into-memo')
       btn.textContent = '+'
-      btn.setAttribute('data-bs-toggle', 'modal')
-      btn.setAttribute('data-bs-target', '#exerciseModal')
       cardBodyDiv.appendChild(btn)
     }
 
@@ -166,4 +165,17 @@ export async function renderExercisesByPart ({ exercises, exercisesId, exercises
 
   // Append the row to the container
   exercisesContainer.appendChild(rowDiv)
+}
+
+export function partContainerStickOnTop () {
+  window.addEventListener('scroll', function () {
+    const partsContainer = document.querySelector('.parts-container')
+    const scrollTop = window.scrollY
+
+    if (scrollTop > 0) {
+      partsContainer.style.top = '0px'
+    } else {
+      partsContainer.style.top = '60px' // Reset to original value when at the top
+    }
+  })
 }

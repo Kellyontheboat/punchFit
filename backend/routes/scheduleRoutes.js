@@ -14,4 +14,6 @@ router.get('/schedules/:scheduleId/items', authenticateToken, scheduleController
 
 router.put('/scheduleItems/update', authenticateToken, scheduleControllers.updateSchedule)
 
+router.delete('/schedules/:scheduleId', authenticateToken, scheduleControllers.deleteSchedule)
+
 module.exports = router

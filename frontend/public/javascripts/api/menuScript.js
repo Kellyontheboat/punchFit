@@ -55,9 +55,9 @@ export async function addListenerSubmitMenu () {
         sessionStorage.removeItem('lastUrl')
         window.location.href = lastUrl
       } else {
-        window.location.href = '/schedules' // Fallback if no last URL is stored
+        window.location.href = '/schedules'
       }
-    }, 500) // 2-second delay
+    }, 1500)
   })
 }
 

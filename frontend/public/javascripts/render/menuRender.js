@@ -1,7 +1,5 @@
 import { getModuleBySection, getExerciseInModule } from '../api/moduleScript.js'
 
-// import { submitMenu } from '../render/menuScript.js'
-
 export async function renderModulesBySections () {
   const params = new URLSearchParams(window.location.search)
   const sectionIds = params.get('sectionIds') ? params.get('sectionIds').split(',') : []
@@ -31,7 +29,6 @@ export async function renderMenuModules (modules, sectionIds) {
     const moduleDiv = document.createElement('div')
     moduleDiv.classList.add('module-editing', 'list-group')
     moduleDiv.dataset.sectionId = sectionId
-    // moduleDiv.innerText = 'Let\'s select exercises!'
 
     const moduleTitle = document.createElement('div')
     moduleTitle.classList.add('menu-section-item')
@@ -78,11 +75,16 @@ export async function renderItemsInMenuModule (itemContainers) {
         const { reps, sets, weight } = item
 
         listItem.classList.add('list-group-item', 'menu-module-item')
+
+        const detailDiv = document.createElement('div')
+        detailDiv.classList.add('exercise-details')
+
         listItem.dataset.id = exerciseId
-        listItem.innerText = `*  ${exerciseName}
-        ${reps} reps ${sets} sets ${weight} kg`
+        listItem.innerText = `*  ${exerciseName}`
+        detailDiv.innerText = `${reps} reps / ${sets} sets / ${weight} kg`
         console.log(listItem)
         listGroup.appendChild(listItem)
+        listItem.appendChild(detailDiv)
         listGroup.appendChild(editBtn)
       })
     }
@@ -91,14 +93,12 @@ export async function renderItemsInMenuModule (itemContainers) {
 }
 
 export async function renderSubmitMenuBtn () {
-  const welcomeContainer = document.querySelector('.welcome')
-  welcomeContainer.classList.add('btn')
+  const menuContainer = document.querySelector('.menu-module-container')
   const SubmitMenuBtn = document.createElement('button')
 
   SubmitMenuBtn.innerText = 'Save into Schedule'
-
   SubmitMenuBtn.classList.add('btn', 'btn-primary') // Example Bootstrap classes
   SubmitMenuBtn.id = 'submit-menu'
-  welcomeContainer.appendChild(SubmitMenuBtn)
+  menuContainer.appendChild(SubmitMenuBtn)
   return SubmitMenuBtn
 }

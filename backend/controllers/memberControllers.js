@@ -44,7 +44,7 @@ const authControllers = {
       const member = await Members.findOne({ where: { email } })
 
       if (!member || !await bcrypt.compare(password, member.password)) {
-        return res.status(401).json({ message: 'Invalid credentials' })
+        return res.status(401).json({ message: 'Invalid email or password' })
       }
       const token = jwt.sign({ id: member.id, username: member.username, email: member.email }, SECRET_KEY, { expiresIn: '1h' })
       return res.json({ token })

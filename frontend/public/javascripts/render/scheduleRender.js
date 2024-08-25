@@ -17,26 +17,27 @@ document.addEventListener('DOMContentLoaded', async function () {
       calendar = new FullCalendar.Calendar(calendarEl, {
         initialView: 'dayGridMonth',
         events: schedules.map(schedule => ({
+          id: schedule.id,
           title: schedule.schedule_name,
           start: schedule.schedule_date,
           extendedProps: {
             scheduleId: schedule.id
           }
         })),
-        dateClick: function (info) {
-          const selectedDate = new Date(info.dateStr)
-          const today = new Date()
+        // dateClick: function (info) {
+        //   const selectedDate = new Date(info.dateStr)
+        //   const today = new Date()
 
-          // Clear the time part of both dates to compare only the date portion
-          selectedDate.setHours(0, 0, 0, 0)
-          today.setHours(0, 0, 0, 0)
+        //   // Clear the time part of both dates to compare only the date portion
+        //   selectedDate.setHours(0, 0, 0, 0)
+        //   today.setHours(0, 0, 0, 0)
 
-          if (selectedDate > today) {
-            alert('You can only create records for today or past dates!')
-          } else {
-            showModal(info.dateStr)
-          }
-        },
+        //   if (selectedDate > today) {
+        //     alert('You can only create records for today or past dates!')
+        //   } else {
+        //     showModal(info.dateStr)
+        //   }
+        // },
         eventClick: async function (info) {
           const scheduleId = info.event.extendedProps.scheduleId
           const scheduleItems = await getSchedulesItems(scheduleId)
@@ -45,6 +46,8 @@ document.addEventListener('DOMContentLoaded', async function () {
         }
       })
       calendar.render()
+      // Make calendar globally accessible
+      window.calendar = calendar
     }
 
     const { schedules } = await getSchedules()
@@ -244,51 +247,85 @@ function showModal (date) {
   })
 }
 
-function showScheduleItemsModal (scheduleItems, scheduleId) {
+async function showScheduleItemsModal (scheduleItems, scheduleId) {
   // Reset the modal buttons to their initial state
-  const editButton = document.getElementById('editButton')
-  const submitButton = document.getElementById('submitButton')
-  editButton.classList.remove('d-none')
-  submitButton.classList.add('d-none')
+  // const editButton = document.getElementById('editButton');
 
-  let modalContent = `<input type="hidden" name="scheduleId" value="${scheduleId}">`
+  // const submitButton = document.getElementById('submitButton');
+  // editButton.classList.remove('d-none');
+  // submitButton.classList.add('d-none');
 
-  // Create a simple list of schedule items
-  modalContent += '<ul class="list-group">'
+  // Create the hidden input for scheduleId
+  const hiddenInput = document.createElement('input')
+  hiddenInput.type = 'hidden'
+  hiddenInput.name = 'scheduleId'
+  hiddenInput.value = scheduleId
+  hiddenInput.classList.add('hidden-input')
+
+  // Create the unordered list element with the class "list-group"
+  const ulElement = document.createElement('ul')
+  ulElement.className = 'list-group'
+
+  // Loop through schedule items and create list items
   scheduleItems.forEach((item) => {
-    modalContent += `
-      <li class="list-group-item" id="item-${item.id}">
-      <div><strong>Exercise:</strong> ${item.name}</div></br>
-        <div class="d-flex">
-          <div><strong>Reps:</strong> ${item.reps}</div>
-          <div><strong>Sets:</strong> ${item.sets}</div>
-          <div><strong>Weight:</strong> ${item.weight} kg</div>
-        </div>
-        <button type="button" class="btn btn-danger btn-sm delete-btn d-none mt-2" data-exercise-id="${item.id}">Delete</button>
-      </li>`
+    // Create the list item element with the class "list-group-item"
+    const liElement = document.createElement('li')
+    liElement.className = 'list-group-item'
+    liElement.id = `item-${item.id}`
+
+    // Create the div for the exercise name
+    const exerciseNameDiv = document.createElement('div')
+    exerciseNameDiv.innerHTML = `<strong>${item.name}</strong> `
+
+    // Create the div for exercise details with the class "exercise-details"
+    const exerciseDetailsDiv = document.createElement('div')
+    exerciseDetailsDiv.className = 'exercise-details'
+    exerciseDetailsDiv.textContent = `${item.reps} reps / ${item.sets} sets / ${item.weight} kg`
+
+    // // Create the delete button
+    // const deleteButton = document.createElement('button');
+    // deleteButton.type = 'button';
+    // deleteButton.className = 'btn btn-danger btn-sm delete-btn d-none mt-2';
+    // deleteButton.setAttribute('data-exercise-id', item.id);
+    // deleteButton.textContent = 'Delete';
+
+    // Append the exercise name, details, and delete button to the list item
+    liElement.appendChild(exerciseNameDiv)
+    liElement.appendChild(exerciseDetailsDiv)
+    // liElement.appendChild(deleteButton);
+
+    // Append the list item to the unordered list
+    ulElement.appendChild(liElement)
   })
-  modalContent += '</ul>'
 
-  document.querySelector('#scheduleItemModal .modal-body').innerHTML = modalContent
+  // Get the modal body and clear any existing content
+  const modalBody = document.querySelector('#scheduleItemModal .modal-body')
+  modalBody.innerHTML = '' // Clear any existing content
 
+  // Append the hidden input and the unordered list to the modal body
+  modalBody.appendChild(hiddenInput)
+  modalBody.appendChild(ulElement)
+
+  // Show the modal
   $('#scheduleItemModal').modal('show')
 
-  const deleteButtons = document.querySelectorAll('.delete-btn')
-  const itemsToDelete = new Set()
+  // // Handle delete button functionality
+  // const deleteButtons = document.querySelectorAll('.delete-btn');
+  // const itemsToDelete = new Set();
 
-  editButton.addEventListener('click', function () {
-    deleteButtons.forEach(button => button.classList.remove('d-none'))
-    editButton.classList.add('d-none')
-    submitButton.classList.remove('d-none')
-  })
+  // editButton.addEventListener('click', function () {
+  //   deleteButtons.forEach(button => button.classList.remove('d-none'));
+  //   editButton.classList.add('d-none');
+  //   submitButton.classList.remove('d-none');
+  // });
 
-  deleteButtons.forEach(button => {
-    button.addEventListener('click', function () {
-      const exerciseId = this.getAttribute('data-exercise-id')
-      itemsToDelete.add(exerciseId)
-      document.getElementById(`item-${exerciseId}`).remove() // Remove item from modal
-    })
-  })
+  // deleteButtons.forEach(button => {
+  //   button.addEventListener('click', function () {
+  //     const exerciseId = this.getAttribute('data-exercise-id');
+  //     itemsToDelete.add(exerciseId);
+  //     document.getElementById(`item-${exerciseId}`).remove(); // Remove item from modal
+  //   });
+  // });
 
   document.getElementById('editScheduleForm').addEventListener('submit', async function (event) {
     event.preventDefault()

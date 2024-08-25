@@ -19,6 +19,7 @@ const scheduleControllers = {
       res.json({ success: false, error: error.message })
     }
   },
+  //! remenber to record detail
   addIntoScheduleItems: async (req, res) => {
     const memberId = req.memberId
     const { sectionIds, scheduleId } = req.body
@@ -58,7 +59,10 @@ const scheduleControllers = {
       const scheduleItems = moduleItems.map(item => ({
         schedule_id: scheduleId,
         section_id: moduleIdSectionMap[item.module_id], // Get section_id from the moduleIdSectionMap
-        exercise_id: item.exercise.id // Get the exercise_id from the associated exercise
+        exercise_id: item.exercise.id, // Get the exercise_id from the associated exercise
+        reps: item.reps,
+        sets: item.sets,
+        weight: item.weight
       }))
 
       await ScheduleItems.bulkCreate(scheduleItems)
@@ -154,6 +158,26 @@ const scheduleControllers = {
     } catch (error) {
       console.error('Error updating schedule items:', error)
       res.status(500).json({ success: false, message: 'Server error' })
+    }
+  },
+  deleteSchedule: async (req, res) => {
+    const scheduleId = req.params.scheduleId
+
+    try {
+      const deletedRows = await Schedules.destroy({
+        where: {
+          id: scheduleId
+        }
+      })
+
+      if (deletedRows === 0) {
+        return res.status(404).json({ success: false, message: 'Schedule not found' })
+      }
+
+      return res.status(200).json({ success: true, message: 'Schedule deleted successfully' })
+    } catch (error) {
+      console.error('Error deleting schedule:', error)
+      return res.status(500).json({ success: false, message: 'Server error' })
     }
   }
 }

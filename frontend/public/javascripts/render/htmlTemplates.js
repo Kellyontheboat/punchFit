@@ -22,24 +22,24 @@ export const navHTML = `
     <!-- Modal: Login -->
     <div id="loginPopup" class="custom-raw-popup">
       <div class="popup-content">
-        <div class="popup-decorate"></div>
+    
         <div class="popup-title-container">
-          <h2>登入會員帳號</h2>
+          <h2>Login</h2>
           <span class="close">&times;</span>
         </div>
         <form action="/api/user/auth" method="put" id="signin-form-login" novalidate>
           <div class="form-group">
-            <input type="email" id="email" name="email" placeholder="輸入電子信箱" required>
+            <input type="email" id="email" name="email" placeholder="Email" required>
           </div>
           <div class="form-group">
-            <input type="password" id="password" name="password" placeholder="輸入密碼" required>
+            <input type="password" id="password" name="password" placeholder="Password" required>
           </div>
           <div class="form-group">
-            <button type="submit">登入帳戶</button>
+            <button type="submit">Login</button>
           </div>
         </form>
         <span id="login-msg" class="login-popup-item"></span>
-        <span class="login-popup-item" id="register-popup-btn">還沒有帳戶？點此註冊</span>
+        <span class="login-popup-item" id="register-popup-btn">Don't have an account yet? <br>Click here to sign up.</span>
 
       </div>
     </div>
@@ -50,25 +50,25 @@ export const navHTML = `
   <div class="popup-content">
     <div class="popup-decorate"></div>
     <div class="popup-title-container">
-      <h2>註冊會員帳號</h2>
+      <h2>Register</h2>
       <span class="close">&times;</span>
     </div>
     <form id="signin-form-register" novalidate>
       <div class="form-group">
-        <input type="text" id="name" name="username" placeholder="輸入姓名" required>
+        <input type="text" id="name" name="username" placeholder="User Name" required>
       </div>
       <div class="form-group">
-        <input type="email" id="register-email" name="email" placeholder="輸入電子郵件" required>
+        <input type="email" id="register-email" name="email" placeholder="Email" required>
       </div>
       <div class="form-group">
-        <input type="password" id="register-password" name="password" placeholder="輸入密碼" required>
+        <input type="password" id="register-password" name="password" placeholder="Password" required>
       </div>
       <div class="form-group">
-        <button type="submit">註冊新帳戶</button>
+        <button type="submit">Create An Account</button>
       </div>
     </form>
     <span id="register-msg"></span>
-    <span class="register-popup-item" id="login-popup-btn">已經有帳戶了？點此登入</span>
+    <span class="register-popup-item" id="login-popup-btn">Already have an account? <br>Click here to log in.</span>
 
   </div>
 </div>

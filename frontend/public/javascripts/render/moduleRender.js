@@ -21,7 +21,7 @@ export async function renderModules (user, isAuthenticated) {
       // specify the moduleWrap of the module by sectionId in this loop
       const moduleWrap = document.querySelector(`.section-item[data-id="${sectionId}"]`)
         .closest('.section-container')
-        .querySelector('.module-wrap')
+        .querySelector('.part-module-wrap')
       console.log(moduleWrap)
       if (moduleWrap) {
         const moduleSpace = moduleWrap.querySelector('.module-item')
@@ -46,6 +46,7 @@ export async function renderModules (user, isAuthenticated) {
   }
 }
 
+// render the module on each section page
 export async function renderEditModule (isAuthenticated) {
   if (!isAuthenticated) return
 
@@ -55,23 +56,23 @@ export async function renderEditModule (isAuthenticated) {
   const sections = JSON.parse(localStorage.getItem('sections'))
   const section = sections[sectionId - 1]
   const moduleWrap = document.createElement('div')
-  moduleWrap.classList.add('module-wrap')
+  moduleWrap.classList.add('part-module-wrap')
 
   // module title(section name)
   const menuSectionItem = document.createElement('div')
-  menuSectionItem.classList.add('menu-section-item')
+  menuSectionItem.classList.add('part-menu-section-item')
   menuSectionItem.dataset.sectionId = sectionId
   menuSectionItem.textContent = section
 
   moduleWrap.appendChild(menuSectionItem)
 
   const moduleDiv = document.createElement('div')
-  moduleDiv.classList.add('module-editing', 'list-group')
+  moduleDiv.classList.add('part-module-editing', 'list-group')
   moduleDiv.dataset.sectionId = sectionId
 
   if (modules.length === 0) {
     moduleDiv.textContent = `Let's select exercises into the ${section} module by clicking "+" in each card!`
-    moduleDiv.classList.remove('module-editing')
+    moduleDiv.classList.remove('part-module-editing')
     moduleDiv.classList.add('module-item')
     moduleWrap.appendChild(moduleDiv)
   } else {
@@ -79,6 +80,16 @@ export async function renderEditModule (isAuthenticated) {
     moduleDiv.dataset.id = module.id
     moduleWrap.appendChild(moduleDiv)
   }
+
+  // Collapse/Expand button
+  const collapseBtn = document.createElement('div')
+  collapseBtn.classList.add('collapse-btn')
+  collapseBtn.textContent = '<  >'
+  moduleWrap.appendChild(collapseBtn)
+  console.log(moduleDiv, collapseBtn)
+  collapseBtn.addEventListener('click', () => {
+    moduleWrap.classList.toggle('collapsed')
+  })
 
   const hrElement = document.querySelector('hr')
   hrElement.insertAdjacentElement('afterend', moduleWrap)
@@ -88,6 +99,7 @@ export async function renderEditModule (isAuthenticated) {
 // only render when the module is already exist
 export async function renderItemsInModule (itemContainers) {
   for (const container of itemContainers) {
+    console.log(container)
     const moduleId = container.dataset.id
     if (!moduleId) continue
 
@@ -110,16 +122,62 @@ export async function renderItemsInModule (itemContainers) {
       listItem.dataset.exerciseId = exerciseId
       listItem.dataset.id = id
 
-      // Replace the static text with input fields for reps, sets, and weight
-      listItem.innerHTML = `
-  * ${exerciseName}
-  <div class="exercise-details">
-    <input type="number" class="form-control reps-input" value="${reps}" placeholder="Reps"> reps 
-    <input type="number" class="form-control sets-input" value="${sets}" placeholder="Sets"> sets 
-    <input type="number" class="form-control weight-input" value="${weight}" placeholder="Weight"> kg
-    <button class="btn btn-danger delete-menu-item">Delete</button>
-  </div>
-`
+      // Create the div for exerciseName
+      const exerciseNameDiv = document.createElement('div')
+      exerciseNameDiv.className = 'module-exercise-name'
+      exerciseNameDiv.textContent = `* ${exerciseName}`
+
+      // Create the div for exercise details
+      const exerciseDetailsDiv = document.createElement('div')
+      exerciseDetailsDiv.className = 'exercise-details'
+
+      // Create the input for reps
+      const repsInput = document.createElement('input')
+      repsInput.type = 'number'
+      repsInput.className = 'form-control reps-input'
+      repsInput.value = reps
+      repsInput.placeholder = 'Reps'
+
+      // Create the text node for reps
+      const repsText = document.createTextNode(' reps ')
+
+      // Create the input for sets
+      const setsInput = document.createElement('input')
+      setsInput.type = 'number'
+      setsInput.className = 'form-control sets-input'
+      setsInput.value = sets
+      setsInput.placeholder = 'Sets'
+
+      // Create the text node for sets
+      const setsText = document.createTextNode(' sets ')
+
+      // Create the input for weight
+      const weightInput = document.createElement('input')
+      weightInput.type = 'number'
+      weightInput.className = 'form-control weight-input'
+      weightInput.value = weight
+      weightInput.placeholder = 'Weight'
+
+      // Create the text node for weight
+      const weightText = document.createTextNode(' kg')
+
+      // Create the delete button
+      const deleteButton = document.createElement('button')
+      deleteButton.className = 'btn btn-danger delete-menu-item'
+      deleteButton.textContent = 'Del'
+
+      // Append the inputs and text nodes to the exerciseDetailsDiv
+      exerciseDetailsDiv.appendChild(repsInput)
+      exerciseDetailsDiv.appendChild(repsText)
+      exerciseDetailsDiv.appendChild(setsInput)
+      exerciseDetailsDiv.appendChild(setsText)
+      exerciseDetailsDiv.appendChild(weightInput)
+      exerciseDetailsDiv.appendChild(weightText)
+      exerciseNameDiv.appendChild(deleteButton)
+
+      // Append exerciseNameDiv and exerciseDetailsDiv to the listItem
+      listItem.appendChild(exerciseNameDiv)
+      listItem.appendChild(exerciseDetailsDiv)
 
       listGroup.appendChild(listItem)
     })
@@ -136,26 +194,26 @@ export async function renderItemsInModule (itemContainers) {
   }
 }
 
+// new added item render right away
 export function renderExerciseToModuleContainer ({ funcModuleId, exerciseId, exerciseName, reps, sets, weight }) {
   let moduleContainer = document.querySelector(`[data-id="${funcModuleId}"]`)
 
   if (!moduleContainer) {
-    const existingElement = document.querySelector('.module-item')
-    const moduleWrap = document.createElement('div')
-    moduleWrap.classList.add('module-wrap')
+    const existingElement = document.querySelector('.list-group')
+    const newListGroup = document.createElement('div')
+    newListGroup.classList.add('part-module-editing', 'list-group')
+    newListGroup.dataset.id = funcModuleId
 
-    moduleContainer = document.createElement('div')
-    moduleContainer.classList.add('module-editing', 'list-group')
-    moduleContainer.dataset.id = funcModuleId
-
-    moduleWrap.appendChild(moduleContainer)
-    existingElement.replaceWith(moduleWrap)
+    existingElement.replaceWith(newListGroup)
+    moduleContainer = newListGroup
   }
 
-  // if the module just been created it doesn't have ul.list-group
-  const listGroup = moduleContainer.querySelector('.list-group') || document.createElement('ul')
-  listGroup.classList.add('list-group')
-  moduleContainer.appendChild(listGroup)
+  let listGroup = moduleContainer.querySelector('ul.list-group')
+  if (!listGroup) {
+    listGroup = document.createElement('ul')
+    listGroup.classList.add('list-group')
+    moduleContainer.appendChild(listGroup)
+  }
 
   const listItem = document.createElement('li')
   listItem.classList.add('list-group-item', 'menu-module-item')
@@ -168,16 +226,18 @@ export function renderExerciseToModuleContainer ({ funcModuleId, exerciseId, exe
     <input type="number" class="form-control reps-input" value="${reps}" placeholder="Reps"> reps 
     <input type="number" class="form-control sets-input" value="${sets}" placeholder="Sets"> sets 
     <input type="number" class="form-control weight-input" value="${weight}" placeholder="Weight"> kg
-    <button class="btn btn-danger delete-menu-item">Delete</button>
+    <button class="btn btn-danger delete-menu-item">Del</button>
     </div>
   `
 
   const saveBtn = listGroup.querySelector('.save-menu-module')
   if (saveBtn) {
+    console.log(listGroup)
     listGroup.insertBefore(listItem, saveBtn)
   } else {
     listGroup.appendChild(listItem)
   }
+
   if (!saveBtn) {
     const newSaveBtn = document.createElement('button')
     newSaveBtn.classList.add('btn', 'btn-primary', 'save-menu-module')
@@ -187,29 +247,3 @@ export function renderExerciseToModuleContainer ({ funcModuleId, exerciseId, exe
   }
   addListenerDeleteModuleItem(listGroup)
 }
-
-// export function renderExerciseToModuleContainer ({ funcModuleId, exerciseId, exerciseName, reps, sets, weight }) {
-//   let moduleContainer = document.querySelector(`[data-id="${funcModuleId}"]`)
-//   if (!moduleContainer) {
-//     const existingElement = document.querySelector('.module-item')
-
-//     moduleContainer = document.createElement('div')
-//     moduleContainer.classList.add('module-editing')
-//     moduleContainer.offsetHeight// Force reflow (read a property to trigger reflow)
-//     moduleContainer.dataset.id = funcModuleId
-//     console.log(existingElement)
-//     existingElement.replaceWith(moduleContainer)
-//   }
-
-//   const itemDiv = document.createElement('div')
-//   const detailDiv = document.createElement('div')
-
-//   itemDiv.classList.add('exercise-item')
-//   itemDiv.dataset.id = exerciseId
-
-//   detailDiv.classList.add('exercise-item-detail')
-//   detailDiv.innerText = `*${exerciseName} ${reps} reps ${sets} sets ${weight} kg`
-
-//   moduleContainer.appendChild(itemDiv)
-//   itemDiv.appendChild(detailDiv)
-// }

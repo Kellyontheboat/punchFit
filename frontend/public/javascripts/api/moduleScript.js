@@ -118,7 +118,7 @@ export async function getModuleBySection (sectionId) {
 export async function addExerciseToModule (exerciseId, exerciseName) {
   let funcModuleId = ''
   const { moduleId, modules } = await getModuleBySection(sectionId)
-  const moduleEdit = document.querySelector('.module-editing')
+  const moduleEdit = document.querySelector('.part-module-editing')
   console.log(modules)
   if (modules.length === 0 && !moduleEdit) {
     funcModuleId = await createModule()
@@ -143,13 +143,11 @@ export async function addExerciseToModule (exerciseId, exerciseName) {
 // add Exercise into memo
 export async function addListenerAddMemoBtn () {
   const addBtn = document.querySelectorAll('.add-into-memo')
+  console.log(addBtn)
 
   addBtn.forEach((btn, index) => {
-    if (!btn) {
-      console.error(`Button at index ${index} is null or undefined.`)
-      return
-    }
-
+    console.log(btn)
+    console.log(btn.closest('.card'))
     const exerciseId = btn.closest('.card').getAttribute('data-id')
 
     btn.addEventListener('click', () => {
@@ -159,6 +157,45 @@ export async function addListenerAddMemoBtn () {
       addExerciseToModule(exerciseId, exerciseName)
     })
   })
+}
+
+let selectedExerciseId = null
+let selectedExerciseName = null
+
+export async function addListenerModalAddMemoBtn () {
+  const exerciseDetailBtns = document.querySelectorAll('.exercise-detail')
+
+  exerciseDetailBtns.forEach((btn) => {
+    btn.addEventListener('click', function () {
+      selectedExerciseId = btn.dataset.id
+      const card = btn.closest('.card')
+      selectedExerciseName = card.querySelector('.card-title').innerText
+
+      console.log('Exercise ID:', selectedExerciseId)
+      console.log('Exercise Name:', selectedExerciseName)
+    })
+  })
+
+  // Listen for when the modal is shown
+  const exerciseModal = document.querySelector('#exerciseModal')
+  exerciseModal.addEventListener('shown.bs.modal', function () {
+    const modalAddBtn = exerciseModal.querySelector('.btn-primary')
+
+    // Clear previous listeners to avoid multiple triggers
+    modalAddBtn.removeEventListener('click', handleModalAddBtnClick)
+
+    // Add new event listener
+    modalAddBtn.addEventListener('click', handleModalAddBtnClick)
+  })
+}
+
+function handleModalAddBtnClick () {
+  if (selectedExerciseId && selectedExerciseName) {
+    console.log('Start to add exercise into module')
+    addExerciseToModule(selectedExerciseId, selectedExerciseName)
+  } else {
+    console.log('No exercise selected')
+  }
 }
 
 export async function getExerciseInModule (moduleId) {
@@ -174,7 +211,7 @@ export async function getExerciseInModule (moduleId) {
 }
 
 export async function collectModuleData () {
-  const moduleContainer = document.querySelector('.module-editing')
+  const moduleContainer = document.querySelector('.part-module-editing')
   const moduleId = moduleContainer.getAttribute('data-id') // Retrieve the moduleId
   const items = moduleContainer.querySelectorAll('.menu-module-item')
 

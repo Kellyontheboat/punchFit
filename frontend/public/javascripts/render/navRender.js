@@ -59,13 +59,20 @@ async function closeButtons () {
 
 export function navScheduleBtn (isAuthenticated) {
   const navScheduleBtn = document.getElementById('my-schedule-btn')
+  const navModuleBtn = document.querySelector('.module-link')
 
-  navScheduleBtn.addEventListener('click', (event) => {
-    if (isAuthenticated) {
-      window.location.href = '/schedules'
-    } else {
-      event.preventDefault()
-      showLoginModal()
+  const btns = [navScheduleBtn, navModuleBtn]
+
+  btns.forEach(btn => {
+    if (btn) {
+      btn.addEventListener('click', (event) => {
+        if (isAuthenticated) {
+          window.location.href = '/schedules'
+        } else {
+          event.preventDefault()
+          showLoginModal()
+        }
+      })
     }
   })
 }

@@ -80,8 +80,8 @@ export async function loginformSubmission () {
           const errorData = await response.json()
           console.log(errorData)
 
-          if (errorData.message === 'Incorrect email or password') {
-            msgSpan.innerText = '電子郵件或密碼錯誤'
+          if (errorData.message === 'Invalid email or password') {
+            msgSpan.innerText = 'Email or Password is wrong'
             msgSpan.style.color = 'red'
           }
         }
@@ -141,7 +141,6 @@ export async function registerformSubmission () {
         localStorage.setItem('registeredEmail', data.email)
       } else {
         const errorData = await response.json()
-        console.log(errorData)
         // key of custom_http_exception_handler: message
         // if email already exist or ...
         if (errorData.message) {
