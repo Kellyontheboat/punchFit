@@ -510,8 +510,50 @@ button {
 }
 
 .card-body {
-  background-color: #3f4040;
+  background-color: #403f3f;
 }
+
+#exerciseModal
+div {
+  font-size: 13px;
+}
+
+h4.card-title {
+  font-size: 15px;
+}
+
+.card.exercise {
+  height: 300px;
+}
+
+.card.exercise
+img {
+  width: 100%;
+    height: auto;
+    object-fit: cover;
+  overflow: hidden;
+}
+#exerciseModal .modal-dialog{
+  display: flex;
+  justify-content: center;
+  max-width: 1200px;
+  margin-left: auto;
+    margin-right: auto;
+}
+#exerciseModal .modal-content{
+  width: 1050px;
+  
+}
+
+#exerciseModal .exercise-images {
+  width: 500px;
+  max-height: 60vh;
+  
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+}
+
 
 /* ! exercises part page */
 .parts-placeholder {
@@ -546,6 +588,7 @@ button {
 .part-item {
   font-size: 20px;
 }
+
 
 /* !training section */
 .section-card {

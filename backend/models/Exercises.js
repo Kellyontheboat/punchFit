@@ -66,6 +66,8 @@ module.exports = function (sequelize, DataTypes) {
 
     Exercise.hasMany(models.Images, { foreignKey: 'exercises_id' })
 
+    Exercise.hasMany(models.Instructions, { foreignKey: 'exercises_id' })
+
     Exercise.hasMany(models.ScheduleItems, { foreignKey: 'exercise_id', as: 'scheduleItems' })
   }
 

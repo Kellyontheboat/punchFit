@@ -2,7 +2,7 @@ import { navHTML, hrHTML, injectHTML } from './render/htmlTemplates.js'
 
 import { showLoginModal, navScheduleBtn, updateLoginButton, initializeModals } from './render/navRender.js'
 
-import { addTrainingRecordBtn, renderSections, renderPartsBySection, renderExercisesByPart, sectionCheckBox, partContainerStickOnTop } from './render/exerciseRender.js'
+import { addTrainingRecordBtn, renderSections, renderPartsBySection, renderExercisesByPart, exerciseCardModal, sectionCheckBox, partContainerStickOnTop } from './render/exerciseRender.js'
 
 import { renderModules, renderItemsInModule, renderEditModule } from './render/moduleRender.js'
 
@@ -45,6 +45,7 @@ document.addEventListener('DOMContentLoaded', async function () {
   await fetchSections()
   const sections = await fetchSections()
   if (pathArray[1] === 'schedules') {
+    console.log(sections)
     // await addTrainingRecordBtn(isAuthenticated)
     welcomeMessage()
     addListenerDelScheduleBtn()
@@ -74,13 +75,14 @@ document.addEventListener('DOMContentLoaded', async function () {
     const itemContainers = document.querySelectorAll('.part-module-editing')
     renderItemsInModule(itemContainers)
 
-    const { exercises, exercisesId, exercisesImgs } = await fetchExercisesByPart(firstPartId)
-    await renderExercisesByPart({ exercises, exercisesId, exercisesImgs, user })
+    const { data, exercises, exercisesId, exercisesImgs } = await fetchExercisesByPart(firstPartId)
+    await renderExercisesByPart({ data, exercises, exercisesId, exercisesImgs, user })
+    //exerciseCardModal(data)
 
     renderPartsBySection({ parts, partsId })
     addPartListener(user)
     addListenerAddMemoBtn()
-    addListenerModalAddMemoBtn()
+    addListenerModalAddMemoBtn(data)
     partContainerStickOnTop()
   } else {
     // if homepage

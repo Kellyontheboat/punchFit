@@ -40,9 +40,11 @@ export async function addListenerEditMenuBtn () {
 export async function addListenerSubmitMenu () {
   const SubmitMenuBtn = await renderSubmitMenuBtn()
   console.log(SubmitMenuBtn)
-  SubmitMenuBtn.addEventListener('click', function (event) {
+  SubmitMenuBtn.addEventListener('click', async function (event) {
     event.preventDefault()
-    submitMenu()
+    const scheduleName = await submitMenu()
+    console.log(scheduleName)
+    if (!scheduleName) return
 
     const lastUrl = sessionStorage.getItem('lastUrl')
 
@@ -68,11 +70,16 @@ export async function submitMenu () {
   const today = new Date()
   const currentDate = today.toLocaleDateString('en-CA')
   console.log(currentDate)
-  const scheduleName = `${currentDate} workout`
-  console.log(scheduleName)
+  const scheduleName = document.getElementById('schedule-name-input').value;
+
+  if (!scheduleName) {
+    alert('Schedule name cannot be empty!');
+    return;
+  }
 
   const scheduleId = await postSchedule({ scheduleName, date: currentDate })
   console.log(scheduleId)
   addItemsIntoSchedule({ sectionIds, scheduleId })
   console.log(sectionIds)
+  return scheduleName
 }

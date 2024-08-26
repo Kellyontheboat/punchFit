@@ -267,6 +267,7 @@ async function showScheduleItemsModal (scheduleItems, scheduleId) {
   ulElement.className = 'list-group'
 
   // Loop through schedule items and create list items
+  console.log(scheduleItems)
   scheduleItems.forEach((item) => {
     // Create the list item element with the class "list-group-item"
     const liElement = document.createElement('li')
@@ -275,7 +276,7 @@ async function showScheduleItemsModal (scheduleItems, scheduleId) {
 
     // Create the div for the exercise name
     const exerciseNameDiv = document.createElement('div')
-    exerciseNameDiv.innerHTML = `<strong>${item.name}</strong> `
+    exerciseNameDiv.innerHTML = `<strong>${item.section}: </strong><em>${item.name}</em> `
 
     // Create the div for exercise details with the class "exercise-details"
     const exerciseDetailsDiv = document.createElement('div')

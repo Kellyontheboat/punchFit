@@ -1,6 +1,6 @@
 const db = require('../models')
 
-const { Parts, Sections, Exercises, Images } = db
+const { Parts, Sections, Exercises, Images, Instructions } = db
 
 const exerciseControllers = {
   getBodySections: async (req, res) => {
@@ -37,10 +37,16 @@ const exerciseControllers = {
         where: {
           parts_id: partId
         },
-        include: [{
+        include: [
+          {
           model: Images,
-          attributes: ['url']
-        }],
+          attributes: ['url', 'exercises_id']
+          },
+          {
+            model: Instructions,
+            attributes: ['instruction_text', 'exercises_id']
+          }
+      ],
         order: [['id', 'ASC']]
       })
 
@@ -61,6 +67,8 @@ const exerciseControllers = {
   }
 
 }
+
+module.exports = exerciseControllers
 
 // getExercisesByBodyPart: async (req, res) => {
 //   const { bodyPart } = req.query // Read the query parameter
@@ -93,7 +101,6 @@ const exerciseControllers = {
 
 // }
 
-module.exports = exerciseControllers
 
 // const messages = await Message.findAll({
 //   order: [['createdAt', 'DESC']],

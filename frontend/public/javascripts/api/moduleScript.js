@@ -1,5 +1,7 @@
 import { checkLoginStatus } from './authScript.js'
 import { renderExerciseToModuleContainer } from '../render/moduleRender.js'
+import { exerciseCardModal } from '../render/exerciseRender.js'
+
 // create new module by clicking add new
 // Btn to create new module using sectionId+memberId
 const sectionId = parseInt(window.location.pathname.split('/')[2], 10)
@@ -162,17 +164,25 @@ export async function addListenerAddMemoBtn () {
 let selectedExerciseId = null
 let selectedExerciseName = null
 
-export async function addListenerModalAddMemoBtn () {
+export async function addListenerModalAddMemoBtn(data) {
+  console.log(data)
   const exerciseDetailBtns = document.querySelectorAll('.exercise-detail')
 
   exerciseDetailBtns.forEach((btn) => {
     btn.addEventListener('click', function () {
       selectedExerciseId = btn.dataset.id
+      
+      const selectedExerciseIdInt = parseInt(btn.dataset.id, 10);
+
       const card = btn.closest('.card')
       selectedExerciseName = card.querySelector('.card-title').innerText
 
       console.log('Exercise ID:', selectedExerciseId)
       console.log('Exercise Name:', selectedExerciseName)
+      const selectedExerciseData = data.find(exercise => exercise.id === selectedExerciseIdInt);
+      console.log(data)
+      console.log(selectedExerciseData)
+      exerciseCardModal(selectedExerciseData);
     })
   })
 
@@ -191,6 +201,8 @@ export async function addListenerModalAddMemoBtn () {
 
 function handleModalAddBtnClick () {
   if (selectedExerciseId && selectedExerciseName) {
+    console.log('Exercise ID:', selectedExerciseId)
+    console.log('Exercise Name:', selectedExerciseName)
     console.log('Start to add exercise into module')
     addExerciseToModule(selectedExerciseId, selectedExerciseName)
   } else {

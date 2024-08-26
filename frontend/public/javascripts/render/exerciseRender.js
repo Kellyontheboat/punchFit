@@ -98,7 +98,7 @@ export function renderPartsBySection ({ parts, partsId }) {
   })
 }
 
-export async function renderExercisesByPart ({ exercises, exercisesId, exercisesImgs, user }) {
+export async function renderExercisesByPart ({ data, exercises, exercisesId, exercisesImgs, user }) {
   const exercisesContainer = document.querySelector('.exercises-container')
   exercisesContainer.innerHTML = ''
 
@@ -107,6 +107,7 @@ export async function renderExercisesByPart ({ exercises, exercisesId, exercises
   rowDiv.classList.add('row', 'g-3')
 
   exercises.forEach((exercise, index) => {
+    console.log(exercise)
     // Create a Bootstrap column for each exercise card
     const colDiv = document.createElement('div')
     colDiv.classList.add('col-md-4', 'col-sm-6')
@@ -114,7 +115,7 @@ export async function renderExercisesByPart ({ exercises, exercisesId, exercises
 
     // Create the Bootstrap card
     const cardDiv = document.createElement('div')
-    cardDiv.classList.add('card')
+    cardDiv.classList.add('card', 'exercise')
     cardDiv.style.width = '18rem' // adjust card width
     cardDiv.dataset.id = exercisesId[index]
 
@@ -166,6 +167,61 @@ export async function renderExercisesByPart ({ exercises, exercisesId, exercises
   // Append the row to the container
   exercisesContainer.appendChild(rowDiv)
 }
+
+export async function exerciseCardModal(data) {
+  console.log(data);
+
+  const exerciseCardModal = document.querySelector('#exerciseModal');
+
+  const modalTitle = exerciseCardModal.querySelector('.modal-title');
+  modalTitle.innerText = data.name;
+
+  // Clear the existing content in the modal body
+  const modalBody = exerciseCardModal.querySelector('.modal-body');
+  modalBody.innerHTML = '';
+
+  // Create elements for the modal body content
+  const forceParagraph = document.createElement('div');
+  forceParagraph.innerText = `Force: ${data.force}`;
+
+  const levelParagraph = document.createElement('div');
+  levelParagraph.innerText = `Level: ${data.level}`;
+
+  const mechanicParagraph = document.createElement('div');
+  mechanicParagraph.innerText = `Mechanic: ${data.mechanic}`;
+
+  const equipmentParagraph = document.createElement('div');
+  equipmentParagraph.innerText = `Equipment: ${data.equipment}`;
+
+  const categoryParagraph = document.createElement('div');
+  categoryParagraph.innerText = `Category: ${data.category}`;
+
+  // Create a div for images
+  const imagesDiv = document.createElement('div');
+  imagesDiv.classList.add('exercise-images');
+
+  // Loop through images and create img elements
+  data.images.forEach(url => {
+    const imgElement = document.createElement('img');
+    imgElement.src = url;
+    imgElement.alt = data.name;
+    imgElement.classList.add('img-fluid', 'mb-2'); // Add Bootstrap classes for styling
+    imagesDiv.appendChild(imgElement);
+  });
+
+  // Append all created elements to the modal body
+  modalBody.appendChild(forceParagraph);
+  modalBody.appendChild(levelParagraph);
+  modalBody.appendChild(mechanicParagraph);
+  modalBody.appendChild(equipmentParagraph);
+  modalBody.appendChild(categoryParagraph);
+  modalBody.appendChild(imagesDiv);
+
+  // Show the modal
+  const modalInstance = bootstrap.Modal.getOrCreateInstance(exerciseCardModal);
+  modalInstance.show();
+}
+
 
 export function partContainerStickOnTop () {
   window.addEventListener('scroll', function () {
