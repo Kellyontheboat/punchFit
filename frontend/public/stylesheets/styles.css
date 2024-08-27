@@ -11,6 +11,32 @@ body {
   background-color: #333434;
 }
 
+#submit-menu {
+  margin-top: 20px;
+  margin-bottom: 5px;
+}
+
+/* .alert-container {
+  position: relative;
+} */
+
+.alert {
+  width: 500px;
+  height: 200px;
+  position: fixed;
+  /* position: absolute; */
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 10;
+  display: flex;
+  justify-content: center;
+  /* Center horizontally */
+  align-items: center;
+  text-align: center;
+
+}
+
 .navbar-container {
   display: flex;
   justify-content: center;
@@ -46,17 +72,17 @@ body {
 }
 
 .nav-item-container .nav-item {
-  
+
   font-weight: 500;
   font-size: 16px;
-  
+
 }
 
 .nav-item-container {
   display: flex;
-    justify-content: space-between;
+  justify-content: space-between;
   align-items: center;
-  width: 150px;
+  width: 250px;
 }
 
 .nav-separator hr {
@@ -67,6 +93,7 @@ body {
 .modal-content {
   background-color: #333434;
 }
+
 .custom-raw-popup {
   display: none;
   position: fixed;
@@ -109,17 +136,13 @@ body {
   overflow-y: auto;
 }
 
-.popup-decorate {
-  width: 100%;
-  height: 10px;
-  border-radius: 6px 6px 0 0;
+#register-popup-btn,
+#login-popup-btn {
+  font-size: 20px;
   margin-bottom: 10px;
-  background: linear-gradient(270deg, #337788 0%, #66AABB 100%);
-  color: white;
-  box-sizing: border-box;
-  position: absolute;
-  top: 0;
-  left: 0;
+  border-bottom: 2px solid;
+    border-color: currentColor;
+    text-align: center;
 }
 
 .popup-title-container {
@@ -127,11 +150,9 @@ body {
   justify-content: center;
   align-items: center;
   position: relative;
-  /* Needed for absolute positioning of the close icon */
   width: 95%;
 
 }
-
 
 .close {
   color: #aaa;
@@ -141,11 +162,8 @@ body {
   margin-left: 30px;
   position: absolute;
   right: 10px;
-  /* Adjust distance from the right edge */
   top: 50%;
-  /* Center vertically */
   transform: translateY(-50%);
-  /* Fine-tune vertical centering */
 }
 
 .close:hover,
@@ -155,8 +173,6 @@ body {
   cursor: pointer;
 }
 
-#to-booking-btn,
-#booking-delete-btn,
 #login-popup-btn:hover,
 #register-popup-btn:hover,
 #login-register-btn,
@@ -205,21 +221,58 @@ button {
 /* ! welcome */
 
 .welcome {
-  width:90vw;
+  width: 90vw;
+  margin-right: auto;
+  margin-left: auto;
+  /* margin-bottom: 20px; */
+}
+
+.welcome-wrap-training {
+  display: flex;
+  justify-content: space-between;
+  width: 90vw;
   margin-right: auto;
   margin-left: auto;
 }
 
+.make-log {
+  width: 350px;
+  height: 50px;
+}
+
+.welcome.btn {
+  padding: 0;
+  margin-right: auto;
+  margin-left: auto;
+  display: flex;
+  flex-direction: column;
+
+}
+
+.welcome.btn button {
+  width: 100%;
+  height: 70px;
+  margin-top: 10px;
+  margin-bottom: 15px;
+}
+
+.welcome.btn div {
+  font-size: large;
+  color: #f2efee;
+  text-align: left;
+}
+
+
 /* ! img section */
-.row{
-  display:flex;
+.row {
+  display: flex;
   justify-content: center;
 }
 
 .section-img-container {
-      width: 80vw;
-      margin-left: auto;
-        margin-right: auto;
+  width: 80vw;
+  margin-left: auto;
+  margin-right: auto;
   display: flex;
   justify-content: center;
   margin-top: 30px;
@@ -235,7 +288,7 @@ button {
 
 .row-span-2 {
   grid-row: span 2;
-  
+
 }
 
 .col-md-3 {
@@ -247,16 +300,16 @@ button {
 
 .section-card {
   width: 100%;
-    height: 100%;
-      overflow: hidden;
+  height: 100%;
+  overflow: hidden;
   background-size: cover;
   background-position: center;
   display: flex;
   align-items: flex-end;
   border: 2px solid #ddd;
-    border-radius:15px;
-        position: relative;
-  
+  border-radius: 15px;
+  position: relative;
+
 }
 
 .overlay {
@@ -266,7 +319,6 @@ button {
   right: 0;
   bottom: 0;
   background-color: rgba(0, 0, 0, 0.5);
-  /* Adjust the transparency */
   z-index: 1;
 }
 
@@ -276,7 +328,7 @@ button {
   z-index: 1;
   position: relative;
   font-size: 40px;
-  
+
 }
 
 .h-100 {
@@ -291,30 +343,28 @@ button {
 .section-wrap {
   margin-top: 100px;
   margin-left: auto;
-    margin-right: auto;
-    
-  display:grid;
+  margin-right: auto;
+  display: grid;
   grid-template-columns: repeat(2, 1fr);
-    grid-gap: 30px;
-    width: 90vw;
-    
+  grid-gap: 30px;
+  width: 90vw;
+
 }
 
 .section-container {
-  display:flex;
+  display: flex;
   flex-direction: column;
   padding-bottom: 20px;
 }
 
 .section-item {
-  /* width:auto; */
-  height:80px;
+  height: 80px;
 }
 
-/* .modules-container {
-  width: 100%;
-    height: 150px;
-} */
+.module-wrap {
+  width: 28vw;
+  margin-top: 20px;
+}
 
 .module-item {
   width: 100%;
@@ -322,9 +372,31 @@ button {
   background-color: #4b4b4b;
 }
 
+.exercise-details {
+  height: 25px;
+  font-size: 13px;
+  flex-direction: row;
+  font-weight: 200;
+}
+
+.exercise-details input {
+  height: 20px;
+}
+
+.list-group-item {
+  padding: 5px;
+  height: 55px;
+  font-size: 15px;
+}
+
+.btn-danger {
+  font-size: 13px;
+  padding: 2px;
+}
+
 .add-module-btn-container {
   display: flex;
-    flex-direction: row;
+  flex-direction: row;
 }
 
 .add-module-btn {
@@ -335,14 +407,86 @@ button {
 }
 
 .module-editing {
-  width: 1000px;
-    height: 300px;
-    background-color: #fad12d;
+  background-color: #fad12d;
+}
+
+.part-module-wrap {
+  width: 28vw;
+  background-color: #fad12d;
+  position: fixed;
+  bottom: 0;
+  right: 0;
+  width: 400px;
+  height: auto;
+  background-color: #f8f9fa;
+  box-shadow: -2px 0 5px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease;
+  z-index: 1000;
+  transform: translateX(0);
+}
+
+/* Collapsed state: panel hidden on the right with only an index visible */
+.part-module-wrap.collapsed {
+  transform: translateX(100%);
+}
+
+/* Index button visible on the left side of the collapsed panel */
+.part-module-wrap .collapse-btn {
+  position: absolute;
+  left: -48px;
+  /* Position it outside the panel when collapsed */
+  top: 10%;
+  transform: translateY(-50%);
+  cursor: pointer;
+  background-color: #5a5c5f;
+  color: rgb(255, 255, 255);
+  padding: 5px 10px;
+  border-radius: 3px;
+  z-index: 1001;
+}
+
+.part-menu-section-item {
+  background-color: #575758;
 }
 
 .exercise-item-detail {
   color: #909090;
   font-size: 22px;
+}
+
+/* !exercise in module */
+.module-exercise-name {
+  display: flex;
+  justify-content: space-between;
+  height: 25px;
+}
+
+.exercise-details {
+  display: flex;
+  align-items: center;
+  gap: 3px;
+}
+
+.exercise-details .form-control {
+  width: 45px;
+  margin-right: 5px;
+  padding: 2px;
+}
+
+.exercise-details .delete-menu-item {
+  margin-left: auto;
+}
+
+.edit-menu-module {
+  width: 100px;
+  margin-top: 20px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.menu-module-item {
+  display: flex;
+  flex-direction: column;
 }
 
 /* !calendar */
@@ -354,34 +498,95 @@ button {
 
 .week-container {
   display: flex;
-    flex-direction: row;
-    column-gap: 15px;
+  flex-direction: row;
+  column-gap: 15px;
 }
 
 .week-item {
-  
+
   width: 80px;
-    height: 80px;
-    background-color: #19b7d0;
+  height: 80px;
+  background-color: #19b7d0;
 }
 
 .card-body {
-  background-color: #3f4040;
+  background-color: #403f3f;
 }
 
-/* ! exercises page */
-.parts-container {
+#exerciseModal
+div {
+  font-size: 13px;
+}
+
+h4.card-title {
+  font-size: 15px;
+}
+
+.card.exercise {
+  height: 300px;
+}
+
+.card.exercise
+img {
+  width: 100%;
+    height: auto;
+    object-fit: cover;
+  overflow: hidden;
+}
+#exerciseModal .modal-dialog{
+  display: flex;
+  justify-content: center;
+  max-width: 1200px;
   margin-left: auto;
     margin-right: auto;
-    display: flex;
-    width: fit-content;
-    gap: 20px;
-    margin-top: 20px;
-    margin-bottom: 20px;
+}
+#exerciseModal .modal-content{
+  width: 1050px;
+  
+}
+
+#exerciseModal .exercise-images {
+  width: 500px;
+  max-height: 60vh;
+  
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+}
+
+
+/* ! exercises part page */
+.parts-placeholder {
+  height: 0;
+  display: flex;
+  gap: 20px;
+  /* Start with no height */
+}
+
+.parts-container {
+  position: sticky;
+  top: 60px;
+  margin-left: auto;
+  margin-right: auto;
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  margin-top: 5px;
+  margin-bottom: 20px;
+  left: 0;
+  right: 0;
+  z-index: 10;
+  background-color: #333434;
+
+}
+
+/* Adjust the height of the placeholder to match the original height of .parts-container */
+.parts-placeholder {
+  height: 0px;
 }
 
 .part-item {
-      font-size: 20px;
+  font-size: 20px;
 }
 
 
@@ -406,9 +611,46 @@ button {
   /* Background color when checked */
   border-color: rgb(247, 211, 82);
   opacity: 1;
-    /* z-index: 1; */
+  /* z-index: 1; */
 }
 
+/* ! menu */
+.menu-module-container {
+  display: flex;
+  flex-direction: column;
+  width: 90vw;
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 20px;
+  padding: 10px;
+  background-color: #909090;
+  border-radius: 10px;
+
+}
+
+.menu-section-item {
+  margin-left: auto;
+  margin-right: auto;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  /* Vertically center the content */
+  background-color: #757575;
+  padding: 5px;
+  font-size: 18px;
+}
+
+.list-group-item {
+  background-color: rgb(247, 211, 82);
+}
+
+.module-editing.list-group {
+  margin-left: auto;
+  margin-right: auto;
+  height: auto;
+}
+
+/* ! footer */
 .before-footer {
   width: 100%;
   background-color: #333434;

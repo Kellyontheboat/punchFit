@@ -59,20 +59,28 @@ async function closeButtons () {
 
 export function navScheduleBtn (isAuthenticated) {
   const navScheduleBtn = document.getElementById('my-schedule-btn')
+  const navModuleBtn = document.querySelector('.module-link')
 
-  navScheduleBtn.addEventListener('click', () => {
-    if (!isAuthenticated) {
-      showLoginModal()
-      return
+  const btns = [navScheduleBtn, navModuleBtn]
+
+  btns.forEach(btn => {
+    if (btn) {
+      btn.addEventListener('click', (event) => {
+        if (isAuthenticated) {
+          window.location.href = '/schedules'
+        } else {
+          event.preventDefault()
+          showLoginModal()
+        }
+      })
     }
-    window.location.href = '/schedule'
   })
 }
 
 export async function updateLoginButton () {
   const loginButton = document.getElementById('login-register-btn')
   if (loginButton) {
-    loginButton.innerText = '登出系統'
+    loginButton.innerText = 'Logout'
     loginButton.id = 'logout-btn'
   }
   const logoutBtn = document.getElementById('logout-btn')

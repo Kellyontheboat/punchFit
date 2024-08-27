@@ -4,88 +4,103 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Schedules</title>
+  <title>Sections</title>
   <link href="./stylesheets/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.15/main.min.css">
+
   <link rel="stylesheet" href="./stylesheets/styles.css">
+
+
+  <!-- Load jQuery before Bootstrap JS -->
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <!-- <script src="/javascripts/bootstrap.bundle.min.js"></script> -->
+
+  <script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.15/index.global.min.js'></script>
+<script type="module" src="/javascripts/render/scheduleRender.js"></script>
   <script type="module" src="/javascripts/main.js" defer></script>
+  
+
+
+
+  </script>
 </head>
 
 <body>
-  <nav>
-    <a href="/" class="homepage-link">
-      <span>打卡健身 PunchFit</span>
-    </a>
-    <span class="nav-item" id="login-register-btn">登入/註冊</span>
-    <span>我的紀錄</span>
 
-        <!-- Modal: Login -->
-        <div id="loginModal" class="modal">
-          <div class="modal-content">
-            <div class="modal-decorate"></div>
-            <div class="modal-title-container">
-              <h2>登入會員帳號</h2>
-              <span class="close">&times;</span>
-            </div>
-            <form action="/api/user/auth" method="put" id="signin-form-login" novalidate>
-              <div class="form-group">
-                <input type="email" id="email" name="email" placeholder="輸入電子信箱" required>
-              </div>
-              <div class="form-group">
-                <input type="password" id="password" name="password" placeholder="輸入密碼" required>
-              </div>
-              <div class="form-group">
-                <button type="submit">登入帳戶</button>
-              </div>
-            </form>
-            <span id="login-msg" class="login-modal-item"></span>
-            <span class="login-modal-item" id="register-modal-btn">還沒有帳戶？點此註冊</span>
 
-          </div>
-        </div>
 
+  <nav class="nav-container">
+    <!-- templateJs -->
   </nav>
-  <hr>
-  <div class="schedules-container">
-    <div>
-      <div>
-        Sun
-      </div>
-      <h3>
-        Mon
-        
-      </h3>
-      <div>
-        <span>Alternating Kettlebell Row</span>
 
-      </div>
-      <div>
-        <span>Alternating Renegade Row</span>
+  <div class="nav-separator">
+    <!-- templateJs -->
+  </div>
 
-      </div>
-      <div>
-        <span>Bent Over Barbell Row</span>
+  <div class="welcome">
+    Check out all the exercises we’ve got!
+    <br>
+    <div class="welcome-message">
+      Login to build your own custom workout template by body parts.
+    </div>
+  </div>
 
+  <div id="calendar"></div>
+
+  <!-- ! calendar -->
+
+  <!-- ! Modal to create schedule -->
+  <div class="modal fade" id="myModal" tabindex="-1" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="myModalLabel">Create a Plan</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body" id="modalBody">
+          <!-- Form content will be injected here -->
+        </div>
       </div>
-      <div>
-        Tue
+    </div>
+  </div>
+
+  <!-- ! dateEventModal -->
+  <div class="modal fade" id="scheduleItemModal" tabindex="-1" role="dialog" aria-labelledby="scheduleItemModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <form id="editScheduleForm">
+          <div class="modal-header">
+            <h5 class="modal-title" id="scheduleItemModalLabel">Schedule Details</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <!-- Modal content will be inserted here dynamically -->
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            <!-- <button type="button" class="btn btn-primary" id="editButton">Edit</button> -->
+            <button type="button" class="btn btn-danger" id="deleteButton">Delete</button>
+
+            <button type="submit" class="btn btn-primary d-none" id="submitButton">Save Changes</button>
+          </div>
+        </form>
       </div>
-      <div>
-        Wed
-      </div>
-      <div>
-        Thu
-      </div>
-      <div>
-        Fri
-      </div>
-      <div>
-        Sat
-      </div>
-      
+    </div>
+  </div>
+
+
+  <!-- ! Footer -->
+  <div class="before-footer"></div>
+  <div class="footer">
+    <div class="footer-text">COPYRIGHT © 2024 PunchFit</div>
   </div>
 
   <script src="/javascripts/bootstrap.bundle.min.js"></script>
-
 </body>
 
 </html>

@@ -50,6 +50,28 @@ const moduleControllers = {
       res.status(500).json({ error: 'Server error' })
     }
   },
+  getModulesBySections: async (req, res) => {
+    try {
+      const memberId = req.memberId
+      const sectionIds = req.query.sectionIds ? req.query.sectionIds.split(',') : []
+
+      const modules = await Modules.findAll({
+        where: {
+          member_id: memberId,
+          section_id: sectionIds
+        }
+      })
+
+      if (!modules || modules.length === 0) {
+        return res.status(404).json({ message: 'Modules not found' })
+      }
+
+      res.json(modules)
+    } catch (error) {
+      console.error('Error fetching modules:', error)
+      res.status(500).json({ error: 'Server error' })
+    }
+  },
   getModuleByPart: async (req, res) => {
     try {
       const memberId = req.memberId
@@ -124,7 +146,62 @@ const moduleControllers = {
       console.error('Error fetching items:', error)
       res.status(500).json({ error: 'Server error' })
     }
+  },
+  updateExerciseInModule: async (req, res) => {
+    const { updatedItems, existingItemIds } = req.body
+    const { moduleId } = req.params
+
+    try {
+      // Fetch the existing items in the module from the database
+      const existingItems = await ModuleItems.findAll({
+        where: { module_id: moduleId },
+        attributes: ['id']
+      })
+
+      // Get the IDs of the existing items in the database
+      const existingItemIdsInDb = existingItems.map(item => item.id)
+
+      const existingItemIdsAsNumbers = existingItemIds.map(id => parseInt(id, 10))
+      const itemsToDelete = existingItemIdsInDb.filter(id => !existingItemIdsAsNumbers.includes(id))
+
+      console.log('existingItemIds from frontend:', existingItemIds)
+      console.log('existingItemIdsInDb from database:', existingItemIdsInDb)
+      console.log('Items to delete:', itemsToDelete)
+      // Handle updates and creations
+      for (const item of updatedItems) {
+        const { itemId, exerciseId, sets, reps, weight, moduleId } = item
+
+        if (itemId) {
+          // Update existing item
+          await ModuleItems.update(
+            { sets, reps, weight },
+            { where: { id: itemId } }
+          )
+        } else {
+          console.log('uuu', itemId)
+          // Create new item
+          await ModuleItems.create({
+            exercise_id: exerciseId,
+            sets,
+            reps,
+            weight,
+            module_id: moduleId // New item, so need to include moduleId
+          })
+        }
+      }
+
+      // Handle deletions
+      for (const itemId of itemsToDelete) {
+        await ModuleItems.destroy({ where: { id: itemId } })
+      }
+
+      res.json({ success: true, message: 'Module items updated and deleted successfully' })
+    } catch (error) {
+      console.error('Error updating module items:', error)
+      res.status(500).json({ success: false, message: 'Server error' })
+    }
   }
+
 }
 
 module.exports = moduleControllers

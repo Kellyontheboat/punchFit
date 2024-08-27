@@ -1,4 +1,32 @@
-export function renderSections ({ sections, sectionsId }) {
+import { submitSectionForm } from '../api/exerciseScript.js'
+import { showLoginModal } from './navRender.js'
+
+export async function addTrainingRecordBtn (isAuthenticated) {
+  const welcomeContainer = document.querySelector('.welcome')
+  welcomeContainer.innerText = ''
+  welcomeContainer.classList.add('btn')
+  const scrollSectionImgBtn = document.createElement('div')
+  const trainingButton = document.createElement('button')
+
+  trainingButton.innerText = 'Let\'s Add Training Record For Today'
+  scrollSectionImgBtn.innerText = 'Or click below to edit your modules:'
+
+  trainingButton.classList.add('btn', 'btn-primary') // Example Bootstrap classes
+
+  scrollSectionImgBtn.classList.add('scroll-to-section')
+
+  trainingButton.addEventListener('click', function () {
+    if (!isAuthenticated) {
+      showLoginModal()
+      return
+    }
+    window.location.href = '/training'
+  })
+  welcomeContainer.appendChild(trainingButton)
+  welcomeContainer.appendChild(scrollSectionImgBtn)
+}
+
+export async function renderSections ({ sections, sectionsId }) {
   const sectionWrap = document.querySelector('.section-wrap')
   const addModuleBtnContainer = document.querySelector('.add-module-btn-container')
   sections.forEach((section, index) => {
@@ -56,27 +84,8 @@ export function sectionCheckBox () {
   submitSectionForm(form, checkboxes)
 }
 
-async function submitSectionForm (form, checkboxes) {
-  form.addEventListener('submit', function (event) {
-    event.preventDefault() // Prevent the default form submission
-    const selectedSections = Array.from(checkboxes)
-      .filter(checkbox => checkbox.checked)
-      .map(checkbox => checkbox.value)
-
-    console.log('Selected Sections:', selectedSections)
-    // Here you can handle the form submission, e.g., send data via AJAX or redirect to another page
-  })
-};
-
 export function renderPartsBySection ({ parts, partsId }) {
   const partsContainer = document.querySelector('.parts-container')
-  // parts.forEach((part, index) => {
-  //   const partDiv = document.createElement('div')
-  //   partDiv.classList.add('part-item')
-  //   partDiv.textContent = part
-  //   partDiv.dataset.id = partsId[index]
-  //   partsContainer.appendChild(partDiv)
-  // })
 
   parts.forEach((part, index) => {
     const partDiv = document.createElement('button')
@@ -89,7 +98,7 @@ export function renderPartsBySection ({ parts, partsId }) {
   })
 }
 
-export async function renderExercisesByPart ({ exercises, exercisesId, exercisesImgs, user }) {
+export async function renderExercisesByPart ({ data, exercises, exercisesId, exercisesImgs, user }) {
   const exercisesContainer = document.querySelector('.exercises-container')
   exercisesContainer.innerHTML = ''
 
@@ -98,6 +107,7 @@ export async function renderExercisesByPart ({ exercises, exercisesId, exercises
   rowDiv.classList.add('row', 'g-3')
 
   exercises.forEach((exercise, index) => {
+    console.log(exercise)
     // Create a Bootstrap column for each exercise card
     const colDiv = document.createElement('div')
     colDiv.classList.add('col-md-4', 'col-sm-6')
@@ -105,7 +115,7 @@ export async function renderExercisesByPart ({ exercises, exercisesId, exercises
 
     // Create the Bootstrap card
     const cardDiv = document.createElement('div')
-    cardDiv.classList.add('card')
+    cardDiv.classList.add('card', 'exercise')
     cardDiv.style.width = '18rem' // adjust card width
     cardDiv.dataset.id = exercisesId[index]
 
@@ -126,11 +136,11 @@ export async function renderExercisesByPart ({ exercises, exercisesId, exercises
     titleH4.textContent = exercise
     cardBodyDiv.appendChild(titleH4)
 
-    // Add a placeholder card text
-    const cardTextP = document.createElement('p')
-    cardTextP.classList.add('card-text')
-    cardTextP.textContent = 'Click to see more details or add this exercise into the Memo.'
-    cardBodyDiv.appendChild(cardTextP)
+    // // Add a placeholder card text
+    // const cardTextP = document.createElement('p')
+    // cardTextP.classList.add('card-text')
+    // cardTextP.textContent = 'Click to see more details or add this exercise into the Memo.'
+    // cardBodyDiv.appendChild(cardTextP)
 
     // button to trigger detail modal
     const exerciseDetailBtn = document.createElement('a')
@@ -138,6 +148,7 @@ export async function renderExercisesByPart ({ exercises, exercisesId, exercises
     exerciseDetailBtn.textContent = 'detail'
     exerciseDetailBtn.setAttribute('data-bs-toggle', 'modal')
     exerciseDetailBtn.setAttribute('data-bs-target', '#exerciseModal')
+    exerciseDetailBtn.dataset.id = exercisesId[index]
     cardBodyDiv.appendChild(exerciseDetailBtn)
 
     // button to add new exercise to the module
@@ -145,8 +156,6 @@ export async function renderExercisesByPart ({ exercises, exercisesId, exercises
       const btn = document.createElement('a')
       btn.classList.add('btn', 'btn-primary', 'add-into-memo')
       btn.textContent = '+'
-      btn.setAttribute('data-bs-toggle', 'modal')
-      btn.setAttribute('data-bs-target', '#exerciseModal')
       cardBodyDiv.appendChild(btn)
     }
 
@@ -157,4 +166,71 @@ export async function renderExercisesByPart ({ exercises, exercisesId, exercises
 
   // Append the row to the container
   exercisesContainer.appendChild(rowDiv)
+}
+
+export async function exerciseCardModal (data) {
+  console.log(data)
+
+  const exerciseCardModal = document.querySelector('#exerciseModal')
+
+  const modalTitle = exerciseCardModal.querySelector('.modal-title')
+  modalTitle.innerText = data.name
+
+  // Clear the existing content in the modal body
+  const modalBody = exerciseCardModal.querySelector('.modal-body')
+  modalBody.innerHTML = ''
+
+  // Create elements for the modal body content
+  const forceParagraph = document.createElement('div')
+  forceParagraph.innerText = `Force: ${data.force}`
+
+  const levelParagraph = document.createElement('div')
+  levelParagraph.innerText = `Level: ${data.level}`
+
+  const mechanicParagraph = document.createElement('div')
+  mechanicParagraph.innerText = `Mechanic: ${data.mechanic}`
+
+  const equipmentParagraph = document.createElement('div')
+  equipmentParagraph.innerText = `Equipment: ${data.equipment}`
+
+  const categoryParagraph = document.createElement('div')
+  categoryParagraph.innerText = `Category: ${data.category}`
+
+  // Create a div for images
+  const imagesDiv = document.createElement('div')
+  imagesDiv.classList.add('exercise-images')
+
+  // Loop through images and create img elements
+  data.images.forEach(url => {
+    const imgElement = document.createElement('img')
+    imgElement.src = url
+    imgElement.alt = data.name
+    imgElement.classList.add('img-fluid', 'mb-2') // Add Bootstrap classes for styling
+    imagesDiv.appendChild(imgElement)
+  })
+
+  // Append all created elements to the modal body
+  modalBody.appendChild(forceParagraph)
+  modalBody.appendChild(levelParagraph)
+  modalBody.appendChild(mechanicParagraph)
+  modalBody.appendChild(equipmentParagraph)
+  modalBody.appendChild(categoryParagraph)
+  modalBody.appendChild(imagesDiv)
+
+  // Show the modal
+  const modalInstance = bootstrap.Modal.getOrCreateInstance(exerciseCardModal)
+  modalInstance.show()
+}
+
+export function partContainerStickOnTop () {
+  window.addEventListener('scroll', function () {
+    const partsContainer = document.querySelector('.parts-container')
+    const scrollTop = window.scrollY
+
+    if (scrollTop > 0) {
+      partsContainer.style.top = '0px'
+    } else {
+      partsContainer.style.top = '60px' // Reset to original value when at the top
+    }
+  })
 }

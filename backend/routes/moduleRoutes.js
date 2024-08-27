@@ -11,10 +11,12 @@ router.get('/modules', authenticateToken, moduleControllers.getModules)
 
 router.get('/parts/:partId/modules', authenticateToken, moduleControllers.getModuleByPart)
 
+router.get('/sections/modules', authenticateToken, moduleControllers.getModulesBySections)
+
 router.get('/sections/:sectionId/modules', authenticateToken, moduleControllers.getModuleBySection)
 
 router.get('/modules/:moduleId/exercises', authenticateToken, moduleControllers.getExerciseInModule)
 
-router.post('/modules/:moduleId/exercises', authenticateToken, moduleControllers.addExerciseToModule)
+router.patch('/modules/:moduleId/exercises', authenticateToken, moduleControllers.updateExerciseInModule)
 
 module.exports = router

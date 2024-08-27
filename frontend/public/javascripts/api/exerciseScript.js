@@ -1,6 +1,6 @@
 import { renderExercisesByPart } from '../render/exerciseRender.js'
 
-import { addListenerAddMemoBtn } from './moduleScript.js'
+import { addListenerAddMemoBtn, addListenerModalAddMemoBtn } from './moduleScript.js'
 
 export async function fetchSections () {
   try {
@@ -72,10 +72,11 @@ export async function addPartListener (user) {
     item.addEventListener('click', async () => {
       const partId = item.dataset.id
       console.log(partId)
-      const { exercises, exercisesId, exercisesImgs } = await fetchExercisesByPart(partId)
+      const { data, exercises, exercisesId, exercisesImgs } = await fetchExercisesByPart(partId)
       renderExercisesByPart({ exercises, exercisesId, exercisesImgs, user })
       // ??after click the part the window should reload
       addListenerAddMemoBtn(user)
+      addListenerModalAddMemoBtn(data)
     })
   })
 }
@@ -93,6 +94,17 @@ export async function fetchExercisesByPart (partId) {
     exercisesId.push(exercise.id)
     exercisesImgs.push(exercise.images[0])
   })
-
-  return { exercises, exercisesId, exercisesImgs }
+  return { data, exercises, exercisesId, exercisesImgs }
 }
+
+export async function submitSectionForm (form, checkboxes) {
+  form.addEventListener('submit', function (event) {
+    event.preventDefault()
+    const selectedSections = Array.from(checkboxes)
+      .filter(checkbox => checkbox.checked)
+      .map(checkbox => checkbox.value)
+
+    console.log('Selected Sections:', selectedSections)
+    window.location.href = `/menu?sectionIds=${selectedSections.join(',')}`
+  })
+};
