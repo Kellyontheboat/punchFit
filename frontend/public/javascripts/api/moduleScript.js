@@ -67,7 +67,7 @@ export async function getModules (isAuthenticated) {
   }
 }
 
-// Enter module editing mode by clicking module
+// Enter module editing mode by clicking module or sectionImg
 export async function addListenerModule (isAuthenticated) {
   const sectionImg = document.querySelectorAll('.col-md-3')
   const sectionModule = document.querySelectorAll('.module-item')
@@ -92,7 +92,7 @@ export async function addListenerModule (isAuthenticated) {
     }
     module.addEventListener('click', function () {
       sessionStorage.setItem('lastUrl', window.location.href)
-      window.location.href = `/sections/${sectionId}/parts`
+      window.location.href = `/sections/${sectionId}/parts` //! !!!!!/sections/${sectionId}/modules
     })
   })
 }
@@ -164,25 +164,25 @@ export async function addListenerAddMemoBtn () {
 let selectedExerciseId = null
 let selectedExerciseName = null
 
-export async function addListenerModalAddMemoBtn(data) {
+export async function addListenerModalAddMemoBtn (data) {
   console.log(data)
   const exerciseDetailBtns = document.querySelectorAll('.exercise-detail')
 
   exerciseDetailBtns.forEach((btn) => {
     btn.addEventListener('click', function () {
       selectedExerciseId = btn.dataset.id
-      
-      const selectedExerciseIdInt = parseInt(btn.dataset.id, 10);
+
+      const selectedExerciseIdInt = parseInt(btn.dataset.id, 10)
 
       const card = btn.closest('.card')
       selectedExerciseName = card.querySelector('.card-title').innerText
 
       console.log('Exercise ID:', selectedExerciseId)
       console.log('Exercise Name:', selectedExerciseName)
-      const selectedExerciseData = data.find(exercise => exercise.id === selectedExerciseIdInt);
+      const selectedExerciseData = data.find(exercise => exercise.id === selectedExerciseIdInt)
       console.log(data)
       console.log(selectedExerciseData)
-      exerciseCardModal(selectedExerciseData);
+      exerciseCardModal(selectedExerciseData)
     })
   })
 

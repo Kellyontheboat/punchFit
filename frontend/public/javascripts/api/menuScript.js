@@ -1,4 +1,4 @@
-import { postSchedule, addItemsIntoSchedule } from '../render/scheduleRender.js'
+import { postSchedule, addItemsIntoSchedule } from '../api/scheduleScript.js'
 
 import { renderSubmitMenuBtn } from '../render/menuRender.js'
 
@@ -70,11 +70,11 @@ export async function submitMenu () {
   const today = new Date()
   const currentDate = today.toLocaleDateString('en-CA')
   console.log(currentDate)
-  const scheduleName = document.getElementById('schedule-name-input').value;
+  const scheduleName = document.getElementById('schedule-name-input').value
 
   if (!scheduleName) {
-    alert('Schedule name cannot be empty!');
-    return;
+    alert('Schedule name cannot be empty!')
+    return
   }
 
   const scheduleId = await postSchedule({ scheduleName, date: currentDate })

@@ -77,7 +77,7 @@ document.addEventListener('DOMContentLoaded', async function () {
 
     const { data, exercises, exercisesId, exercisesImgs } = await fetchExercisesByPart(firstPartId)
     await renderExercisesByPart({ data, exercises, exercisesId, exercisesImgs, user })
-    //exerciseCardModal(data)
+    // exerciseCardModal(data)
 
     renderPartsBySection({ parts, partsId })
     addPartListener(user)

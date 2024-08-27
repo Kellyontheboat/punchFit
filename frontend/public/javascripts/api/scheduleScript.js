@@ -1,5 +1,174 @@
 const token = localStorage.getItem('token')
 
+export async function planFormSubmission (date) {
+  // Get the form data from the modal
+  const form = document.getElementById('planForm')
+  const formData = new FormData(form)
+  // Retrieve selected section IDs from the form data
+  const sectionIds = []
+  formData.getAll('sections').forEach(sectionId => {
+    sectionIds.push(sectionId)
+  })
+  const scheduleName = formData.get('planName')
+  console.log('formSubmission', { sectionIds, scheduleName, date })
+
+  const data = { sectionIds, scheduleName, date }
+  console.log(data)
+
+  // *add a layer for user to edit the items in menu first
+  const scheduleId = await postSchedule({ scheduleName, date })
+  await addItemsIntoSchedule({ sectionIds, scheduleId })
+
+  // Add the new event to the calendar
+  calendar.addEvent({
+    title: scheduleName,
+    start: date,
+    extendedProps: {
+      scheduleId
+    }
+  })
+  return data
+}
+
+export async function postSchedule ({ scheduleName, date }) {
+  const token = localStorage.getItem('token')
+  const data = { scheduleName, date }
+  console.log(date)
+  try {
+    const response = await fetch('/api/schedules', {
+      method: 'POST',
+      headers: {
+        Authorization: `Bearer ${token}`,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(data)
+    })
+
+    if (!response.ok) {
+      throw new Error('Failed to add schedule')
+    }
+    const scheduleData = await response.json()
+    const scheduleId = scheduleData.schedule_id
+    console.log(scheduleId)
+    return scheduleId // send to addItemsIntoSchedule
+  } catch (error) {
+    console.error('Error:', error)
+  }
+}
+
+// sectionIds>modules>exercises
+export async function addItemsIntoSchedule ({ sectionIds, scheduleId }) {
+  console.log({ sectionIds, scheduleId })
+  const token = localStorage.getItem('token')
+  try {
+    const data = { sectionIds, scheduleId }
+    console.log(sectionIds)
+    const response = await fetch('/api/scheduleItems', {
+      method: 'POST',
+      headers: {
+        Authorization: `Bearer ${token}`,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(data)
+    })
+
+    if (!response.ok) {
+      throw new Error('Failed to add scheduleItems')
+    }
+  } catch (error) {
+    console.error('Error:', error)
+  }
+  return { sectionIds }// the section user want to train
+}
+
+// get schedules of current member
+export async function getSchedules () {
+  const response = await fetch('/api/schedules', {
+    method: 'GET',
+    headers: {
+      Authorization: `Bearer ${token}`,
+      'Content-Type': 'application/json'
+    }
+  })
+  const schedules = await response.json()
+
+  const scheduleIds = []
+  schedules.forEach(s => {
+    scheduleIds.push(s.id)
+  })
+  console.log(scheduleIds)
+  return { scheduleIds, schedules }
+}
+
+export async function getSchedulesItems (scheduleId = null) {
+  const token = localStorage.getItem('token')
+  let scheduleIdsArray = []
+
+  // If scheduleId is provided, use it;(when user just created a schedule need to render right away)
+  // otherwise, get all scheduleIds(when page loaded need to get all schedules)
+  if (scheduleId) {
+    console.log(scheduleId)
+    scheduleIdsArray.push(scheduleId)
+  } else {
+    const { scheduleIds, schedules } = await getSchedules()
+    scheduleIdsArray = scheduleIds
+  }
+
+  if (scheduleIdsArray.length === 0) return []
+
+  const allExercises = []
+  for (const id of scheduleIdsArray) {
+    const response = await fetch(`/api/schedules/${id}/items`, {
+      method: 'GET',
+      headers: {
+        Authorization: `Bearer ${token}`,
+        'Content-Type': 'application/json'
+      }
+    })
+
+    if (!response.ok) {
+      throw new Error(`Failed to fetch items for schedule ${id}`)
+    }
+
+    const rawData = await response.json()
+    const exercises = rawData.items.map(item => ({
+      id: item.exercise.id,
+      name: item.exercise.name,
+      section: item.section.section_name,
+      reps: item.reps,
+      sets: item.sets,
+      weight: item.weight,
+      status: item.status
+    }))
+    console.log(exercises)
+    allExercises.push(...exercises)
+  }
+
+  console.log(allExercises)
+  return allExercises
+}
+
+export async function updateScheduleItems (updatedItems, itemsToDelete) {
+  try {
+    const response = await fetch('/api/scheduleItems/update', {
+      method: 'PUT',
+      headers: {
+        Authorization: `Bearer ${token}`,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ updatedItems, itemsToDelete })
+    })
+
+    if (!response.ok) {
+      throw new Error('Failed to update schedule items')
+    }
+
+    console.log('Schedule items updated successfully')
+  } catch (error) {
+    console.error('Error updating schedule items:', error)
+  }
+}
+
 export async function addListenerDelScheduleBtn () {
   const scheduleItemModal = document.querySelector('#scheduleItemModal')
 

@@ -39,14 +39,14 @@ const exerciseControllers = {
         },
         include: [
           {
-          model: Images,
-          attributes: ['url', 'exercises_id']
+            model: Images,
+            attributes: ['url', 'exercises_id']
           },
           {
             model: Instructions,
             attributes: ['instruction_text', 'exercises_id']
           }
-      ],
+        ],
         order: [['id', 'ASC']]
       })
 
@@ -100,7 +100,6 @@ module.exports = exerciseControllers
 //   }
 
 // }
-
 
 // const messages = await Message.findAll({
 //   order: [['createdAt', 'DESC']],
