@@ -63,7 +63,7 @@ app.get('/consult', (req, res) => {
 
 // Sync models and start the server
 sequelize.sync({ alter: false }).then(() => {
-  server.listen(port, () => { // Use the HTTP server for listening
+  server.listen(port, '0.0.0.0', () => { // Use the HTTP server for listening
     console.log(`Server is running on http://localhost:${port}`)
   })
 }).catch(error => {
