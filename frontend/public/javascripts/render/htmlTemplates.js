@@ -17,7 +17,6 @@ export const navHTML = `
       <span class="nav-item" id="my-schedule-btn">Schedule</span>
     </a>
 
-
     <span>
     <!-- Modal: Login -->
     <div id="loginPopup" class="custom-raw-popup">

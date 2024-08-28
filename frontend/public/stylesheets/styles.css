@@ -72,17 +72,19 @@ body {
 }
 
 .nav-item-container .nav-item {
-
-  font-weight: 500;
   font-size: 16px;
-
 }
 
 .nav-item-container {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  width: 250px;
+  width: 320px;
+}
+
+.nav-item-container a {
+  font-weight: 400;
+  color: #ddd
 }
 
 .nav-separator hr {
