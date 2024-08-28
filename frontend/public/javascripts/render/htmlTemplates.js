@@ -17,6 +17,9 @@ export const navHTML = `
       <span class="nav-item" id="my-schedule-btn">Schedule</span>
     </a>
 
+    <a href="/consult" class="module-link">
+      <span class="nav-title" id="consult-btn">Msg</span>
+    </a>
 
     <span>
     <!-- Modal: Login -->

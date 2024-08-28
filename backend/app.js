@@ -1,7 +1,7 @@
 const express = require('express')
-// const helmet = require('helmet')
 const path = require('path')
-const app = express()
+const http = require('http')
+const { Server } = require('socket.io')
 const { sequelize } = require('./models')
 const exerciseRoutes = require('./routes/exerciseRoutes')
 const memberRoutes = require('./routes/memberRoutes')
@@ -9,28 +9,23 @@ const moduleRoutes = require('./routes/moduleRoutes')
 const scheduleRoutes = require('./routes/scheduleRoutes')
 
 const port = 3000
+const app = express()
+const server = http.createServer(app) // Create an HTTP server
+const io = new Server(server) // Initialize Socket.io with the HTTP server
 
-// const cspDirectives = "default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https://raw.githubusercontent.com;";
+// Socket.io connection
+io.on('connection', (socket) => {
+  console.log('a user connected')
+  // Handle socket events here
+})
 
-// app.use((req, res, next) => {
-//   res.setHeader("Content-Security-Policy", cspDirectives);
-//   next();
-// });
-
+// Middleware and API routes
 app.use(express.json())
-// Serve static files from the frontend/public directory
 app.use(express.static(path.join(__dirname, '../frontend/public')))
-
 app.use('/node_modules', express.static(path.join(__dirname, '../node_modules')))
-
-// Make sure all static files are served correctly(with css function)
 app.use('/sections/:sectionId', express.static(path.join(__dirname, '../frontend/public')))
-
 app.use('/parts/:partId', express.static(path.join(__dirname, '../frontend/public')))
-
 app.use('/user/:memberId', express.static(path.join(__dirname, '../frontend/public')))
-
-// !API routes
 app.use('/api', exerciseRoutes, memberRoutes, moduleRoutes, scheduleRoutes)
 
 // Frontend routes
@@ -62,9 +57,13 @@ app.get('/schedules', (req, res) => {
   res.sendFile(path.join(__dirname, '../frontend/public/schedules.html'))
 })
 
+app.get('/consult', (req, res) => {
+  res.sendFile(path.join(__dirname, '../frontend/public/consult.html'))
+})
+
 // Sync models and start the server
 sequelize.sync({ alter: false }).then(() => {
-  app.listen(port, () => {
+  server.listen(port, () => { // Use the HTTP server for listening
     console.log(`Server is running on http://localhost:${port}`)
   })
 }).catch(error => {

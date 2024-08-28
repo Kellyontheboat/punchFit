@@ -6,7 +6,6 @@ let calendar
 
 document.addEventListener('DOMContentLoaded', async function () {
   const { user, isAuthenticated, token } = await checkLoginStatus()
-  console.log(user)
 
   if (!isAuthenticated) {
     console.log('User is not authenticated')

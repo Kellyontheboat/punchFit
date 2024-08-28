@@ -96,7 +96,6 @@ export async function getSchedules () {
   schedules.forEach(s => {
     scheduleIds.push(s.id)
   })
-  console.log(scheduleIds)
   return { scheduleIds, schedules }
 }
 

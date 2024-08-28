@@ -20,6 +20,8 @@ import { addListenerModule, addListenerAddMemoBtn, addListenerModalAddMemoBtn } 
 
 import { fetchSections, addSectionListener, fetchPartsBySection, addPartListener, fetchExercisesByPart } from './api/exerciseScript.js'
 
+// import { handleInMsg, uploadNotification, sendMsg } from './api/chatScript.js'
+
 document.addEventListener('DOMContentLoaded', async function () {
   // use the Template HTML
   await injectHTML('.nav-container', navHTML)
@@ -44,7 +46,12 @@ document.addEventListener('DOMContentLoaded', async function () {
   addSectionListener()
   await fetchSections()
   const sections = await fetchSections()
-  if (pathArray[1] === 'schedules') {
+  if (pathArray[1] === 'consult') {
+    console.log(sections)
+    // handleInMsg()
+    // uploadNotification()
+    // sendMsg()
+  } else if (pathArray[1] === 'schedules') {
     console.log(sections)
     // await addTrainingRecordBtn(isAuthenticated)
     welcomeMessage()

@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Chat</title>
+  <link href="./stylesheets/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="./stylesheets/styles.css">
+
+  <!-- Load jQuery before Bootstrap JS -->
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script src="/socket.io/socket.io.js"></script>
+  <script type="module" src="/javascripts/api/chatScript.js" defer></script>
+  <script type="module" src="/javascripts/main.js" defer></script>
+</head>
+
+<body>
+    <!-- <script src="/socket.io/socket.io.js"></script> -->
+
+  <nav class="nav-container">
+    <!-- templateJs -->
+  </nav>
+
+  <div class="nav-separator">
+    <!-- templateJs -->
+  </div>
+
+  <div class="welcome">
+    Your messages:
+  </div>
+  
+  <!-- consult chatRoom -->
+    <div id="chat">
+      <input id="message" type="text" placeholder="Type a message" />
+      <button id="send">Send</button>
+      <div id="messages"></div>
+    </div>
+
+  </div>
+
+  <!-- <script src="/socket.io/socket.io.js"></script> -->
+  <script>
+    const socket = io();
+  </script>
+</body>
