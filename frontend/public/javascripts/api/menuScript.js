@@ -19,6 +19,7 @@ export async function getModulesBySections (sectionIds) {
   modules.forEach(module => {
     moduleId.push(module.id)
   })
+  console.log({ modules, moduleId })
   return { modules, moduleId }
 }
 

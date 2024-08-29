@@ -116,6 +116,23 @@ export async function getModuleBySection (sectionId) {
   return { modules, moduleId }
 }
 
+export async function getModulesBySections (sectionIds) {
+  const queryString = sectionIds.join(',')
+
+  const response = await fetch(`/api/sections/modules?sectionIds=${queryString}`, {
+    method: 'GET',
+    headers: {
+      Authorization: `Bearer ${token}`,
+      'Content-Type': 'application/json'
+    }
+  })
+
+  const modules = await response.json()
+
+  const moduleId = modules.map(module => module.id)
+  return { modules, moduleId }
+}
+
 // to the view
 export async function addExerciseToModule (exerciseId, exerciseName) {
   let funcModuleId = ''

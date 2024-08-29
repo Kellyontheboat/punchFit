@@ -61,6 +61,41 @@ const moduleControllers = {
       res.status(500).json({ error: 'Server error' })
     }
   },
+  getModulesBySections: async (req, res) => {
+    try {
+      const memberId = req.memberId
+      const sectionIds = req.query.sectionIds.split(',')
+
+      const modules = []
+
+      for (const sectionId of sectionIds) {
+        const cacheKey = `modules:${memberId}:${sectionId}`
+        const cachedModuleArray = await redisClient.get(cacheKey)
+
+        if (cachedModuleArray) {
+          // Parse the JSON string from Redis
+          const parsedModules = JSON.parse(cachedModuleArray)
+          modules.push(...parsedModules)
+        } else {
+          // Fetch data with raw: true
+          const moduleData = await Modules.findAll({
+            where: { member_id: memberId, section_id: sectionId },
+            raw: true // return raw data
+          })
+
+          if (moduleData) {
+            // Save the fetched data to Redis
+            await redisClient.set(cacheKey, JSON.stringify(moduleData))
+            modules.push(...moduleData)
+          }
+        }
+      }
+      res.json(modules)
+    } catch (error) {
+      console.error('Error fetching modules:', error)
+      res.status(500).json({ error: 'Server error' })
+    }
+  },
   getExerciseInModule: async (req, res) => {
     try {
       const moduleId = req.params.moduleId
