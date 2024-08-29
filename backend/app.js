@@ -1,6 +1,6 @@
 const express = require('express')
 // const helmet = require('helmet')
-const { testRedisConnection, redisClient } = require('./services/redisService');
+const { testRedisConnection, redisClient, connectRedis } = require('./services/redisService')
 
 const path = require('path')
 const app = express()
@@ -66,35 +66,36 @@ app.get('/schedules', (req, res) => {
   res.sendFile(path.join(__dirname, '../frontend/public/schedules.html'))
 })
 
-async function startServer() {
+async function startServer () {
   try {
     // Run Redis connection test
-    await testRedisConnection();
+    await testRedisConnection()
+    await connectRedis()
 
     // Sync Sequelize models
-    await sequelize.sync({ alter: false });
+    await sequelize.sync({ alter: false })
 
     // Start the server
     app.listen(port, () => {
-      console.log(`Server is running on http://localhost:${port}`);
-    });
+      console.log(`Server is running on http://localhost:${port}`)
+    })
   } catch (error) {
-    console.error('Error during server startup:', error);
-    process.exit(9000); // Exit the process with an error code
+    console.error('Error during server startup:', error)
+    process.exit(9000) // Exit the process with an error code
   }
 }
 
 // Start the server
-startServer();
+startServer()
 
-//Handle process termination
+// Handle process termination
 process.on('SIGINT', () => {
-  console.log('Closing Redis client...');
+  console.log('Closing Redis client...')
   redisClient.quit(() => {
-    console.log('Redis client closed');
-    process.exit(0);
-  });
-});
+    console.log('Redis client closed')
+    process.exit(0)
+  })
+})
 
 // backend / app.js
 // backend / routes / exercisesRoutes.js

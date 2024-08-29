@@ -1,4 +1,4 @@
-require('dotenv').config({ path: __dirname + '/../../.env' });
+require('dotenv').config({ path: __dirname + '/../../.env' })
 
 module.exports = {
   development: {
@@ -22,4 +22,4 @@ module.exports = {
     host: process.env.DATABASE_HOST,
     dialect: 'mysql'
   }
-};
+}

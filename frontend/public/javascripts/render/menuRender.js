@@ -63,7 +63,7 @@ export async function renderItemsInMenuModule (itemContainers) {
     editBtn.innerText = 'Edit'
 
     const items = await getExerciseInModule(moduleId)
-
+    console.log(items)
     // Clear the container before rendering items
     if (items.length !== 0) {
       // container.innerText = ''
