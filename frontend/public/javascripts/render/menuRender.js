@@ -1,17 +1,13 @@
-import { getModuleBySection, getExerciseInModule } from '../api/moduleScript.js'
+import { getModuleBySection, getModulesBySections, getExerciseInModule } from '../api/moduleScript.js'
 
 export async function renderModulesBySections () {
   const params = new URLSearchParams(window.location.search)
   const sectionIds = params.get('sectionIds') ? params.get('sectionIds').split(',') : []
-  const menuModules = []
-  for (const sectionId of sectionIds) {
-    const { modules, moduleId } = await getModuleBySection(sectionId)
-    if (modules.length === 0) {
-      menuModules.push('')
-      continue
-    }
-    menuModules.push(modules[0])
-  }
+
+  const { modules } = await getModulesBySections(sectionIds)
+  const menuModules = modules
+
+  console.log(menuModules)
   renderMenuModules(menuModules, sectionIds)
 }
 
@@ -63,7 +59,7 @@ export async function renderItemsInMenuModule (itemContainers) {
     editBtn.innerText = 'Edit'
 
     const items = await getExerciseInModule(moduleId)
-
+    console.log(items)
     // Clear the container before rendering items
     if (items.length !== 0) {
       // container.innerText = ''

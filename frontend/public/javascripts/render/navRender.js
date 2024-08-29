@@ -80,7 +80,7 @@ export function navScheduleBtn (isAuthenticated) {
 export async function updateLoginButton () {
   const loginButton = document.getElementById('login-register-btn')
   if (loginButton) {
-    loginButton.innerText = 'Logout'
+    loginButton.innerText = 'Logout.'
     loginButton.id = 'logout-btn'
   }
   const logoutBtn = document.getElementById('logout-btn')

@@ -9,7 +9,11 @@ export async function addTrainingRecordBtn (isAuthenticated) {
   const trainingButton = document.createElement('button')
 
   trainingButton.innerText = 'Let\'s Add Training Record For Today'
-  scrollSectionImgBtn.innerText = 'Or click below to edit your modules:'
+  if (isAuthenticated) {
+    scrollSectionImgBtn.innerText = 'Or click below to edit your modules:'
+  } else {
+    scrollSectionImgBtn.innerText = 'Click below to check out our exercise library:'
+  }
 
   trainingButton.classList.add('btn', 'btn-primary') // Example Bootstrap classes
 

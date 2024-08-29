@@ -6,11 +6,6 @@ const authenticateToken = require('../middleware/auth')
 router.post('/modules', authenticateToken, moduleControllers.createModule
 )
 
-// remember to add authenticate middleware
-router.get('/modules', authenticateToken, moduleControllers.getModules)
-
-router.get('/parts/:partId/modules', authenticateToken, moduleControllers.getModuleByPart)
-
 router.get('/sections/modules', authenticateToken, moduleControllers.getModulesBySections)
 
 router.get('/sections/:sectionId/modules', authenticateToken, moduleControllers.getModuleBySection)

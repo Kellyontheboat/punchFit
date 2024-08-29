@@ -91,12 +91,3 @@ document.addEventListener('DOMContentLoaded', async function () {
     // await renderSections(sections) for rendering section module move to /module
   }
 })
-
-// } else if (pageType === 'exercises') {
-//   const bodyPartId = pathArray[2]
-//   console.log(bodyPartId)
-//   const { exercises, exercisesId, exercisesImgs } = await fetchExercisesByPart(bodyPartId)
-//   renderExercisesByPart({ exercises, exercisesId, exercisesImgs })
-
-//   addListenerExerciseBtn(user, isAuthenticated)
-//   return

@@ -1,8 +1,12 @@
 const express = require('express')
 // const helmet = require('helmet')
+const { testRedisConnection, redisClient, connectRedis } = require('./services/redisService')
+
 const path = require('path')
 const app = express()
+
 const { sequelize } = require('./models')
+
 const exerciseRoutes = require('./routes/exerciseRoutes')
 const memberRoutes = require('./routes/memberRoutes')
 const moduleRoutes = require('./routes/moduleRoutes')
@@ -62,13 +66,35 @@ app.get('/schedules', (req, res) => {
   res.sendFile(path.join(__dirname, '../frontend/public/schedules.html'))
 })
 
-// Sync models and start the server
-sequelize.sync({ alter: false }).then(() => {
-  app.listen(port, () => {
-    console.log(`Server is running on http://localhost:${port}`)
+async function startServer () {
+  try {
+    // Run Redis connection test
+    await testRedisConnection()
+    await connectRedis()
+
+    // Sync Sequelize models
+    await sequelize.sync({ alter: false })
+
+    // Start the server
+    app.listen(port, () => {
+      console.log(`Server is running on http://localhost:${port}`)
+    })
+  } catch (error) {
+    console.error('Error during server startup:', error)
+    process.exit(9000) // Exit the process with an error code
+  }
+}
+
+// Start the server
+startServer()
+
+// Handle process termination
+process.on('SIGINT', () => {
+  console.log('Closing Redis client...')
+  redisClient.quit(() => {
+    console.log('Redis client closed')
+    process.exit(0)
   })
-}).catch(error => {
-  console.error('Unable to sync the database:', error)
 })
 
 // backend / app.js

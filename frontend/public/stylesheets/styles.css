@@ -72,17 +72,19 @@ body {
 }
 
 .nav-item-container .nav-item {
-
-  font-weight: 500;
   font-size: 16px;
-
 }
 
 .nav-item-container {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  width: 250px;
+  width: 320px;
+}
+
+.nav-item-container a {
+  font-weight: 400;
+  color: #ddd
 }
 
 .nav-separator hr {
@@ -141,8 +143,8 @@ body {
   font-size: 20px;
   margin-bottom: 10px;
   border-bottom: 2px solid;
-    border-color: currentColor;
-    text-align: center;
+  border-color: currentColor;
+  text-align: center;
 }
 
 .popup-title-container {
@@ -249,8 +251,10 @@ button {
 
 }
 
+#startButtonContainer button,
 .welcome.btn button {
-  width: 100%;
+  font-size: 25px;
+  width: 90vw;
   height: 70px;
   margin-top: 10px;
   margin-bottom: 15px;
@@ -482,6 +486,12 @@ button {
   margin-top: 20px;
   margin-left: auto;
   margin-right: auto;
+  margin-bottom: 5px;
+  width: 50px;
+  height: 25px;
+  display: flex;
+  align-items: center;
+  justify-content: center
 }
 
 .menu-module-item {
@@ -513,8 +523,7 @@ button {
   background-color: #403f3f;
 }
 
-#exerciseModal
-div {
+#exerciseModal div {
   font-size: 13px;
 }
 
@@ -526,29 +535,30 @@ h4.card-title {
   height: 300px;
 }
 
-.card.exercise
-img {
+.card.exercise img {
   width: 100%;
-    height: auto;
-    object-fit: cover;
+  height: auto;
+  object-fit: cover;
   overflow: hidden;
 }
-#exerciseModal .modal-dialog{
+
+#exerciseModal .modal-dialog {
   display: flex;
   justify-content: center;
   max-width: 1200px;
   margin-left: auto;
-    margin-right: auto;
+  margin-right: auto;
 }
-#exerciseModal .modal-content{
+
+#exerciseModal .modal-content {
   width: 1050px;
-  
+
 }
 
 #exerciseModal .exercise-images {
   width: 500px;
   max-height: 60vh;
-  
+
   display: flex;
   flex-direction: row;
   gap: 10px;
