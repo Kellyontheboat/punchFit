@@ -74,7 +74,7 @@ export async function loginformSubmission () {
         if (response.ok) {
           const responseData = await response.json()
           localStorage.setItem('token', responseData.token)
-          console.log('login successfully!')
+          console.log('Login successfully!')
           window.location.href = '/training'
         } else {
           const errorData = await response.json()
@@ -87,7 +87,7 @@ export async function loginformSubmission () {
         }
       } catch (error) {
         console.error('Error logging in:', error)
-        msgSpan.innerText = '發生錯誤，請稍後再試'
+        msgSpan.innerText = 'Error!Please try later.'
         msgSpan.style.color = 'red'
       }
     })
@@ -112,7 +112,7 @@ export async function registerformSubmission () {
 
     // Check if all fields are filled
     if (!data.name || !data.email || !data.password) {
-      registerMessage.innerText = '請輸入所有欄位'
+      registerMessage.innerText = 'Please fill in al fields.'
       registerMessage.style.color = 'red'
       return
     }
@@ -120,7 +120,7 @@ export async function registerformSubmission () {
     // Validate email format
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
     if (!emailRegex.test(data.email)) {
-      registerMessage.innerText = '請輸入正確信箱格式'
+      registerMessage.innerText = 'Please enter the right email.'
       registerMessage.style.color = 'red'
       return
     }
@@ -135,8 +135,8 @@ export async function registerformSubmission () {
       })
       // if BE return ok true
       if (response.ok) {
-        registerMessage.innerText = '註冊成功，請登入系統'
-        registerMessage.style.color = 'green'
+        registerMessage.innerText = 'Registered successful,please login.'
+        registerMessage.style.color = rgb(247, 211, 82)
         // Store the registered email in localstorage
         localStorage.setItem('registeredEmail', data.email)
       } else {
@@ -152,7 +152,7 @@ export async function registerformSubmission () {
       }
     } catch (error) {
       console.error('Error:', error)
-      alert('註冊過程發生錯誤，請再嘗試一次')
+      alert('Error!Please try again.')
     }
   })
 };
