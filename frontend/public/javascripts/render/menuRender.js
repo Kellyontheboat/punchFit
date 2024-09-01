@@ -6,7 +6,7 @@ export async function renderModulesBySections () {
 
   const { modules } = await getModulesBySections(sectionIds)
   const menuModules = modules
-
+  console.log(menuModules)
   renderMenuModules(menuModules, sectionIds)
 }
 
@@ -30,12 +30,25 @@ export async function renderMenuModules (modules, sectionIds) {
     moduleTitle.dataset.sectionId = sectionId
     moduleTitle.innerText = `${sectionName}`
 
-    // Tie the module.id to moduleDiv if a module exists under this sectionId
-    const module = modules[index]
-    if (module && module !== '') {
-      const moduleId = module.id
-      moduleDiv.dataset.id = moduleId
+    console.log(modules)
+    // // Tie the module.id to moduleDiv if a module exists under this sectionId
+    console.log(sectionId)
+    const sectionIdNumber = Number(sectionId);
+    console.log(modules)
+    // Find the module with the matching section_id
+    let module = modules.find(module => module.section_id === sectionIdNumber);
+
+    if (module) {
+      const moduleId = module.id;
+      moduleDiv.dataset.id = moduleId;
+      // remove the module from the array
+      const moduleIndex = modules.indexOf(module);
+      if (moduleIndex !== -1) {
+        modules.splice(moduleIndex, 1);
+      }
     }
+
+
     moduleWrap.appendChild(moduleTitle)
     moduleWrap.appendChild(moduleDiv)
     moduleContainer.appendChild(moduleWrap)
