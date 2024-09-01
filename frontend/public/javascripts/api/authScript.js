@@ -136,7 +136,7 @@ export async function registerformSubmission () {
       // if BE return ok true
       if (response.ok) {
         registerMessage.innerText = 'Registered successful,please login.'
-        registerMessage.style.color = rgb(247, 211, 82)
+        registerMessage.style.color = 'rgb(247, 211, 82)'
         // Store the registered email in localstorage
         localStorage.setItem('registeredEmail', data.email)
       } else {

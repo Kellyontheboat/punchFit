@@ -15,7 +15,7 @@ export async function addTrainingRecordBtn (isAuthenticated) {
     scrollSectionImgBtn.innerText = 'Click below to check out our exercise library:'
   }
 
-  trainingButton.classList.add('btn', 'btn-primary') // Example Bootstrap classes
+  trainingButton.classList.add('btn', 'btn-primary')
 
   scrollSectionImgBtn.classList.add('scroll-to-section')
 

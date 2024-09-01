@@ -2,9 +2,9 @@ const express = require('express')
 const router = express.Router()
 const scheduleControllers = require('../controllers/scheduleControllers')
 const authenticateToken = require('../middleware/auth')
+const { upload } = require('../middleware/upload')
 
-router.post('/schedules', authenticateToken, scheduleControllers.createSchedule
-)
+router.post('/schedules', authenticateToken, upload.single('video'), scheduleControllers.createSchedule)
 
 router.get('/schedules', authenticateToken, scheduleControllers.getMemberSchedules)
 

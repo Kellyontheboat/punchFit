@@ -29,6 +29,18 @@ module.exports = function (sequelize, DataTypes) {
     schedule_name: {
       type: DataTypes.STRING(255),
       allowNull: false
+    },
+    content: {
+      type: DataTypes.STRING(255),
+      allowNull: true
+    },
+    video: {
+      type: Sequelize.STRING(255),
+      allowNull: true
+    },
+    coachComment: {
+      type: Sequelize.STRING(255),
+      allowNull: true
     }
   }, {
     sequelize,

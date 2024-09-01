@@ -15,8 +15,7 @@ export async function planFormSubmission (date) {
   const data = { sectionIds, scheduleName, date }
   console.log(data)
 
-  // *add a layer for user to edit the items in menu first
-  const scheduleId = await postSchedule({ scheduleName, date })
+  const scheduleId = await postSchedule({ formData })
   await addItemsIntoSchedule({ sectionIds, scheduleId })
 
   // Add the new event to the calendar
@@ -30,18 +29,27 @@ export async function planFormSubmission (date) {
   return data
 }
 
-export async function postSchedule ({ scheduleName, date }) {
+export async function postSchedule ({ formData }) { // scheduleName, date,
   const token = localStorage.getItem('token')
-  const data = { scheduleName, date }
-  console.log(date)
+
+  // // Create a new FormData object for the schedule data
+  // const scheduleFormData = new FormData();
+  // scheduleFormData.append('scheduleName', scheduleName);
+  // scheduleFormData.append('date', date);
+
+  // // Append formData to the scheduleFormData
+  // for (let [key, value] of formData.entries()) {
+  //   scheduleFormData.append(key, value);
+  // }
+  console.log(formData)
+  console.log(formData.captionInput)
   try {
     const response = await fetch('/api/schedules', {
       method: 'POST',
       headers: {
-        Authorization: `Bearer ${token}`,
-        'Content-Type': 'application/json'
+        Authorization: `Bearer ${token}`
       },
-      body: JSON.stringify(data)
+      body: formData // scheduleFormData
     })
 
     if (!response.ok) {
@@ -50,11 +58,37 @@ export async function postSchedule ({ scheduleName, date }) {
     const scheduleData = await response.json()
     const scheduleId = scheduleData.schedule_id
     console.log(scheduleId)
-    return scheduleId // send to addItemsIntoSchedule
+    return scheduleId
   } catch (error) {
     console.error('Error:', error)
   }
 }
+
+// export async function postSchedule ({ scheduleName, date }) {
+//   const token = localStorage.getItem('token')
+//   const data = { scheduleName, date }
+//   console.log(date)
+//   try {
+//     const response = await fetch('/api/schedules', {
+//       method: 'POST',
+//       headers: {
+//         Authorization: `Bearer ${token}`,
+//         'Content-Type': 'application/json'
+//       },
+//       body: JSON.stringify(data)
+//     })
+
+//     if (!response.ok) {
+//       throw new Error('Failed to add schedule')
+//     }
+//     const scheduleData = await response.json()
+//     const scheduleId = scheduleData.schedule_id
+//     console.log(scheduleId)
+//     return scheduleId // send to addItemsIntoSchedule
+//   } catch (error) {
+//     console.error('Error:', error)
+//   }
+// }
 
 // sectionIds>modules>exercises
 export async function addItemsIntoSchedule ({ sectionIds, scheduleId }) {
@@ -96,7 +130,6 @@ export async function getSchedules () {
   schedules.forEach(s => {
     scheduleIds.push(s.id)
   })
-  console.log(scheduleIds)
   return { scheduleIds, schedules }
 }
 
@@ -107,7 +140,6 @@ export async function getSchedulesItems (scheduleId = null) {
   // If scheduleId is provided, use it;(when user just created a schedule need to render right away)
   // otherwise, get all scheduleIds(when page loaded need to get all schedules)
   if (scheduleId) {
-    console.log(scheduleId)
     scheduleIdsArray.push(scheduleId)
   } else {
     const { scheduleIds, schedules } = await getSchedules()
@@ -140,11 +172,9 @@ export async function getSchedulesItems (scheduleId = null) {
       weight: item.weight,
       status: item.status
     }))
-    console.log(exercises)
     allExercises.push(...exercises)
   }
 
-  console.log(allExercises)
   return allExercises
 }
 
