@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Real-Time Chat</title>
+  <style>
+    #messages {
+      list-style-type: none;
+      padding: 0;
+    }
+
+    #messages li {
+      padding: 8px;
+      background: #f3f3f3;
+      margin-bottom: 4px;
+    }
+
+    #chat {
+      margin-top: 20px;
+    }
+  </style>
+</head>
+
+<body>
+  <h1>Real-Time Chat</h1>
+  <div id="chat">
+    <input id="roomId" type="text" placeholder="Enter room ID">
+    <button id="joinRoom">Join Room</button>
+    <ul id="messages"></ul>
+    <input id="message" type="text" placeholder="Type a message">
+    <button id="sendMessage">Send</button>
+  </div>
+
+  <script src="/socket.io/socket.io.js"></script>
+  <script>
+    const socket = io();
+
+    document.getElementById('joinRoom').addEventListener('click', () => {
+      const roomId = document.getElementById('roomId').value;
+      socket.emit('joinRoom', roomId);
+    });
+
+    document.getElementById('sendMessage').addEventListener('click', () => {
+      const roomId = document.getElementById('roomId').value;
+      const messageText = document.getElementById('message').value;
+      socket.emit('chatMessage', { roomId, text: messageText });
+    });
+
+    socket.on('chatMessage', (message) => {
+      const messagesList = document.getElementById('messages');
+      const li = document.createElement('li');
+      li.textContent = message.text;
+      messagesList.appendChild(li);
+    });
+  </script>
+</body>
+
+</html>

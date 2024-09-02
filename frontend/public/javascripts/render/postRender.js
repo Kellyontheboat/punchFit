@@ -1,10 +1,13 @@
 import { getSchedules, getSchedulesItems } from '../api/scheduleScript.js'
 
 export async function renderPosts (posts) {
-  console.log(posts)
   const postContainer = document.getElementById('post-container')
 
   posts.forEach(post => {
+    // Create a post wrapper
+    const postWrapper = document.createElement('div')
+    postWrapper.classList.add('post-wrapper')
+
     // Create a container for each post
     const postElement = document.createElement('div')
     postElement.classList.add('post')
@@ -28,7 +31,6 @@ export async function renderPosts (posts) {
     if (post.video) {
       const videoContainer = document.createElement('div')
       videoContainer.classList.add('video-post')
-      console.log(videoContainer)
       const videoElement = document.createElement('video')
       videoElement.controls = true
 
@@ -41,19 +43,28 @@ export async function renderPosts (posts) {
       scheduleNameDiv.insertAdjacentElement('afterend', videoContainer)
     }
 
+    // Create the coach consult button
+    const consultBtn = document.createElement('button')
+    consultBtn.type = 'submit'
+    consultBtn.dataset.id = post.id
+    consultBtn.classList.add('btn', 'btn-primary', 'consult')
+    consultBtn.innerText = 'Consult Coach'
+    textContainer.appendChild(consultBtn)
+
     // Append the post to the container
-    postContainer.appendChild(postElement)
+    
+    postWrapper.appendChild(postElement)
+    postContainer.appendChild(postWrapper)
+    
   })
 }
 
 export async function renderExerciseInPosts () {
   const posts = document.querySelectorAll('.post')
-  console.log(posts)
 
   for (const post of posts) {
     const scheduleId = post.dataset.id
     const scheduleItems = await getSchedulesItems(scheduleId)
-    console.log(scheduleItems)
     renderExerciseInPost(scheduleItems, post)
   }
 }

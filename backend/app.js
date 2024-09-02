@@ -1,6 +1,9 @@
 const express = require('express')
+const http = require('http');
 // const helmet = require('helmet')
 const { testRedisConnection, redisClient, connectRedis } = require('./services/redisService')
+const { initializeSocket } = require('./services/socketService');
+
 
 const path = require('path')
 const app = express()
@@ -11,8 +14,10 @@ const exerciseRoutes = require('./routes/exerciseRoutes')
 const memberRoutes = require('./routes/memberRoutes')
 const moduleRoutes = require('./routes/moduleRoutes')
 const scheduleRoutes = require('./routes/scheduleRoutes')
+const invitationRoutes = require('./routes/invitationRoutes')
 
 const port = 3000
+const server = http.createServer(app);
 
 // const cspDirectives = "default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https://raw.githubusercontent.com;";
 
@@ -35,7 +40,7 @@ app.use('/parts/:partId', express.static(path.join(__dirname, '../frontend/publi
 app.use('/user/:memberId', express.static(path.join(__dirname, '../frontend/public')))
 
 // !API routes
-app.use('/api', exerciseRoutes, memberRoutes, moduleRoutes, scheduleRoutes)
+app.use('/api', exerciseRoutes, memberRoutes, moduleRoutes, scheduleRoutes, invitationRoutes)
 
 // Frontend routes
 app.get('/', (req, res) => {
@@ -70,24 +75,48 @@ app.get('/posts', (req, res) => {
   res.sendFile(path.join(__dirname, '../frontend/public/post.html'))
 })
 
-async function startServer () {
-  try {
-    // Run Redis connection test
-    await testRedisConnection()
-    await connectRedis()
+app.get('/consult', (req, res) => {
+  res.sendFile(path.join(__dirname, '../frontend/public/consult.html'))
+})
 
-    // Sync Sequelize models
-    await sequelize.sync({ alter: false })
+
+async function startServer() {
+  try {
+    await testRedisConnection();
+    await connectRedis();
+
+    await sequelize.sync({ alter: false });
+
+    // Initialize Socket.io with the HTTP server
+    initializeSocket(server);
 
     // Start the server
-    app.listen(port, () => {
-      console.log(`Server is running on http://localhost:${port}`)
-    })
+    server.listen(port, () => {
+      console.log(`Server is running on http://localhost:${port}`);
+    });
   } catch (error) {
-    console.error('Error during server startup:', error)
-    process.exit(9000) // Exit the process with an error code
+    console.error('Error during server startup:', error);
+    process.exit(1); // Exit the process with an error code
   }
 }
+// async function startServer () {
+//   try {
+//     // Run Redis connection test
+//     await testRedisConnection()
+//     await connectRedis()
+
+//     // Sync Sequelize models
+//     await sequelize.sync({ alter: false })
+
+//     // Start the server
+//     app.listen(port, () => {
+//       console.log(`Server is running on http://localhost:${port}`)
+//     })
+//   } catch (error) {
+//     console.error('Error during server startup:', error)
+//     process.exit(9000) // Exit the process with an error code
+//   }
+// }
 
 // Start the server
 startServer()

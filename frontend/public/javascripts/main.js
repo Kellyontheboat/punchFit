@@ -22,6 +22,8 @@ import { addListenerModule, addListenerAddMemoBtn, addListenerModalAddMemoBtn } 
 
 import { fetchSections, addSectionListener, fetchPartsBySection, addPartListener, fetchExercisesByPart } from './api/exerciseScript.js'
 
+import { addListenerConsultBtn } from './api/consultScript.js'
+
 document.addEventListener('DOMContentLoaded', async function () {
   // use the Template HTML
   await injectHTML('.nav-container', navHTML)
@@ -50,15 +52,17 @@ document.addEventListener('DOMContentLoaded', async function () {
   if (pathArray[1] === 'posts') {
     const { scheduleIds, schedules } = await getSchedules()
     await renderPosts(schedules)
-    renderExerciseInPosts()
+    await renderExerciseInPosts()
+    
   } else if (pathArray[1] === 'schedules') {
     console.log(sections)
     welcomeMessage()
     addListenerDelScheduleBtn()
-
     const { scheduleIds, schedules } = await getSchedules()
     await renderPosts(schedules)
-    renderExerciseInPosts()
+    await renderExerciseInPosts()
+    addListenerConsultBtn()
+
   } else if (pathArray[1] === 'module') {
     await renderModulesBySections()
     const itemContainers = document.querySelectorAll('.module-editing')

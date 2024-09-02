@@ -745,7 +745,7 @@ span {
 }
 
 /* ! post */
-.post {
+.post-wrapper {
   border: 1px solid #ccc;
   padding: 20px;
   margin-bottom: 15px;
@@ -753,8 +753,13 @@ span {
   margin-left: auto;
   margin-right: auto;
   display: flex;
-    flex-direction: row;
+    flex-direction: column;
     border-radius: 15px;
+}
+
+.post {
+  display: flex;
+    flex-direction: row;
 }
 
 .post
