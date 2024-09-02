@@ -35,7 +35,19 @@
 
   <script src="/socket.io/socket.io.js"></script>
   <script>
-    const socket = io();
+    const socket = io('https://www.good-msg.xyz');
+
+    socket.on('connect', () => {
+        console.log('Connected to server');
+      });
+
+      socket.on('chatMessage', (message) => {
+        console.log('New message:', message);
+      });
+
+      function sendMessage(message) {
+        socket.emit('chatMessage', message);
+      }
 
     document.getElementById('joinRoom').addEventListener('click', () => {
       const roomId = document.getElementById('roomId').value;

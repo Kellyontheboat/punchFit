@@ -17,7 +17,6 @@ const scheduleRoutes = require('./routes/scheduleRoutes')
 const invitationRoutes = require('./routes/invitationRoutes')
 
 const port = 3000
-const server = http.createServer(app);
 
 // const cspDirectives = "default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https://raw.githubusercontent.com;";
 
@@ -88,7 +87,8 @@ async function startServer() {
     await sequelize.sync({ alter: false });
 
     // Initialize Socket.io with the HTTP server
-    initializeSocket(server);
+    const server = http.createServer(app);
+    const io = initializeSocket(server);
 
     // Start the server
     server.listen(port, () => {
@@ -96,9 +96,22 @@ async function startServer() {
     });
   } catch (error) {
     console.error('Error during server startup:', error);
-    process.exit(1); // Exit the process with an error code
+    process.exit(9000); // Exit the process with an error code
   }
 }
+
+// Start the server
+startServer()
+
+// Handle process termination
+process.on('SIGINT', () => {
+  console.log('Closing Redis client...')
+  redisClient.quit(() => {
+    console.log('Redis client closed')
+    process.exit(0)
+  })
+})
+
 // async function startServer () {
 //   try {
 //     // Run Redis connection test
@@ -117,18 +130,6 @@ async function startServer() {
 //     process.exit(9000) // Exit the process with an error code
 //   }
 // }
-
-// Start the server
-startServer()
-
-// Handle process termination
-process.on('SIGINT', () => {
-  console.log('Closing Redis client...')
-  redisClient.quit(() => {
-    console.log('Redis client closed')
-    process.exit(0)
-  })
-})
 
 // backend / app.js
 // backend / routes / exercisesRoutes.js
