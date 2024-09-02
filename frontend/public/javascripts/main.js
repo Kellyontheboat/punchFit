@@ -8,7 +8,9 @@ import { renderModules, renderItemsInModule, renderEditModule } from './render/m
 
 import { welcomeMessage } from './render/scheduleRender.js'
 
-import { addListenerDelScheduleBtn } from './api/scheduleScript.js'
+import { renderPosts, renderExerciseInPosts } from './render/postRender.js'
+
+import { addListenerDelScheduleBtn, getSchedules, getSchedulesItems } from './api/scheduleScript.js'
 
 import { renderModulesBySections, renderMenuModules, renderItemsInMenuModule, renderSubmitMenuBtn } from './render/menuRender.js'
 
@@ -44,11 +46,19 @@ document.addEventListener('DOMContentLoaded', async function () {
   addSectionListener()
   await fetchSections()
   const sections = await fetchSections()
-  if (pathArray[1] === 'schedules') {
+
+  if (pathArray[1] === 'posts') {
+    const { scheduleIds, schedules } = await getSchedules()
+    await renderPosts(schedules)
+    renderExerciseInPosts()
+  } else if (pathArray[1] === 'schedules') {
     console.log(sections)
-    // await addTrainingRecordBtn(isAuthenticated)
     welcomeMessage()
     addListenerDelScheduleBtn()
+
+    const { scheduleIds, schedules } = await getSchedules()
+    await renderPosts(schedules)
+    renderExerciseInPosts()
   } else if (pathArray[1] === 'module') {
     await renderModulesBySections()
     const itemContainers = document.querySelectorAll('.module-editing')

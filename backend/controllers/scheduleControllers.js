@@ -1,16 +1,42 @@
 const db = require('../models')
 const { Exercises, Schedules, Modules, ScheduleItems, ModuleItems, Sections } = db
 
+const crypto = require('crypto')
+const generateFileName = (bytes = 32) => crypto.randomBytes(bytes).toString('hex')
+const { uploadFile } = require('../services/s3.js')
+
 const scheduleControllers = {
   createSchedule: async (req, res) => {
     const memberId = req.memberId
-    const { scheduleName, date } = req.body
-    console.log('date to write in:', date)
+    const { scheduleName, date, captionInput } = req.body
+    const file = req.file // from middleware/upload.js
+
+    console.log('Schedule name:', scheduleName)
+    console.log('Date to write in:', date)
+    console.log('Caption:', captionInput)
+    console.log('Uploaded file:', file)
+
+    if (!scheduleName || !date) {
+      return res.status(400).json({ error: 'Schedule name and date are required.' })
+    }
+
+    let videoName = null
+    if (file) {
+      videoName = generateFileName()
+      try {
+        await uploadFile(videoName, file.buffer, file.mimetype)
+      } catch (error) {
+        return res.status(500).json({ error: 'Failed to upload video' })
+      }
+    }
+
     try {
       const newSchedule = await Schedules.create({
         schedule_name: scheduleName,
         schedule_date: date,
-        member_id: memberId
+        member_id: memberId,
+        video: videoName,
+        content: captionInput
       })
 
       res.json({ success: true, schedule_id: newSchedule.id }) // Return the schedule_id
@@ -19,11 +45,9 @@ const scheduleControllers = {
       res.json({ success: false, error: error.message })
     }
   },
-  //! remenber to record detail
   addIntoScheduleItems: async (req, res) => {
     const memberId = req.memberId
     const { sectionIds, scheduleId } = req.body
-    console.log('kkk', { sectionIds, scheduleId })
     try {
       // 1. Find all modules for the given member and sectionIds
       const modules = await Modules.findAll({
@@ -77,10 +101,19 @@ const scheduleControllers = {
   getMemberSchedules: async (req, res) => {
     const memberId = req.memberId
     const schedules = await Schedules.findAll({
-      where: { member_id: memberId }
+      where: { member_id: memberId },
+      order: [
+        ['schedule_date', 'DESC'],
+        ['created_at', 'DESC']
+      ],
+      raw: true
     })
-
-    return res.json(schedules)
+    const schedulesWithVideoUrl = await Promise.all(schedules.map(async (schedule) => {
+      schedule.videoUrl = 'https://d348uiae81km7c.cloudfront.net/' + schedule.video
+      return schedule
+    }))
+    console.log('sdsd', schedulesWithVideoUrl)
+    return res.json(schedulesWithVideoUrl)
   },
   getItemsInSchedule: async (req, res) => {
     const { scheduleId } = req.params

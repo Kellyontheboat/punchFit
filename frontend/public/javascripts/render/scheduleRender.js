@@ -121,7 +121,6 @@ async function showScheduleItemsModal (scheduleItems, scheduleId) {
   ulElement.className = 'list-group'
 
   // Loop through schedule items and create list items
-  console.log(scheduleItems)
   scheduleItems.forEach((item) => {
     // Create the list item element with the class "list-group-item"
     const liElement = document.createElement('li')

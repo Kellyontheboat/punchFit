@@ -6,7 +6,6 @@ export async function renderModulesBySections () {
 
   const { modules } = await getModulesBySections(sectionIds)
   const menuModules = modules
-
   console.log(menuModules)
   renderMenuModules(menuModules, sectionIds)
 }
@@ -31,12 +30,25 @@ export async function renderMenuModules (modules, sectionIds) {
     moduleTitle.dataset.sectionId = sectionId
     moduleTitle.innerText = `${sectionName}`
 
-    // Tie the module.id to moduleDiv if a module exists under this sectionId
-    const module = modules[index]
-    if (module && module !== '') {
-      const moduleId = module.id
-      moduleDiv.dataset.id = moduleId
+    console.log(modules)
+    // // Tie the module.id to moduleDiv if a module exists under this sectionId
+    console.log(sectionId)
+    const sectionIdNumber = Number(sectionId);
+    console.log(modules)
+    // Find the module with the matching section_id
+    let module = modules.find(module => module.section_id === sectionIdNumber);
+
+    if (module) {
+      const moduleId = module.id;
+      moduleDiv.dataset.id = moduleId;
+      // remove the module from the array
+      const moduleIndex = modules.indexOf(module);
+      if (moduleIndex !== -1) {
+        modules.splice(moduleIndex, 1);
+      }
     }
+
+
     moduleWrap.appendChild(moduleTitle)
     moduleWrap.appendChild(moduleDiv)
     moduleContainer.appendChild(moduleWrap)
@@ -45,8 +57,6 @@ export async function renderMenuModules (modules, sectionIds) {
 
 export async function renderItemsInMenuModule (itemContainers) {
   for (const container of itemContainers) {
-    console.log(container)
-
     const moduleId = container.dataset.id
     // if (!moduleId) continue
 
@@ -59,11 +69,8 @@ export async function renderItemsInMenuModule (itemContainers) {
     editBtn.innerText = 'Edit'
 
     const items = await getExerciseInModule(moduleId)
-    console.log(items)
     // Clear the container before rendering items
     if (items.length !== 0) {
-      // container.innerText = ''
-
       items.forEach(item => {
         const listItem = document.createElement('li')
         const exerciseName = item.exercise.name
@@ -78,7 +85,6 @@ export async function renderItemsInMenuModule (itemContainers) {
         listItem.dataset.id = exerciseId
         listItem.innerText = `*  ${exerciseName}`
         detailDiv.innerText = `${reps} reps / ${sets} sets / ${weight} kg`
-        console.log(listItem)
         listGroup.appendChild(listItem)
         listItem.appendChild(detailDiv)
         listGroup.appendChild(editBtn)
@@ -89,12 +95,13 @@ export async function renderItemsInMenuModule (itemContainers) {
 }
 
 export async function renderSubmitMenuBtn () {
-  const menuContainer = document.querySelector('.menu-module-container')
+  const menuContainer = document.querySelector('.menu-wrapper')
   const SubmitMenuBtn = document.createElement('button')
 
   SubmitMenuBtn.innerText = 'Save into Schedule'
-  SubmitMenuBtn.classList.add('btn', 'btn-primary') // Example Bootstrap classes
+  SubmitMenuBtn.classList.add('btn', 'btn-primary')
   SubmitMenuBtn.id = 'submit-menu'
+  SubmitMenuBtn.type = 'button'
   menuContainer.appendChild(SubmitMenuBtn)
   return SubmitMenuBtn
 }

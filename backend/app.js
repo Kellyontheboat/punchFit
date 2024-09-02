@@ -66,6 +66,10 @@ app.get('/schedules', (req, res) => {
   res.sendFile(path.join(__dirname, '../frontend/public/schedules.html'))
 })
 
+app.get('/posts', (req, res) => {
+  res.sendFile(path.join(__dirname, '../frontend/public/post.html'))
+})
+
 async function startServer () {
   try {
     // Run Redis connection test

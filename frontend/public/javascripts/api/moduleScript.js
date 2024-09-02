@@ -61,6 +61,7 @@ export async function getModules (isAuthenticated) {
     }
 
     const modules = await response.json()
+    console.log(modules)
     return modules // array
   } catch (error) {
     console.error('Error:', error)
@@ -128,7 +129,7 @@ export async function getModulesBySections (sectionIds) {
   })
 
   const modules = await response.json()
-
+  console.log(modules)
   const moduleId = modules.map(module => module.id)
   return { modules, moduleId }
 }
