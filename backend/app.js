@@ -1,9 +1,8 @@
 const express = require('express')
-const http = require('http');
+const http = require('http')
 // const helmet = require('helmet')
 const { testRedisConnection, redisClient, connectRedis } = require('./services/redisService')
-const { initializeSocket } = require('./services/socketService');
-
+const { initializeSocket } = require('./services/socketService')
 
 const path = require('path')
 const app = express()
@@ -78,25 +77,24 @@ app.get('/consult', (req, res) => {
   res.sendFile(path.join(__dirname, '../frontend/public/consult.html'))
 })
 
-
-async function startServer() {
+async function startServer () {
   try {
-    await testRedisConnection();
-    await connectRedis();
+    await testRedisConnection()
+    await connectRedis()
 
-    await sequelize.sync({ alter: false });
+    await sequelize.sync({ alter: false })
 
     // Initialize Socket.io with the HTTP server
-    const server = http.createServer(app);
-    const io = initializeSocket(server);
+    const server = http.createServer(app)
+    const io = initializeSocket(server)
 
     // Start the server
     server.listen(port, () => {
-      console.log(`Server is running on http://localhost:${port}`);
-    });
+      console.log(`Server is running on http://localhost:${port}`)
+    })
   } catch (error) {
-    console.error('Error during server startup:', error);
-    process.exit(9000); // Exit the process with an error code
+    console.error('Error during server startup:', error)
+    process.exit(9000) // Exit the process with an error code
   }
 }
 

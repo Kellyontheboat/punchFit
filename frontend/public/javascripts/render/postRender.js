@@ -52,10 +52,9 @@ export async function renderPosts (posts) {
     textContainer.appendChild(consultBtn)
 
     // Append the post to the container
-    
+
     postWrapper.appendChild(postElement)
     postContainer.appendChild(postWrapper)
-    
   })
 }
 

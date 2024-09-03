@@ -5,6 +5,8 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Real-Time Chat</title>
+
+
   <style>
     #messages {
       list-style-type: none;
@@ -21,21 +23,53 @@
       margin-top: 20px;
     }
   </style>
+
+
+  <link href="./stylesheets/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.15/main.min.css">
+  
+  <link rel="stylesheet" href="./stylesheets/styles.css">
+  
+  
+  <!-- Load jQuery before Bootstrap JS -->
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <!-- <script src="/javascripts/bootstrap.bundle.min.js"></script> -->
+
+  
+  <script type="module" src="/javascripts/main.js" defer></script>
+  <script src="/socket.io/socket.io.js"></script>
 </head>
 
 <body>
-  <h1>Real-Time Chat</h1>
+  <nav class="nav-container">
+    <!-- templateJs -->
+  </nav>
+  
+  <div class="nav-separator">
+    <!-- templateJs -->
+  </div>
+  
+  <div class="welcome">
+    
+    <br>
+    <div class="welcome-message">
+      
+    </div>
+  </div>
+
+  <!-- <div class="consult-title">Online Coach</div>
   <div id="chat">
     <input id="roomId" type="text" placeholder="Enter room ID">
     <button id="joinRoom">Join Room</button>
     <ul id="messages"></ul>
     <input id="message" type="text" placeholder="Type a message">
     <button id="sendMessage">Send</button>
-  </div>
+  </div> -->
 
-  <script src="/socket.io/socket.io.js"></script>
+
+  <!-- <script src="/socket.io/socket.io.js"></script>
   <script>
-    const socket = io('https://www.good-msg.xyz');
+    const socket = io(); //'https://www.good-msg.xyz'
 
     socket.on('connect', () => {
         console.log('Connected to server');
@@ -66,7 +100,7 @@
       li.textContent = message.text;
       messagesList.appendChild(li);
     });
-  </script>
+  </script> -->
 </body>
 
 </html>

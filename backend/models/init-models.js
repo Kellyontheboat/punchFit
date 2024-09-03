@@ -26,7 +26,6 @@ function initModels (sequelize) {
   const ModuleItems = _ModuleItems(sequelize, DataTypes)
   const Invitations = _Invitations(sequelize, DataTypes)
 
-
   Images.belongsTo(Exercises, { as: 'exercise', foreignKey: 'exercises_id' })
   Exercises.hasMany(Images, { as: 'Images', foreignKey: 'exercises_id' })
   Instructions.belongsTo(Exercises, { as: 'exercise', foreignKey: 'exercises_id' })
@@ -39,9 +38,9 @@ function initModels (sequelize) {
   ScheduleItems.belongsTo(Exercises, { foreignKey: 'exercise_id', as: 'exercise' })
   ModuleItems.belongsTo(Exercises, { foreignKey: 'exercise_id', as: 'exercise' })
   Exercises.hasMany(ModuleItems, { foreignKey: 'exercise_id', as: 'moduleItems' })
-  Invitations.belongsTo(Schedules, { as: 'schedule', foreignKey: 'schedule_id' });
-  Invitations.belongsTo(Members, { as: 'coach', foreignKey: 'coach_id' });
-  Invitations.belongsTo(Members, { as: 'student', foreignKey: 'student_id' });
+  Invitations.belongsTo(Schedules, { as: 'schedule', foreignKey: 'schedule_id' })
+  Invitations.belongsTo(Members, { as: 'coach', foreignKey: 'coach_id' })
+  Invitations.belongsTo(Members, { as: 'student', foreignKey: 'student_id' })
 
   return {
     Exercises,

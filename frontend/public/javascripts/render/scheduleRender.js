@@ -215,9 +215,9 @@ async function showScheduleItemsModal (scheduleItems, scheduleId) {
   })
 }
 
-export async function welcomeMessage () {
-  const welcomeContainer = document.querySelector('.welcome')
-  const messageContainer = document.querySelector('.welcome-message')
-  welcomeContainer.innerText = ''
-  messageContainer.innerText = 'Your Record'
-}
+// export async function welcomeMessage () {
+//   const welcomeContainer = document.querySelector('.welcome')
+//   const messageContainer = document.querySelector('.welcome-message')
+//   welcomeContainer.innerText = ''
+//   messageContainer.innerText = 'Your Record'
+// }

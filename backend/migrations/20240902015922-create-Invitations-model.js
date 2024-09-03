@@ -1,4 +1,4 @@
-'use strict';
+'use strict'
 
 module.exports = {
   up: async (queryInterface, Sequelize) => {
@@ -6,48 +6,48 @@ module.exports = {
       id: {
         type: Sequelize.BIGINT,
         autoIncrement: true,
-        primaryKey: true,
+        primaryKey: true
       },
       schedule_id: {
         type: Sequelize.BIGINT.UNSIGNED,
         allowNull: false,
         references: {
           model: 'Schedules',
-          key: 'id',
-        },
+          key: 'id'
+        }
       },
       coach_id: {
         type: Sequelize.BIGINT,
         allowNull: false,
         references: {
           model: 'Members',
-          key: 'id',
-        },
+          key: 'id'
+        }
       },
       student_id: {
         type: Sequelize.BIGINT,
         allowNull: false,
         references: {
           model: 'Members',
-          key: 'id',
-        },
+          key: 'id'
+        }
       },
       status: {
         type: Sequelize.ENUM('pending', 'accepted', 'rejected'),
-        defaultValue: 'pending',
+        defaultValue: 'pending'
       },
       created_at: {
         type: Sequelize.DATE,
-        defaultValue: Sequelize.NOW,
+        defaultValue: Sequelize.NOW
       },
       updated_at: {
         type: Sequelize.DATE,
-        defaultValue: Sequelize.NOW,
-      },
-    });
+        defaultValue: Sequelize.NOW
+      }
+    })
   },
 
   down: async (queryInterface, Sequelize) => {
-    await queryInterface.dropTable('Invitations');
-  },
-};
+    await queryInterface.dropTable('Invitations')
+  }
+}

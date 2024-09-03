@@ -6,8 +6,6 @@ import { addTrainingRecordBtn, renderSections, renderPartsBySection, renderExerc
 
 import { renderModules, renderItemsInModule, renderEditModule } from './render/moduleRender.js'
 
-import { welcomeMessage } from './render/scheduleRender.js'
-
 import { renderPosts, renderExerciseInPosts } from './render/postRender.js'
 
 import { addListenerDelScheduleBtn, getSchedules, getSchedulesItems } from './api/scheduleScript.js'
@@ -22,7 +20,7 @@ import { addListenerModule, addListenerAddMemoBtn, addListenerModalAddMemoBtn } 
 
 import { fetchSections, addSectionListener, fetchPartsBySection, addPartListener, fetchExercisesByPart } from './api/exerciseScript.js'
 
-import { addListenerConsultBtn } from './api/consultScript.js'
+import { addListenerConsultBtn, initCoachSocket, coachGetNotification } from './api/consultScript.js'
 
 document.addEventListener('DOMContentLoaded', async function () {
   // use the Template HTML
@@ -30,6 +28,7 @@ document.addEventListener('DOMContentLoaded', async function () {
   await injectHTML('.nav-separator', hrHTML)
 
   const pathArray = window.location.pathname.split('/')
+  console.log(pathArray)
   const pageType = pathArray[3]
 
   const { user, isAuthenticated } = await checkLoginStatus()// user:id username email
@@ -53,16 +52,20 @@ document.addEventListener('DOMContentLoaded', async function () {
     const { scheduleIds, schedules } = await getSchedules()
     await renderPosts(schedules)
     await renderExerciseInPosts()
-    
+  } else if (pathArray[1] === 'consult') {
+    console.log('consult page')
+    console.log(sections)
+    coachGetNotification()
+    initCoachSocket(user)
+    // addListenerConsultBtn(user)
   } else if (pathArray[1] === 'schedules') {
     console.log(sections)
-    welcomeMessage()
+    // welcomeMessage()
     addListenerDelScheduleBtn()
     const { scheduleIds, schedules } = await getSchedules()
     await renderPosts(schedules)
     await renderExerciseInPosts()
-    addListenerConsultBtn()
-
+    addListenerConsultBtn(user)
   } else if (pathArray[1] === 'module') {
     await renderModulesBySections()
     const itemContainers = document.querySelectorAll('.module-editing')
