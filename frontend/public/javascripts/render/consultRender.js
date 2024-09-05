@@ -1,3 +1,6 @@
+import { coachGetPostItems, coachGetPostContent } from '../api/consultScript.js'
+
+const token = localStorage.getItem('token')
 export async function renderInviteForm (scheduleId) {
   // Get the container element where the form will be appended
   const container = document.querySelector(`.post[data-id="${scheduleId}"]`)
@@ -18,33 +21,41 @@ export async function renderInviteForm (scheduleId) {
   scheduleInput.value = scheduleId
   form.appendChild(scheduleInput)
 
-  // Create input for coachId
-  const coachInput = document.createElement('input')
-  coachInput.type = 'email'
-  coachInput.name = 'coachEmail'
-  coachInput.placeholder = 'Coach Email'
-  coachInput.required = true
-  form.appendChild(coachInput)
-
   // Create submit button
   const submitButton = document.createElement('button')
   submitButton.type = 'submit'
-  submitButton.textContent = 'Consult Coach'
+  submitButton.classList.add('share-btn')
+  submitButton.textContent = 'Agree to share exercise record'
   form.appendChild(submitButton)
 
   // Append the form to the container
-  // container.appendChild(form);
   container.insertAdjacentElement('afterend', form)
 }
 
-// for both student and coach
-export async function renderConsultRoom (scheduleId, roomId) {
-  const container = document.querySelector(`.post[data-id="${scheduleId}"]`) || document.body
+export async function renderCoachConsultRoom (studentName, incomeNotification) {
+  if (window.location.pathname === '/consult') {
+    console.log(incomeNotification)
+    // Render chat room
+    const itemData = await coachGetPostItems(incomeNotification.scheduleId)
+    const post = await coachGetPostContent(incomeNotification.scheduleId)
+    console.log(post)
+    await renderConsultPostContent(post)
+    console.log(itemData)
+    const items = itemData.items
+    await renderExerciseInConsult(items)
+    await renderConsultRoom(incomeNotification.scheduleId, incomeNotification.roomId, studentName)
+  }
+}
+
+// for both student and coach in renderCoachConsultRoom
+export async function renderConsultRoom (scheduleId, roomId, studentName) {
+  const container = document.querySelector(`.post[data-id="${scheduleId}"]`) || document.querySelector('.consult-post')
 
   if (!container) {
     console.error('Container element not found')
     return
   }
+
   console.log('start rendering consultRoom')
   // Create consult room elements
   const consultRoomDiv = document.createElement('div')
@@ -52,7 +63,18 @@ export async function renderConsultRoom (scheduleId, roomId) {
 
   const consultTitle = document.createElement('div')
   consultTitle.className = 'consult-title'
-  consultTitle.textContent = 'Online Coach'
+  // if is the coach's consult room
+  if (container.classList.contains('consult-post')) {
+    consultTitle.textContent = 'Reply:'
+    // add roomTitle
+    const roomTitle = document.createElement('div')
+    roomTitle.classList.add('room-title')
+    roomTitle.innerText = `From student ${studentName}:`
+    const postWrapper = document.querySelector('.post-wrapper')
+    postWrapper.insertAdjacentElement('afterbegin', roomTitle)
+  } else {
+    consultTitle.textContent = 'Online coach real-time consultation:'
+  }
 
   const chatDiv = document.createElement('div')
   chatDiv.id = 'chat'
@@ -68,6 +90,17 @@ export async function renderConsultRoom (scheduleId, roomId) {
   const sendButton = document.createElement('button')
   sendButton.id = 'sendMessage'
   sendButton.textContent = 'Send'
+
+  sendButton.addEventListener('click', () => {
+    const messageInput = document.getElementById('message')
+    const userId = token
+    const roomId = document.getElementById('roomId').value
+    if (messageInput.value.trim()) {
+      const socket = io()
+      socket.emit('chatMessage', { text: messageInput.value, roomId, senderId: userId })
+      messageInput.value = ''
+    }
+  })
 
   const roomIdInput = document.createElement('input')
   roomIdInput.id = 'roomId'
@@ -85,4 +118,105 @@ export async function renderConsultRoom (scheduleId, roomId) {
   consultRoomDiv.appendChild(chatDiv)
 
   container.insertAdjacentElement('afterend', consultRoomDiv)
+}
+
+// source:coachGetPostContent(scheduleId)
+export async function renderConsultPostContent (post) {
+  console.log(post)
+  const postContainer = document.getElementById('consult-post-container')
+  // Create a post wrapper
+  const postWrapper = document.createElement('div')
+  postWrapper.classList.add('post-wrapper')
+
+  // Create a container for each post
+  const postElement = document.createElement('div')
+  postElement.classList.add('consult-post')
+  // postElement.dataset.id = post.id
+
+  const scheduleNameDiv = document.createElement('div')
+  scheduleNameDiv.classList.add('schedule-name')
+  const now = new Date()
+  const formattedDate = now.toLocaleString('en-US', { timeZone: 'Asia/Taipei', hour12: false })
+
+  scheduleNameDiv.innerText = `${post.scheduleName} / ${formattedDate}`
+  postElement.appendChild(scheduleNameDiv)
+
+  // Container for user note and coach comment
+  const textContainer = document.createElement('div')
+  textContainer.classList.add('text-post')
+  // Create and append the content
+  const contentElement = document.createElement('p')
+  contentElement.textContent = post.scheduleContent
+  textContainer.appendChild(contentElement)
+  scheduleNameDiv.appendChild(textContainer)
+
+  // Create and append the video if available
+  if (post.scheduleWithVideoUrl) {
+    const videoContainer = document.createElement('div')
+    videoContainer.classList.add('consult-video-post')
+    const videoElement = document.createElement('video')
+    videoElement.controls = true
+
+    const sourceElement = document.createElement('source')
+    sourceElement.src = post.scheduleWithVideoUrl
+    sourceElement.type = 'video/mp4'
+
+    videoElement.appendChild(sourceElement)
+    videoContainer.appendChild(videoElement)
+    scheduleNameDiv.insertAdjacentElement('afterend', videoContainer)
+  }
+  // Append the post to the container
+  postWrapper.appendChild(postElement)
+  postContainer.appendChild(postWrapper)
+}
+
+// source:coachGetPostItems(scheduleId)
+export async function renderExerciseInConsult (scheduleItems) {
+  const consultPost = document.querySelector('.consult-post')
+
+  const exerciseContainer = document.createElement('div')
+  exerciseContainer.classList.add('consult-exercise-post')
+
+  // Create a wrapper div for exercises
+  const moduleWrap = document.createElement('div')
+  moduleWrap.classList.add('module-wrap')
+
+  // Create a container for exercises
+  const menuEditing = document.createElement('div')
+  menuEditing.classList.add('module-editing', 'list-group')
+
+  // Create a list for exercises
+  const exerciseList = document.createElement('ul')
+  exerciseList.classList.add('list-group')
+
+  scheduleItems.forEach(item => {
+    // Create list item for each exercise
+    const exerciseItem = document.createElement('li')
+    exerciseItem.classList.add('list-group-item', 'menu-module-item')
+    exerciseItem.dataset.id = item.id
+
+    // Add exercise details
+    const exerciseDetails = document.createElement('div')
+    exerciseDetails.classList.add('exercise-details')
+    exerciseDetails.textContent = `${item.reps} reps / ${item.sets} sets / ${item.weight} kg`
+
+    const exerciseSection = document.createElement('strong')
+    const exerciseName = document.createElement('em')
+    exerciseName.innerText = `${item.exercise.name}`
+    exerciseSection.innerText = `${item.section.section_name}: `
+    const exerciseSectionName = document.createElement('div')
+
+    exerciseSectionName.appendChild(exerciseSection)
+    exerciseSectionName.appendChild(exerciseName)
+    exerciseItem.appendChild(exerciseSectionName)
+    exerciseItem.appendChild(exerciseDetails)
+    exerciseList.appendChild(exerciseItem)
+  })
+
+  menuEditing.appendChild(exerciseList)
+  moduleWrap.appendChild(menuEditing)
+
+  // Append the module wrap to the post container
+  exerciseContainer.appendChild(moduleWrap)
+  consultPost.appendChild(exerciseContainer)
 }

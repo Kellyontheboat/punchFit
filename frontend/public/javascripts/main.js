@@ -1,6 +1,6 @@
 import { navHTML, hrHTML, injectHTML } from './render/htmlTemplates.js'
 
-import { showLoginModal, navScheduleBtn, updateLoginButton, initializeModals } from './render/navRender.js'
+import { showLoginModal, navScheduleBtn, updateLoginButton, initializeModals, coachNavbar } from './render/navRender.js'
 
 import { addTrainingRecordBtn, renderSections, renderPartsBySection, renderExercisesByPart, exerciseCardModal, sectionCheckBox, partContainerStickOnTop } from './render/exerciseRender.js'
 
@@ -12,6 +12,8 @@ import { addListenerDelScheduleBtn, getSchedules, getSchedulesItems } from './ap
 
 import { renderModulesBySections, renderMenuModules, renderItemsInMenuModule, renderSubmitMenuBtn } from './render/menuRender.js'
 
+import { renderConsultRoom, renderCoachConsultRoom } from './render/consultRender.js'
+
 import { addListenerEditMenuBtn, addListenerSubmitMenu } from './api/menuScript.js'
 
 import { checkLoginStatus, loginformSubmission, registerformSubmission, loginBtn } from './api/authScript.js'
@@ -20,7 +22,7 @@ import { addListenerModule, addListenerAddMemoBtn, addListenerModalAddMemoBtn } 
 
 import { fetchSections, addSectionListener, fetchPartsBySection, addPartListener, fetchExercisesByPart } from './api/exerciseScript.js'
 
-import { addListenerConsultBtn, initCoachSocket, coachGetNotification } from './api/consultScript.js'
+import { addListenerConsultBtn, initCoachSocket, coachGetNotification, coachGetPostContent } from './api/consultScript.js'
 
 document.addEventListener('DOMContentLoaded', async function () {
   // use the Template HTML
@@ -43,30 +45,48 @@ document.addEventListener('DOMContentLoaded', async function () {
   loginformSubmission() // click submit then login
   registerformSubmission()
 
+  const { isCoach } = await coachNavbar()
+  console.log({ isCoach })
+
   // !section part
   addSectionListener()
   await fetchSections()
   const sections = await fetchSections()
 
   if (pathArray[1] === 'posts') {
-    const { scheduleIds, schedules } = await getSchedules()
-    await renderPosts(schedules)
-    await renderExerciseInPosts()
-  } else if (pathArray[1] === 'consult') {
-    console.log('consult page')
-    console.log(sections)
-    coachGetNotification()
-    initCoachSocket(user)
-    // addListenerConsultBtn(user)
-  } else if (pathArray[1] === 'schedules') {
-    console.log(sections)
-    // welcomeMessage()
-    addListenerDelScheduleBtn()
+    if (isCoach) {
+      window.location.href = '/consult'
+    }
     const { scheduleIds, schedules } = await getSchedules()
     await renderPosts(schedules)
     await renderExerciseInPosts()
     addListenerConsultBtn(user)
+  } else if (pathArray[1] === 'consult') {
+    if (!isCoach) {
+      window.location.href = '/training'
+      return
+    }
+    console.log('consult page')
+    console.log(sections)
+    const { invitations, studentName } = await coachGetNotification()
+    console.log({ invitations, studentName })
+    await initCoachSocket(user, studentName)
+
+    // renderCoachConsultRoom({studentName})
+  } else if (pathArray[1] === 'schedules') {
+    if (isCoach) {
+      window.location.href = '/consult'
+    }
+    console.log(sections)
+    addListenerDelScheduleBtn()
+    // const { scheduleIds, schedules } = await getSchedules()
+    // await renderPosts(schedules)
+    // await renderExerciseInPosts()
+    // addListenerConsultBtn(user)
   } else if (pathArray[1] === 'module') {
+    if (isCoach) {
+      window.location.href = '/consult'
+    }
     await renderModulesBySections()
     const itemContainers = document.querySelectorAll('.module-editing')
     await renderItemsInMenuModule(itemContainers)
@@ -74,6 +94,8 @@ document.addEventListener('DOMContentLoaded', async function () {
   } else if (pathArray[1] === 'menu') {
     if (!isAuthenticated) {
       window.location.href = '/'
+    } else if (isCoach) {
+      window.location.href = '/consult'
     }
     await renderModulesBySections()
     const itemContainers = document.querySelectorAll('.module-editing')
@@ -81,8 +103,14 @@ document.addEventListener('DOMContentLoaded', async function () {
     addListenerEditMenuBtn()
     addListenerSubmitMenu()
   } else if (pathArray[1] === 'training') {
+    if (isCoach) {
+      window.location.href = '/consult'
+    }
     sectionCheckBox()
   } else if (pageType === 'parts') {
+    if (isCoach) {
+      window.location.href = '/consult'
+    }
     const sectionId = pathArray[2]
     const { parts, partsId } = await fetchPartsBySection(sectionId)
     // render the exercises of first bodyPart
@@ -102,6 +130,9 @@ document.addEventListener('DOMContentLoaded', async function () {
     addListenerModalAddMemoBtn(data)
     partContainerStickOnTop()
   } else {
+    if (isCoach) {
+      window.location.href = '/consult'
+    }
     // if homepage
     addTrainingRecordBtn(isAuthenticated)
     addListenerModule(isAuthenticated)

@@ -4,7 +4,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Real-Time Chat</title>
+  <title>Real-Time Coach</title>
 
 
   <style>
@@ -26,7 +26,8 @@
 
 
   <link href="./stylesheets/bootstrap.min.css" rel="stylesheet">
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.15/main.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+
   
   <link rel="stylesheet" href="./stylesheets/styles.css">
   
@@ -56,6 +57,26 @@
       
     </div>
   </div>
+
+  
+  <div id="consult-post-container" style="display: none;">
+  </div>
+
+  <div class="before-consult"></div>
+
+  <div class="svg-outer-container">
+  <div class="svg-container">
+    <svg xmlns="http://www.w3.org/2000/svg" width="400" height="400" fill="dimGray" class="bi bi-chat-dots-fill"
+      viewBox="0 0 16 16">
+      <path
+        d="M16 8c0 3.866-3.582 7-8 7a9 9 0 0 1-2.347-.306c-.584.296-1.925.864-4.181 1.234-.2.032-.352-.176-.273-.362.354-.836.674-1.95.77-2.966C.744 11.37 0 9.76 0 8c0-3.866 3.582-7 8-7s8 3.134 8 7M5 8a1 1 0 1 0-2 0 1 1 0 0 0 2 0m4 0a1 1 0 1 0-2 0 1 1 0 0 0 2 0m3 1a1 1 0 1 0 0-2 1 1 0 0 0 0 2" />
+    </svg>
+    <div class="red-dot" style="display: none"></div>
+  </div>
+  </div>
+  
+
+  
 
   <!-- <div class="consult-title">Online Coach</div>
   <div id="chat">

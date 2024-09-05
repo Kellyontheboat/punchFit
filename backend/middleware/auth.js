@@ -1,6 +1,8 @@
 const jwt = require('jsonwebtoken')
 const dotenv = require('dotenv')
 dotenv.config()
+const db = require('../models')
+const { Members } = db
 
 function authenticateToken (req, res, next) {
   const authHeader = req.headers.authorization
@@ -18,4 +20,20 @@ function authenticateToken (req, res, next) {
   })
 }
 
-module.exports = authenticateToken
+async function authorizeCoach (req, res, next) {
+  try {
+    const memberId = req.memberId
+    const member = await Members.findByPk(memberId)
+
+    if (member && member.is_coach) {
+      next() // Proceed if the user is a coach
+    } else {
+      res.sendStatus(403) // Forbidden if the user is not a coach
+    }
+  } catch (error) {
+    console.error('Authorization error:', error)
+    res.sendStatus(500)
+  }
+}
+
+module.exports = { authenticateToken, authorizeCoach }

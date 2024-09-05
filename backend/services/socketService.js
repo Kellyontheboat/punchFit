@@ -48,11 +48,11 @@ function getIo () {
   return io
 }
 
-async function notifyUser (userId, message, roomId) {
+async function notifyUser (userId, message, roomId, scheduleId, studentName) {
   const socketId = userSocketMap.get(userId)
   if (socketId) {
     const io = getIo()
-    io.to(socketId).emit('notification', { message, roomId })
+    io.to(socketId).emit('notification', { message, roomId, scheduleId, studentName })
   }
 }
 

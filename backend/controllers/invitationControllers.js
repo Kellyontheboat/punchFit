@@ -7,12 +7,15 @@ const invitationControllers = {
   createInvitation: async (req, res) => {
     try {
       const studentId = req.memberId
-      const { scheduleId, coachEmail } = req.body
-
+      const { scheduleId } = req.body
+      const studentMember = await Members.findByPk(studentId)
+      const studentName = studentMember.username
+      const studentEmail = studentMember.email
+      const coachEmail = `coach${studentEmail}`
       const coachMember = await Members.findOne({ where: { email: coachEmail } })
 
-      if (!coachMember) {
-        return res.status(404).json({ error: 'Coach not found' })
+      if (!coachMember || !studentMember) {
+        return res.status(404).json({ error: 'Coach/Student not found' })
       }
 
       const invitation = await Invitations.create({
@@ -23,12 +26,12 @@ const invitationControllers = {
       })
 
       const roomId = `${studentId}_${coachMember.id}_${scheduleId}`
-
-      res.status(201).json(invitation)
+      console.log(studentMember, 'ooooo')
+      res.status(201).json({ invitation, studentName })
 
       // Notify the coach
       const message = 'You have a new consultation request!'
-      await notifyUser(coachMember.id, message, roomId)
+      await notifyUser(coachMember.id, message, roomId, scheduleId, studentName)
     } catch (error) {
       console.error('Error details:', error)
       res.status(500).json({ error: 'Error creating invitation' })
@@ -39,8 +42,11 @@ const invitationControllers = {
     try {
       const coachId = req.memberId
       const invitations = await Invitations.findAll({ where: { coach_id: coachId } })
-      res.json({ invitations, coachId })
-      console.log('nnn', invitations)
+      const studentMemberId = invitations[0].student_id
+      const studentMember = await Members.findByPk(studentMemberId)
+      const studentName = studentMember.username
+      res.json({ invitations, coachId, studentName })
+      console.log('nnn', studentName)
     } catch (error) {
       res.status(500).json({ error: 'Error fetching invitations' })
     }

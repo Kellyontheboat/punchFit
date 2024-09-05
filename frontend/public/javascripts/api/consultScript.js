@@ -1,4 +1,4 @@
-import { renderInviteForm, renderConsultRoom } from '../render/consultRender.js'
+import { renderInviteForm, renderConsultRoom, renderCoachConsultRoom, renderConsultPostContent, renderExerciseInConsult } from '../render/consultRender.js'
 
 const token = localStorage.getItem('token')
 
@@ -28,10 +28,12 @@ export async function submitInviteForm (user) {
   const inviteForm = document.getElementById('invite-form')
   inviteForm.addEventListener('submit', async (event) => {
     event.preventDefault()
+    const submitBtn = document.querySelector('.share-btn')
+    submitBtn.style.display = 'none'
     const formData = new FormData(event.target)
     const data = {
-      scheduleId: formData.get('scheduleId'),
-      coachEmail: formData.get('coachEmail')
+      scheduleId: formData.get('scheduleId')
+      // coachEmail: formData.get('coachEmail')
     }
     console.log(data)
     try {
@@ -43,15 +45,16 @@ export async function submitInviteForm (user) {
         },
         body: JSON.stringify(data)
       })
-      const result = await response.json()
-      console.log(result)
+      const invitationData = await response.json()
+      const result = invitationData.invitation
+      const studentName = invitationData.studentName
       const memberId = result.student_id
-      const coachId = result.coach_id //! coach role
+      const coachId = result.coach_id
       const scheduleId = result.schedule_id
       console.log('Invitation sent:', result)
       const roomId = `${memberId}_${coachId}_${scheduleId}`
       console.log(roomId)
-      await renderConsultRoom(scheduleId, roomId)
+      await renderConsultRoom(scheduleId, roomId, studentName)
       initConsultSocket(roomId)
     } catch (error) {
       console.error('Error sending invitation:', error)
@@ -60,8 +63,9 @@ export async function submitInviteForm (user) {
 }
 
 // Init WebSocket connection and event listeners for student
+// Join room.handle incoming msg.notification
 export function initConsultSocket (roomId) {
-  const socket = io()// !Connect to the server 'https://www.good-msg.xyz'
+  const socket = io()
   console.log(roomId)
   // Join the room
   socket.emit('joinRoom', roomId)
@@ -70,7 +74,18 @@ export function initConsultSocket (roomId) {
   socket.on('chatMessage', (message) => {
     const messagesList = document.getElementById('messages')
     const messageElement = document.createElement('li')
-    messageElement.textContent = message.text
+    const hr = document.createElement('hr')
+
+    const userId = token
+    // Check if the message is from the current user
+    if (message.senderId === userId) {
+      messageElement.textContent = `You: ${message.text}`
+      messageElement.style.textAlign = 'right'
+    } else {
+      messageElement.textContent = `Coach: ${message.text}`
+      messageElement.style.textAlign = 'left'
+    }
+    messageElement.appendChild(hr)
     messagesList.appendChild(messageElement)
   })
 
@@ -85,26 +100,24 @@ export function initConsultSocket (roomId) {
   const sendButton = document.getElementById('sendMessage')
   sendButton.addEventListener('click', () => {
     const messageInput = document.getElementById('message')
+    const userId = token
     if (messageInput.value.trim()) {
-      socket.emit('chatMessage', { text: messageInput.value, roomId })
+      socket.emit('chatMessage', { text: messageInput.value, roomId, senderId: userId })
       messageInput.value = ''
     }
   })
 }
 
 export async function displayNotification (message) {
-  console.log('displayNotify')
-  // Create a notification element
-  const notification = document.createElement('div')
-  notification.className = 'notification'
-  notification.textContent = message
+  const redDot = document.querySelector('.red-dot')
+  redDot.style.display = 'block'
+  const welcomeContainer = document.querySelector('.welcome')
+  welcomeContainer.innerText = 'Consultation request:'
 
-  // Append notification to the body or a specific container
-  document.body.appendChild(notification)
-  // Remove the notification after a few seconds
-  // document.body.removeChild(notification);
+  addListenerNotification()
 }
 
+//
 export async function coachGetNotification () {
   console.log('check if coach got notification')
   try {
@@ -114,19 +127,46 @@ export async function coachGetNotification () {
         Authorization: `Bearer ${token}`
       }
     })
-    const { invitations, coachId } = await response.json()
 
-    // if (invitations.length !== 0) {
-    //   initCoachSocket(coachId);
-    // }
+    const invitationContent = await response.json()
+    const { invitations, studentName } = invitationContent
+    console.log()
+    return ({ invitations, studentName })
   } catch (error) {
     console.error('Error fetching notifications:', error)
   }
 }
 
-export function initCoachSocket (user) {
+export async function coachGetPostItems (scheduleId) {
+  console.log(scheduleId)
+  const response1 = await fetch(`/api/schedules/${scheduleId}/items?consulting=true`, {
+    method: 'GET',
+    headers: {
+      Authorization: `Bearer ${token}`
+    }
+  })
+
+  const postItems = await response1.json()
+  console.log(postItems)
+  return postItems
+}
+
+export async function coachGetPostContent (scheduleId) {
+  console.log(scheduleId)
+  const response2 = await fetch(`/api/schedules/${scheduleId}/video?consulting=true`, {
+    method: 'GET',
+    headers: {
+      Authorization: `Bearer ${token}`
+    }
+  })
+  const postContent = await response2.json()
+  console.log(postContent)
+  return postContent
+}
+
+export async function initCoachSocket (user, studentName) {
   console.log('initCoachSocket')
-  const socket = io() // !Connect to the server 'https://www.good-msg.xyz'
+  const socket = io()
   const coachId = user.id
   console.log(coachId)
   // Register the coach with their ID
@@ -138,7 +178,16 @@ export function initCoachSocket (user) {
     console.log(data.roomId)
     // Display the notification
     await displayNotification(data.message)
-    await renderConsultRoom(data.scheduleId, data.roomId) // Render chat room
+
+    // Render chat room
+    // coach get the student content
+    const itemData = await coachGetPostItems(data.scheduleId)
+    const items = itemData.items
+    const post = await coachGetPostContent(data.scheduleId)
+    await renderConsultPostContent(post)
+    console.log(itemData)
+    await renderExerciseInConsult(items)
+    await renderConsultRoom(data.scheduleId, data.roomId, studentName)
 
     // After rendering, join the room
     socket.emit('joinRoom', data.roomId)
@@ -148,18 +197,46 @@ export function initCoachSocket (user) {
     socket.on('chatMessage', (message) => {
       const messagesList = document.getElementById('messages')
       const messageElement = document.createElement('li')
-      messageElement.textContent = message.text
+      const hr = document.createElement('hr')
+      const userId = token
+      // Check if the message is from the current user
+      if (message.senderId === userId) {
+        messageElement.textContent = `You: ${message.text}`
+        messageElement.style.textAlign = 'right'
+      } else {
+        messageElement.textContent = `Student: ${message.text}`
+        messageElement.style.textAlign = 'left'
+      }
+      messageElement.appendChild(hr)
       messagesList.appendChild(messageElement)
     })
 
     const sendButton = document.getElementById('sendMessage')
     sendButton.addEventListener('click', () => {
       const messageInput = document.getElementById('message')
+      const userId = token
       const roomId = document.getElementById('roomId').value
       if (messageInput.value.trim()) {
-        socket.emit('chatMessage', { text: messageInput.value, roomId })
+        socket.emit('chatMessage', { text: messageInput.value, roomId, senderId: userId })
         messageInput.value = ''
       }
     })
+  })
+}
+
+export async function addListenerNotification () {
+  const notificationIcon = document.querySelector('.red-dot')
+  notificationIcon.addEventListener('click', () => {
+    // Hide the chat icon
+    const svgElement = document.querySelector('svg')
+    const redDot = document.querySelector('.red-dot')
+    const beforeConsult = document.querySelector('.before-consult')
+    beforeConsult.style.display = 'none'
+    svgElement.style.display = 'none'
+    redDot.style.display = 'none'
+
+    // Show the consult content post from student
+    const consultContainer = document.getElementById('consult-post-container')
+    consultContainer.style.display = 'block'
   })
 }
