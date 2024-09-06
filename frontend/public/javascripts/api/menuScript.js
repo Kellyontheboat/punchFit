@@ -52,7 +52,7 @@ export async function addListenerSubmitMenu () {
 
     const scheduleName = await submitMenu()
     if (!scheduleName) return
-    
+
     const lastUrl = sessionStorage.getItem('lastUrl')
     const saveSuccessAlert = document.getElementById('saveSuccessAlert')
     saveSuccessAlert.classList.remove('d-none')
@@ -108,6 +108,12 @@ export async function submitMenu () {
   if (file && !file.type.startsWith('video/')) {
     alert('Please upload a video file.')
     return null
+  }
+
+  const MAX_FILE_SIZE = 50 * 1024 * 1024
+  if (file.size > MAX_FILE_SIZE) {
+    alert('File is too large. Maximum allowed size is 50MB.')
+    return
   }
 
   const formData = new FormData()

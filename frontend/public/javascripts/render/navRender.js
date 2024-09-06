@@ -105,30 +105,18 @@ export async function coachNavbar () {
     const { isCoach } = await response.json()
     console.log({ isCoach })
     const homepageContainer = document.querySelector('.homepage-link')
-    if (isCoach) {
-      const btnA = document.createElement('a')
-      btnA.classList.add('module-link')
-      btnA.href = '/consult'
-
-      const consultBtn = document.createElement('span')
-      consultBtn.id = 'consult-btn'
-      consultBtn.className = 'nav-item'
-      consultBtn.textContent = ' | Consult.'
-      btnA.appendChild(consultBtn)
-      // navContainer.appendChild(btnA);
-      homepageContainer.insertAdjacentElement('afterend', btnA)
-    } else {
+    if (!isCoach) {
       const navContainer = document.querySelector('.nav-item-container')
-      const btnA = document.createElement('a')
-      btnA.classList.add('module-link')
-      btnA.href = '/posts'
+      // const btnA = document.createElement('a')
+      // btnA.classList.add('module-link')
+      // btnA.href = '/posts'
 
-      const consultBtn = document.createElement('span')
-      consultBtn.id = 'post-btn'
-      consultBtn.className = 'nav-item'
-      consultBtn.textContent = ' | Post.'
-      btnA.appendChild(consultBtn)
-      homepageContainer.insertAdjacentElement('afterend', btnA)
+      // const consultBtn = document.createElement('span')
+      // consultBtn.id = 'post-btn'
+      // consultBtn.className = 'nav-item'
+      // consultBtn.textContent = ' Post '
+      // btnA.appendChild(consultBtn)
+      // homepageContainer.insertAdjacentElement('afterend', btnA)
 
       // module nav link
       const aModuleHref = document.createElement('a')
@@ -150,10 +138,23 @@ export async function coachNavbar () {
       calendarSpan.className = 'nav-item'
       calendarSpan.textContent = ' Calendar.'
 
+      // post nav link
+      const aPostHref = document.createElement('a')
+      aPostHref.classList.add('module-link')
+      aPostHref.href = '/posts'
+
+      const postSpan = document.createElement('span')
+      postSpan.id = 'my-post-btn'
+      postSpan.className = 'nav-item'
+      postSpan.textContent = ' Post.'
+
       aModuleHref.appendChild(moduleSpan)
       aCalendarHref.appendChild(calendarSpan)
+      aPostHref.appendChild(postSpan)
+
       navContainer.appendChild(aCalendarHref)
       navContainer.appendChild(aModuleHref)
+      navContainer.appendChild(aPostHref)
     }
 
     return ({ isCoach })

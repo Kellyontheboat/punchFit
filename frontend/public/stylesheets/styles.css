@@ -46,6 +46,11 @@ body {
   height: 100%;
 }
 
+.navbar-item-container {
+  width: 40%;
+  display: flex;
+  justify-content: space-between;
+}
 
 .homepage-link {
   text-decoration: none;
@@ -68,19 +73,13 @@ body {
   font-size: 30px;
 }
 
-#consult-btn,
-#post-btn{
-  font-weight: 400;
-    color: rgb(247, 211, 82);
-    font-size: 28px;
-}
-
 .navbar a {
   text-decoration: none;
 }
 
 .nav-item-container .nav-item {
-  font-size: 16px;
+  font-size: 18px;
+  font-weight: 600;
 }
 
 .nav-item-container {
@@ -88,7 +87,7 @@ body {
   flex-direction: row-reverse;
   justify-content: space-between;
   align-items: center;
-  width: 320px;
+  min-width: 300px;
 }
 
 .nav-item-container a {
@@ -101,7 +100,7 @@ body {
 }
 
 #logout-btn {
-  font-weight: 600;
+  font-weight: 300;
 }
 /* ! modal */
 .modal-content {
@@ -309,6 +308,13 @@ button {
 
 }
 
+.exercises-container {
+  width: 90vw;
+  display: flex;
+  margin-left: auto;
+  margin-right: auto;
+}
+
 .col-md-3 {
   width: calc(90vw/4);
   height: 100%;
@@ -395,6 +401,10 @@ button {
   font-size: 13px;
   flex-direction: row;
   font-weight: 200;
+}
+
+a.exercise-detail {
+  margin-right: 15px;
 }
 
 .exercise-details input {
@@ -916,6 +926,7 @@ hr {
 .consult-exercise-post
 .module-wrap {
   margin-top: 0;
+  width: 25vw;
 }
 
 .consult-title {

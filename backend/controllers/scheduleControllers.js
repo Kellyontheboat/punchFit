@@ -4,7 +4,9 @@ const { getIo, notifyUser } = require('../services/socketService')
 
 const crypto = require('crypto')
 const generateFileName = (bytes = 32) => crypto.randomBytes(bytes).toString('hex')
-//const { uploadFile } = require('../services/s3.js')
+// const { uploadFile } = require('../services/s3.js')
+const upload = require('../middleware/upload.js') // Import the updated upload middleware
+
 const { multipartUpload } = require('../services/s3.js')
 
 const scheduleControllers = {
@@ -32,11 +34,11 @@ const scheduleControllers = {
       // }
       try {
         // Call multipartUpload instead of uploadFile for large file uploads
-        await multipartUpload(videoName, file.buffer, file.mimetype);
-        console.log('Video uploaded successfully');
+        await multipartUpload(videoName, file.buffer, file.mimetype)
+        console.log('Video uploaded successfully')
       } catch (error) {
-        console.error('Error uploading video:', error);
-        return res.status(500).json({ error: 'Failed to upload video' });
+        console.error('Error uploading video:', error)
+        return res.status(500).json({ error: 'Failed to upload video' })
       }
     }
 
