@@ -107,7 +107,7 @@ export async function submitMenu () {
 
   if (file && !file.type.startsWith('video/')) {
     alert('Please upload a video file.')
-    return
+    return null
   }
 
   const formData = new FormData()
@@ -135,6 +135,7 @@ export async function submitMenu () {
     await addItemsIntoSchedule({ sectionIds, scheduleId })
   } catch (error) {
     console.error('Error:', error)
+    return null
   }
 
   return scheduleName
