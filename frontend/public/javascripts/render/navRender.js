@@ -143,7 +143,7 @@ export async function coachNavbar () {
       // calendar nav link
       const aCalendarHref = document.createElement('a')
       aCalendarHref.classList.add('module-link')
-      aCalendarHref.href = '/schedule'
+      aCalendarHref.href = '/schedules'
 
       const calendarSpan = document.createElement('span')
       calendarSpan.id = 'my-calendar-btn'
