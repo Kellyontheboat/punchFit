@@ -52,7 +52,7 @@ export async function addListenerSubmitMenu () {
 
     const scheduleName = await submitMenu()
     if (!scheduleName) return
-
+    
     const lastUrl = sessionStorage.getItem('lastUrl')
     const saveSuccessAlert = document.getElementById('saveSuccessAlert')
     saveSuccessAlert.classList.remove('d-none')
@@ -65,7 +65,7 @@ export async function addListenerSubmitMenu () {
         window.location.href = lastUrl
       } else {
         console.log('menu redirect')
-        window.location.href = '/schedules'
+        window.location.href = '/posts'
       }
     }, 1500)
   })

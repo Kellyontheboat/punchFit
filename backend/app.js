@@ -86,6 +86,7 @@ async function startServer () {
 
     // Initialize Socket.io with the HTTP server
     const server = http.createServer(app)
+    server.timeout = 300000;
     const io = initializeSocket(server)
 
     // Start the server
