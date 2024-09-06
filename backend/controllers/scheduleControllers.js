@@ -4,8 +4,8 @@ const { getIo, notifyUser } = require('../services/socketService')
 
 const crypto = require('crypto')
 const generateFileName = (bytes = 32) => crypto.randomBytes(bytes).toString('hex')
-const { uploadFile } = require('../services/s3.js')
-const { post } = require('../routes/invitationRoutes.js')
+//const { uploadFile } = require('../services/s3.js')
+const { multipartUpload } = require('../services/s3.js')
 
 const scheduleControllers = {
   createSchedule: async (req, res) => {
@@ -25,10 +25,18 @@ const scheduleControllers = {
     let videoName = null
     if (file) {
       videoName = generateFileName()
+      // try {
+      //   await uploadFile(videoName, file.buffer, file.mimetype)
+      // } catch (error) {
+      //   return res.status(500).json({ error: 'Failed to upload video' })
+      // }
       try {
-        await uploadFile(videoName, file.buffer, file.mimetype)
+        // Call multipartUpload instead of uploadFile for large file uploads
+        await multipartUpload(videoName, file.buffer, file.mimetype);
+        console.log('Video uploaded successfully');
       } catch (error) {
-        return res.status(500).json({ error: 'Failed to upload video' })
+        console.error('Error uploading video:', error);
+        return res.status(500).json({ error: 'Failed to upload video' });
       }
     }
 
