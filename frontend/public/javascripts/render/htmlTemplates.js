@@ -3,19 +3,15 @@ import DOMPurify from '../../../../../../../../../node_modules/dompurify/dist/pu
 export const navHTML = `
   <div class="navbar-container">
     <div class="navbar">
-    
+
+    <div class="navbar-item-container">
     <a href="/" class="homepage-link">
       <span class="nav-title">PunchFit  打卡健身</span>
     </a>
+    </div>
+
     <span class="nav-item-container">
       <span class="nav-item" id="login-register-btn">Login/Register.</span>
-    <a href="/module?sectionIds=1,2,3,4,5,6,7" class="module-link">
-      <span class="nav-item" id="my-module-btn">Module.</span>
-    </a>
-
-    <a href="/schedules" class="module-link">
-      <span class="nav-item" id="my-schedule-btn">Schedule.</span>
-    </a>
 
     <span>
     <!-- Modal: Login -->

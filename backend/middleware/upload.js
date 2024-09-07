@@ -3,8 +3,14 @@ const dotenv = require('dotenv')
 
 dotenv.config()
 
-const storage = multer.memoryStorage()
-const upload = multer({ storage })
+const MAX_FILE_SIZE = 50 * 1024 * 1024 // 50MB
 
-// Export the upload middleware
-module.exports = { upload }
+const storage = multer.memoryStorage()
+const upload = multer({
+  storage,
+  limits: {
+    fileSize: MAX_FILE_SIZE
+  }
+})
+
+module.exports = upload

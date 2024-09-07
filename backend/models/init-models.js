@@ -1,5 +1,6 @@
 const DataTypes = require('sequelize').DataTypes
 const _Exercises = require('./Exercises')
+const _Members = require('./Members')
 const _Images = require('./Images')
 const _Instructions = require('./Instructions')
 const _Parts = require('./Parts')
@@ -9,9 +10,11 @@ const _Schedules = require('./Schedules')
 const _ScheduleItems = require('./ScheduleItems')
 const _Modules = require('./Modules')
 const _ModuleItems = require('./ModuleItems')
+const _Invitations = require('./Invitations')
 
 function initModels (sequelize) {
   const Exercises = _Exercises(sequelize, DataTypes)
+  const Members = _Members(sequelize, DataTypes)
   const Images = _Images(sequelize, DataTypes)
   const Instructions = _Instructions(sequelize, DataTypes)
   const Parts = _Parts(sequelize, DataTypes)
@@ -21,6 +24,7 @@ function initModels (sequelize) {
   const ScheduleItems = _ScheduleItems(sequelize, DataTypes)
   const Modules = _Modules(sequelize, DataTypes)
   const ModuleItems = _ModuleItems(sequelize, DataTypes)
+  const Invitations = _Invitations(sequelize, DataTypes)
 
   Images.belongsTo(Exercises, { as: 'exercise', foreignKey: 'exercises_id' })
   Exercises.hasMany(Images, { as: 'Images', foreignKey: 'exercises_id' })
@@ -34,9 +38,13 @@ function initModels (sequelize) {
   ScheduleItems.belongsTo(Exercises, { foreignKey: 'exercise_id', as: 'exercise' })
   ModuleItems.belongsTo(Exercises, { foreignKey: 'exercise_id', as: 'exercise' })
   Exercises.hasMany(ModuleItems, { foreignKey: 'exercise_id', as: 'moduleItems' })
+  Invitations.belongsTo(Schedules, { as: 'schedule', foreignKey: 'schedule_id' })
+  Invitations.belongsTo(Members, { as: 'coach', foreignKey: 'coach_id' })
+  Invitations.belongsTo(Members, { as: 'student', foreignKey: 'student_id' })
 
   return {
     Exercises,
+    Members,
     Images,
     Instructions,
     Parts,

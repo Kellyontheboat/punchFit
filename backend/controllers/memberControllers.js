@@ -55,6 +55,21 @@ const authControllers = {
   },
   authenticate: (req, res) => {
     res.json({ data: req.user })
+  },
+  getRole: async (req, res) => {
+    try {
+      const memberId = req.memberId
+      const member = await Members.findByPk(memberId)
+
+      if (!member) {
+        return res.status(404).json({ error: 'Member not found' })
+      }
+
+      res.json({ isCoach: member.is_coach })
+    } catch (error) {
+      console.error('Error fetching user role:', error)
+      res.status(500).json({ error: 'Internal server error' })
+    }
   }
 }
 

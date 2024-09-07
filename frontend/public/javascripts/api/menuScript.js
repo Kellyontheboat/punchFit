@@ -65,7 +65,7 @@ export async function addListenerSubmitMenu () {
         window.location.href = lastUrl
       } else {
         console.log('menu redirect')
-        window.location.href = '/schedules'
+        window.location.href = '/posts'
       }
     }, 1500)
   })
@@ -107,6 +107,12 @@ export async function submitMenu () {
 
   if (file && !file.type.startsWith('video/')) {
     alert('Please upload a video file.')
+    return null
+  }
+
+  const MAX_FILE_SIZE = 50 * 1024 * 1024
+  if (file.size > MAX_FILE_SIZE) {
+    alert('File is too large. Maximum allowed size is 50MB.')
     return
   }
 
@@ -135,6 +141,7 @@ export async function submitMenu () {
     await addItemsIntoSchedule({ sectionIds, scheduleId })
   } catch (error) {
     console.error('Error:', error)
+    return null
   }
 
   return scheduleName

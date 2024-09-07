@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Real-Time Coach</title>
+
+
+  <style>
+    #messages {
+      list-style-type: none;
+      padding: 0;
+    }
+
+    #messages li {
+      padding: 8px;
+      background: #f3f3f3;
+      margin-bottom: 4px;
+    }
+
+    #chat {
+      margin-top: 20px;
+    }
+  </style>
+
+
+  <link href="./stylesheets/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+
+  
+  <link rel="stylesheet" href="./stylesheets/styles.css">
+  
+  
+  <!-- Load jQuery before Bootstrap JS -->
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <!-- <script src="/javascripts/bootstrap.bundle.min.js"></script> -->
+
+  
+  <script type="module" src="/javascripts/main.js" defer></script>
+  <script src="/socket.io/socket.io.js"></script>
+</head>
+
+<body>
+  <nav class="nav-container">
+    <!-- templateJs -->
+  </nav>
+  
+  <div class="nav-separator">
+    <!-- templateJs -->
+  </div>
+  
+  <div class="welcome">
+    
+    <br>
+    <div class="welcome-message">
+      
+    </div>
+  </div>
+
+  
+  <div id="consult-post-container" style="display: none;">
+  </div>
+
+  <div class="before-consult"></div>
+
+  <div class="svg-outer-container">
+  <div class="svg-container">
+    <svg xmlns="http://www.w3.org/2000/svg" width="400" height="400" fill="dimGray" class="bi bi-chat-dots-fill"
+      viewBox="0 0 16 16">
+      <path
+        d="M16 8c0 3.866-3.582 7-8 7a9 9 0 0 1-2.347-.306c-.584.296-1.925.864-4.181 1.234-.2.032-.352-.176-.273-.362.354-.836.674-1.95.77-2.966C.744 11.37 0 9.76 0 8c0-3.866 3.582-7 8-7s8 3.134 8 7M5 8a1 1 0 1 0-2 0 1 1 0 0 0 2 0m4 0a1 1 0 1 0-2 0 1 1 0 0 0 2 0m3 1a1 1 0 1 0 0-2 1 1 0 0 0 0 2" />
+    </svg>
+    <div class="red-dot" style="display: none"></div>
+  </div>
+  </div>
+  
+
+  
+
+  <!-- <div class="consult-title">Online Coach</div>
+  <div id="chat">
+    <input id="roomId" type="text" placeholder="Enter room ID">
+    <button id="joinRoom">Join Room</button>
+    <ul id="messages"></ul>
+    <input id="message" type="text" placeholder="Type a message">
+    <button id="sendMessage">Send</button>
+  </div> -->
+
+
+  <!-- <script src="/socket.io/socket.io.js"></script>
+  <script>
+    const socket = io(); //'https://www.good-msg.xyz'
+
+    socket.on('connect', () => {
+        console.log('Connected to server');
+      });
+
+      socket.on('chatMessage', (message) => {
+        console.log('New message:', message);
+      });
+
+      function sendMessage(message) {
+        socket.emit('chatMessage', message);
+      }
+
+    document.getElementById('joinRoom').addEventListener('click', () => {
+      const roomId = document.getElementById('roomId').value;
+      socket.emit('joinRoom', roomId);
+    });
+
+    document.getElementById('sendMessage').addEventListener('click', () => {
+      const roomId = document.getElementById('roomId').value;
+      const messageText = document.getElementById('message').value;
+      socket.emit('chatMessage', { roomId, text: messageText });
+    });
+
+    socket.on('chatMessage', (message) => {
+      const messagesList = document.getElementById('messages');
+      const li = document.createElement('li');
+      li.textContent = message.text;
+      messagesList.appendChild(li);
+    });
+  </script> -->
+</body>
+
+</html>

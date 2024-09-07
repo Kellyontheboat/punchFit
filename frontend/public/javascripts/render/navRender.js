@@ -96,3 +96,69 @@ async function hideModals () {
   loginModal.style.display = 'none'
   registerModal.style.display = 'none'
 }
+
+export async function coachNavbar () {
+  try {
+    const response = await fetch('/api/user-role', {
+      headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
+    })
+    const { isCoach } = await response.json()
+    console.log({ isCoach })
+    const homepageContainer = document.querySelector('.homepage-link')
+    if (!isCoach) {
+      const navContainer = document.querySelector('.nav-item-container')
+      // const btnA = document.createElement('a')
+      // btnA.classList.add('module-link')
+      // btnA.href = '/posts'
+
+      // const consultBtn = document.createElement('span')
+      // consultBtn.id = 'post-btn'
+      // consultBtn.className = 'nav-item'
+      // consultBtn.textContent = ' Post '
+      // btnA.appendChild(consultBtn)
+      // homepageContainer.insertAdjacentElement('afterend', btnA)
+
+      // module nav link
+      const aModuleHref = document.createElement('a')
+      aModuleHref.classList.add('module-link')
+      aModuleHref.href = '/module?sectionIds=1,2,3,4,5,6,7'
+
+      const moduleSpan = document.createElement('span')
+      moduleSpan.id = 'my-module-btn'
+      moduleSpan.className = 'nav-item'
+      moduleSpan.textContent = ' Module.'
+
+      // calendar nav link
+      const aCalendarHref = document.createElement('a')
+      aCalendarHref.classList.add('module-link')
+      aCalendarHref.href = '/schedules'
+
+      const calendarSpan = document.createElement('span')
+      calendarSpan.id = 'my-calendar-btn'
+      calendarSpan.className = 'nav-item'
+      calendarSpan.textContent = ' Calendar.'
+
+      // post nav link
+      const aPostHref = document.createElement('a')
+      aPostHref.classList.add('module-link')
+      aPostHref.href = '/posts'
+
+      const postSpan = document.createElement('span')
+      postSpan.id = 'my-post-btn'
+      postSpan.className = 'nav-item'
+      postSpan.textContent = ' Post.'
+
+      aModuleHref.appendChild(moduleSpan)
+      aCalendarHref.appendChild(calendarSpan)
+      aPostHref.appendChild(postSpan)
+
+      navContainer.appendChild(aCalendarHref)
+      navContainer.appendChild(aModuleHref)
+      navContainer.appendChild(aPostHref)
+    }
+
+    return ({ isCoach })
+  } catch (error) {
+    console.error('Error updating navbar:', error)
+  }
+}

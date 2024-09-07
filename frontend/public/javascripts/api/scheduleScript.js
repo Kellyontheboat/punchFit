@@ -53,14 +53,20 @@ export async function postSchedule ({ formData }) { // scheduleName, date,
     })
 
     if (!response.ok) {
-      throw new Error('Failed to add schedule')
+      console.error('Failed to upload:', response.statusText)
+      alert('Failed to upload. Please try again.')
+      return null
     }
     const scheduleData = await response.json()
-    const scheduleId = scheduleData.schedule_id
-    console.log(scheduleId)
-    return scheduleId
+    if (scheduleData.success) {
+      const scheduleId = scheduleData.schedule_id
+      console.log(scheduleId)
+      return scheduleId
+    }
   } catch (error) {
     console.error('Error:', error)
+    alert('Error uploading. Please try again.')
+    return null
   }
 }
 

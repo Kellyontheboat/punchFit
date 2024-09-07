@@ -46,6 +46,11 @@ body {
   height: 100%;
 }
 
+.navbar-item-container {
+  width: 40%;
+  display: flex;
+  justify-content: space-between;
+}
 
 .homepage-link {
   text-decoration: none;
@@ -73,14 +78,16 @@ body {
 }
 
 .nav-item-container .nav-item {
-  font-size: 16px;
+  font-size: 18px;
+  font-weight: 600;
 }
 
 .nav-item-container {
   display: flex;
+  flex-direction: row-reverse;
   justify-content: space-between;
   align-items: center;
-  width: 320px;
+  min-width: 300px;
 }
 
 .nav-item-container a {
@@ -92,6 +99,9 @@ body {
   margin: 10px;
 }
 
+#logout-btn {
+  font-weight: 300;
+}
 /* ! modal */
 .modal-content {
   background-color: #333434;
@@ -224,10 +234,12 @@ button {
 /* ! welcome */
 
 .welcome {
+  font-size: 26px;
+  font-weight: 450;
   width: 90vw;
   margin-right: auto;
   margin-left: auto;
-  /* margin-bottom: 20px; */
+  margin-bottom: 15px;
 }
 
 .welcome-wrap-training {
@@ -294,6 +306,13 @@ button {
 .row-span-2 {
   grid-row: span 2;
 
+}
+
+.exercises-container {
+  width: 90vw;
+  display: flex;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 .col-md-3 {
@@ -379,9 +398,13 @@ button {
 
 .exercise-details {
   height: 25px;
-  font-size: 13px;
+  font-size: 16px;
   flex-direction: row;
-  font-weight: 200;
+  font-weight: 300;
+}
+
+a.exercise-detail {
+  margin-right: 15px;
 }
 
 .exercise-details input {
@@ -525,14 +548,14 @@ button {
 }
 
 #calendar {
-  width: 48vw;
+  width: 90vw;
   height: auto;
   margin-bottom: 20px;
 }
 
 .fc-toolbar-chunk
 button {
-  height: 25px;
+  height: 50px;
   justify-content:first baseline;
 }
 
@@ -706,12 +729,35 @@ span {
   flex-direction: row;
 }
 
-.menu-module-container {
+.menu-module-container-module {
   display: flex;
   flex-direction: column;
   width: 90vw;
   margin-left: auto;
   margin-right: auto;
+}
+
+.menu-wrapper
+.module-wrap {
+  max-width: 100%;
+}
+
+.module-page{
+  display: flex;
+  justify-content: center;
+}
+
+.module-page
+.module-wrap {
+  max-width:100%;
+}
+
+.module-page .menu-module-container {
+
+  width: 90vw;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(520px, 1fr));
+  gap: 20px;
 }
 
 .menu-wrapper .menu-module-container {
@@ -745,7 +791,7 @@ span {
 }
 
 /* ! post */
-.post {
+.post-wrapper {
   border: 1px solid #ccc;
   padding: 20px;
   margin-bottom: 15px;
@@ -753,13 +799,23 @@ span {
   margin-left: auto;
   margin-right: auto;
   display: flex;
-    flex-direction: row;
+    flex-direction: column;
     border-radius: 15px;
+}
+
+.post {
+  display: flex;
+    flex-direction: row;
 }
 
 .post
 .schedule-name {
   width: 100%;
+}
+
+.schedule-name
+.text-post {
+    margin-top: 10px;
 }
 
 .post .module-wrap {
@@ -795,7 +851,7 @@ span {
 
 video {
   margin-left: 15px;
-  margin-right: 15px;
+  margin-right: 25px;
   width: 35vw;
   border-radius: 10px;
 } */
@@ -810,7 +866,118 @@ video {
   max-height: 300px;
 }
 
+/* ! consult */
+.show-more-post{
+  display: flex;
+  justify-content: center;
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 30px;
+  width: 90vw;
+  height: 45px;
+  font-size: 20px;
+}
 
+#consult-post-container
+ {
+  display: flex;
+  justify-content: center;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.consult-post {
+  display: flex;
+  flex-direction: row;
+}
+
+.room-title{
+  font-size: 20px;
+  font-weight: 550;
+}
+
+#messages {
+  border-radius: 10px;
+  padding: 5px;
+  background-color: #3f4040;
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  min-height: 100px;
+}
+
+#messages li{
+  padding: 8px;
+  list-style-type: none;
+  background: none;
+  margin-bottom: 0px;
+}
+
+#messages li::before,
+#messages li::after {
+  content: none;
+}
+
+#messages 
+hr {
+  margin: 5px;
+}
+
+.consult-exercise-post
+.module-wrap {
+  margin-top: 0;
+  width: 25vw;
+}
+
+.consult-title {
+  margin-bottom: 15px;
+  font-weight: 300;
+}
+
+.schedule-name {
+  font-size: 18px;
+  font-weight: 400;
+}
+
+.text-post
+p {
+  font-size: 16px;
+  font-weight: 300;
+  min-height: 200px;
+}
+
+.before-consult {
+  width: 100%;
+  background-color: #333434;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  height: 200px;
+}
+
+.svg-outer-container {
+width: 100%;
+  text-align: center;
+}
+
+.svg-container {
+  position: relative;
+  display: inline-block;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.red-dot {
+  position: absolute;
+  top: 50px;
+  left: 300px;
+  width: 60px;
+  height: 60px;
+  background-color: red;
+  border-radius: 50%;
+  /* transform: translate(-50%, -50%); */
+}
 /* ! footer */
 .before-footer {
   width: 100%;
@@ -819,7 +986,7 @@ video {
   justify-content: center;
   align-items: center;
   text-align: center;
-  height: 350px;
+  height: 200px;
 }
 
 .footer {

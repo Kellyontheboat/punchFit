@@ -1,9 +1,13 @@
 const db = require('../models')
-const { Exercises, Schedules, Modules, ScheduleItems, ModuleItems, Sections } = db
+const { Exercises, Schedules, Modules, ScheduleItems, ModuleItems, Sections, Invitations, Members } = db
+const { getIo, notifyUser } = require('../services/socketService')
 
 const crypto = require('crypto')
 const generateFileName = (bytes = 32) => crypto.randomBytes(bytes).toString('hex')
-const { uploadFile } = require('../services/s3.js')
+// const { uploadFile } = require('../services/s3.js')
+const upload = require('../middleware/upload.js') // Import the updated upload middleware
+
+const { multipartUpload } = require('../services/s3.js')
 
 const scheduleControllers = {
   createSchedule: async (req, res) => {
@@ -23,9 +27,17 @@ const scheduleControllers = {
     let videoName = null
     if (file) {
       videoName = generateFileName()
+      // try {
+      //   await uploadFile(videoName, file.buffer, file.mimetype)
+      // } catch (error) {
+      //   return res.status(500).json({ error: 'Failed to upload video' })
+      // }
       try {
-        await uploadFile(videoName, file.buffer, file.mimetype)
+        // Call multipartUpload instead of uploadFile for large file uploads
+        await multipartUpload(videoName, file.buffer, file.mimetype)
+        console.log('Video uploaded successfully')
       } catch (error) {
+        console.error('Error uploading video:', error)
         return res.status(500).json({ error: 'Failed to upload video' })
       }
     }
@@ -112,12 +124,11 @@ const scheduleControllers = {
       schedule.videoUrl = 'https://d348uiae81km7c.cloudfront.net/' + schedule.video
       return schedule
     }))
-    console.log('sdsd', schedulesWithVideoUrl)
     return res.json(schedulesWithVideoUrl)
   },
   getItemsInSchedule: async (req, res) => {
     const { scheduleId } = req.params
-    console.log('Received scheduleId:', scheduleId)
+    const studentId = req.memberId
 
     try {
       // Fetch the items associated with the given schedule_id
@@ -139,10 +150,54 @@ const scheduleControllers = {
         ]
       })
 
-      res.json({ success: true, items })
+      // Determine if the student is in the consultation procedure
+      const isConsulting = req.query.consulting === 'true'
+
+      if (isConsulting) {
+        const student = await Members.findByPk(studentId)
+
+        if (!student) {
+          return res.status(404).json({ error: 'Student not found' })
+        }
+        return res.json({ success: true, items })
+      }
+
+      return res.json({ success: true, items })
     } catch (error) {
       console.error('Error fetching schedule items:', error)
       res.status(500).json({ success: false, error: error.message })
+    }
+  },
+  // Get data for coach
+  getScheduleById: async (req, res) => {
+    const scheduleId = req.params.scheduleId
+    const studentId = req.memberId
+
+    try {
+      const schedule = await Schedules.findByPk(scheduleId)
+
+      if (!schedule) {
+        return res.status(404).json({ error: 'Schedule not found' })
+      }
+
+      const scheduleName = schedule.schedule_name
+      const scheduleContent = schedule.content
+      const scheduleWithVideoUrl = 'https://d348uiae81km7c.cloudfront.net/' + schedule.video
+
+      const isConsulting = req.query.consulting === 'true'
+
+      if (isConsulting) {
+        const student = await Members.findByPk(studentId)
+
+        if (!student) {
+          return res.status(404).json({ error: 'Student not found' })
+        }
+      }
+
+      return res.json({ scheduleWithVideoUrl, scheduleName, scheduleContent })
+    } catch (error) {
+      console.error('Error fetching schedule:', error)
+      return res.status(500).json({ error: 'Internal server error' })
     }
   },
   updateSchedule: async (req, res) => {
