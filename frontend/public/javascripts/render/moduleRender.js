@@ -196,9 +196,10 @@ export async function renderItemsInModule (itemContainers) {
 
 // new added item render right away
 export function renderExerciseToModuleContainer ({ funcModuleId, exerciseId, exerciseName, reps, sets, weight }) {
-  let moduleContainer = document.querySelector(`[data-id="${funcModuleId}"]`)
+  let moduleContainer = document.querySelector(`[data-id="${funcModuleId}"].part-module-editing`)
 
   if (!moduleContainer) {
+    console.log("no module container,create new")
     const existingElement = document.querySelector('.list-group')
     const newListGroup = document.createElement('div')
     newListGroup.classList.add('part-module-editing', 'list-group')

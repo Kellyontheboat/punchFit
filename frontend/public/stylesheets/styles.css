@@ -398,9 +398,9 @@ button {
 
 .exercise-details {
   height: 25px;
-  font-size: 13px;
+  font-size: 16px;
   flex-direction: row;
-  font-weight: 200;
+  font-weight: 300;
 }
 
 a.exercise-detail {
