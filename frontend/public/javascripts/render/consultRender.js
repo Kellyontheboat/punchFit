@@ -73,6 +73,7 @@ export async function renderConsultRoom(roomId, studentName, user) {
     console.log(roomId)
     const studentId = roomId.split('_')[0]
     // Check if postWrapper is a NodeList and has elements
+    // renderPostContent first(postWrapper created) then renderConsultRoom
     if (postWrapper.length > 0) {
       // add student into studentList
       postWrapper[postWrapper.length - 1].dataset.studentId = studentId // add studentId to the last postWrapper
@@ -390,7 +391,10 @@ export async function clearConsultRoomUnread(user) {
       } else { //if user is student, clear calendar event notification
         const scheduleId = roomId.split('_')[2]
 
-        const eventElement = document.querySelector('.fc-direction-ltr .fc-daygrid-event.fc-event-end');
+        const calendarEl = document.getElementById('calendar');
+        const eventElement = calendarEl.querySelector(`[data-schedule-id="${scheduleId}"]`);
+        console.log(eventElement, "eventElement")
+
         if (eventElement) {
           eventElement.style.backgroundColor = '#3788d8';
 

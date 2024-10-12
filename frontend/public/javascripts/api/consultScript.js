@@ -61,26 +61,26 @@ export async function submitInviteForm(user) {
       const roomId = `${student_id}_${coach_id}_${schedule_id}`;
 
       //add studentName if not exist
-      const studentListContainer = document.getElementById('consult-student-list-container');
-      console.log(studentListContainer)
-      if (studentListContainer) {
-        const existingStudentItems = studentListContainer.querySelectorAll('.student-list-item');
-        let studentExists = false;
-        for (let item of existingStudentItems) {
-          if (item.textContent.trim() === studentName) {
-            studentExists = true;
-            break; //once found, break the loop
-          }
-        }
+      //const studentListContainer = document.getElementById('consult-student-list-container');
+      //console.log(studentListContainer)
+      // if (studentListContainer) {
+      //   const existingStudentItems = studentListContainer.querySelectorAll('.student-list-item');
+      //   let studentExists = false;
+      //   for (let item of existingStudentItems) {
+      //     if (item.textContent.trim() === studentName) {
+      //       studentExists = true;
+      //       break; //once found, break the loop
+      //     }
+      //   }
 
-        if (!studentExists) {
-          const newStudentItem = document.createElement('div');
-          newStudentItem.className = 'student-list-item';
-          newStudentItem.dataset.studentId = student_id;
-          newStudentItem.textContent = studentName;
-          studentListContainer.appendChild(newStudentItem);
-        }
-      }
+      //   if (!studentExists) {
+      //     const newStudentItem = document.createElement('div');
+      //     newStudentItem.className = 'student-list-item';
+      //     newStudentItem.dataset.studentId = student_id;
+      //     newStudentItem.textContent = studentName;
+      //     studentListContainer.appendChild(newStudentItem);
+      //   }
+      // }
       await renderConsultRoom(roomId, studentName, user);
 
       if (socket) {
@@ -94,6 +94,8 @@ export async function submitInviteForm(user) {
         socket.emit('joinRoom', roomId, (response) => {
           console.log(`Joined new room emit callback: ${roomId}`, response);
         });
+        sendMessage(roomId, "教練想諮詢有關本次訓練！", user)
+
 
       } else {
         console.error('Socket is not initialized');
@@ -169,6 +171,9 @@ export function initUserSocket(user) {
     }
 
       if (user.isCoach) {
+
+        //const notificationData = await coachGetNotification() 
+        //console.log('notificationData', notificationData)
         await renderFirstStudentPost()
         addListenerStudentList()
         renderNotificationDot(unreadRoomIds) //studentList
@@ -211,6 +216,7 @@ export function initUserSocket(user) {
         await handleCoachNotification(data, user, socket); // prepare post content
         let unreadRoomIds = []
         unreadRoomIds.push(data.roomId)
+        console.log('notification data', data)
         renderNotificationDot(unreadRoomIds)
         renderConsultRoomUnread(unreadRoomIds, user)
       }
@@ -229,7 +235,7 @@ async function handleCoachNotification(data, user, socket) {
   const { scheduleId, roomId, studentName } = data;
   const itemData = await coachGetPostItems(data.roomId);
   const post = await coachGetPostContent(data.roomId);
-  await renderConsultPostContent(post); 
+  await renderConsultPostContent(post); //create postWrapper
   await renderExerciseInConsult(itemData.items);
   await renderConsultRoom(roomId, studentName, user); //will none all postWrapper
   const studentId = document.querySelector('.student-list-item.active')?.dataset.studentId
@@ -358,6 +364,28 @@ export async function deleteUnreadRoomId(roomId) {
 
 }
 
+export async function coachGetNotification() {
+  console.log('check if coach got notification')
+  try {
+    const response = await fetch('/api/invitations', {
+      method: 'GET',
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    })
+
+    const invitationContent = await response.json()
+    //const invitationContent = invitationData
+    console.log('coachGetNotification', invitationContent)
+    return invitationContent
+    // const { invitations, studentNames, studentMemberIds } = invitationContent
+    // console.log('coachGetNotification', { invitations, studentNames, studentMemberIds })
+    // return ({ invitations, studentNames, studentMemberIds })
+  } catch (error) {
+    console.error('Error fetching notifications:', error)
+  }
+}
+
 // export async function displayNotification(message) {
 //   const redDot = document.querySelector('.red-dot')
 //   redDot.style.display = 'block'
@@ -365,28 +393,6 @@ export async function deleteUnreadRoomId(roomId) {
 //   welcomeContainer.innerText = 'Consultation request:'
 
 //   addListenerNotification()
-// }
-
-// export async function coachGetNotification() {
-//   console.log('check if coach got notification')
-//   try {
-//     const response = await fetch('/api/invitations', {
-//       method: 'GET',
-//       headers: {
-//         Authorization: `Bearer ${token}`
-//       }
-//     })
-
-//     const invitationContent = await response.json()
-//     //const invitationContent = invitationData
-//     console.log('coachGetNotification', invitationContent)
-//     return invitationContent
-//     // const { invitations, studentNames, studentMemberIds } = invitationContent
-//     // console.log('coachGetNotification', { invitations, studentNames, studentMemberIds })
-//     // return ({ invitations, studentNames, studentMemberIds })
-//   } catch (error) {
-//     console.error('Error fetching notifications:', error)
-//   }
 // }
 
 // export async function addListenerNotification() {
