@@ -1,6 +1,7 @@
 const { Server } = require('socket.io');
 const redisAdapter = require('socket.io-redis');
-const { redisClient, redisPubClient, redisSubClient } = require('../services/redisService');
+const redisConfig = require('../config/redisConfig')
+const { redisClient } = require('../services/redisService'); //, redisPubClient, redisSubClient
 const { getSchedulesForUser, getMessagesForRoom, saveMessageToRoom, getPostItems, getPostContent } = require('../services/messageService');
 const jwt = require('jsonwebtoken');
 
@@ -11,8 +12,12 @@ function initializeSocket(server) {
   io = new Server(server);
 
   // Use Redis adapter for Socket.IO
-  io.adapter(redisAdapter(redisPubClient, redisSubClient));
+  io.adapter(redisAdapter({
+    host: redisConfig.host,
+    port: redisConfig.port
+  }));
 
+  console.log('redisConfig', redisConfig)
   // Add authentication middleware
   io.use((socket, next) => {
     const token = socket.handshake.auth.token;

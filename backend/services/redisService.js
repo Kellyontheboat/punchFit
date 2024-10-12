@@ -5,8 +5,8 @@ const redisClient = redis.createClient({
   url: `redis://${redisConfig.host}:${redisConfig.port}`,
   database: redisConfig.db
 })
-const redisPubClient = redisClient.duplicate();
-const redisSubClient = redisClient.duplicate();
+// const redisPubClient = redisClient.duplicate();
+// const redisSubClient = redisClient.duplicate();
 
 redisClient.on('error', (err) => {
   console.error(`Redis error: ${err}`)
@@ -15,11 +15,12 @@ redisClient.on('error', (err) => {
 // Connect to Redis when the application starts
 async function connectRedis () {
   try {
-    await Promise.all([
-      redisClient.connect(),
-      redisPubClient.connect(),
-      redisSubClient.connect()
-    ]);
+    await redisClient.connect();
+    // await Promise.all([
+    //   redisClient.connect(),
+    //   redisPubClient.connect(),
+    //   redisSubClient.connect()
+    // ]);
     console.log('Connected to Redis')
   } catch (error) {
     console.error(`Error connecting to Redis: ${error}`)
@@ -41,4 +42,4 @@ async function testRedisConnection () {
 }
 // // Ensure to connect Redis when your application starts
 // connectRedis()
-module.exports = { testRedisConnection, redisClient, redisPubClient, redisSubClient, connectRedis }
+module.exports = { testRedisConnection, redisClient, connectRedis } //redisPubClient, redisSubClient

@@ -79,7 +79,7 @@ app.get('/consult', (req, res) => {
 
 async function startServer () {
   try {
-    await testRedisConnection()
+    //await testRedisConnection()
     await connectRedis()
 
     await sequelize.sync({ alter: false })
