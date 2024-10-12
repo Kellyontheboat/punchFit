@@ -26,7 +26,7 @@ router.get('/schedules/:scheduleId/items', authenticateToken, scheduleController
 
 router.put('/scheduleItems/update', authenticateToken, scheduleControllers.updateSchedule)
 
-router.get('/schedules/:scheduleId/video', authenticateToken, scheduleControllers.getScheduleById)
+router.get('/schedules/:scheduleId/:roomId/video', authenticateToken, scheduleControllers.getScheduleById)
 
 router.delete('/schedules/:scheduleId', authenticateToken, scheduleControllers.deleteSchedule)
 

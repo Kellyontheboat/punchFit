@@ -1,6 +1,8 @@
 const db = require('../models')
 const { Exercises, Schedules, Modules, ScheduleItems, ModuleItems, Sections, Invitations, Members } = db
 const { getIo, notifyUser } = require('../services/socketService')
+const { redisClient } = require('../services/redisService')
+const { io } = require('../services/socketService');
 
 const crypto = require('crypto')
 const generateFileName = (bytes = 32) => crypto.randomBytes(bytes).toString('hex')
@@ -109,7 +111,7 @@ const scheduleControllers = {
       res.status(500).json({ success: false, error: error.message })
     }
   },
-
+  // Get all schedules for a member by memberId
   getMemberSchedules: async (req, res) => {
     const memberId = req.memberId
     const schedules = await Schedules.findAll({
@@ -126,6 +128,7 @@ const scheduleControllers = {
     }))
     return res.json(schedulesWithVideoUrl)
   },
+  //get items in schedule for coach notification / student posts
   getItemsInSchedule: async (req, res) => {
     const { scheduleId } = req.params
     const studentId = req.memberId
@@ -155,10 +158,14 @@ const scheduleControllers = {
 
       if (isConsulting) {
         const student = await Members.findByPk(studentId)
-
         if (!student) {
           return res.status(404).json({ error: 'Student not found' })
         }
+        const TTL = 864000; // 24 hours in seconds*10
+        await redisClient.set(`postItems:${scheduleId}`, JSON.stringify(items), {
+          EX: TTL
+        });
+        console.log('postItems:', items)
         return res.json({ success: true, items })
       }
 
@@ -168,7 +175,7 @@ const scheduleControllers = {
       res.status(500).json({ success: false, error: error.message })
     }
   },
-  // Get data for coach
+  // Get data for coach by scheduleId
   getScheduleById: async (req, res) => {
     const scheduleId = req.params.scheduleId
     const studentId = req.memberId
@@ -185,7 +192,6 @@ const scheduleControllers = {
       const scheduleWithVideoUrl = 'https://d348uiae81km7c.cloudfront.net/' + schedule.video
 
       const isConsulting = req.query.consulting === 'true'
-
       if (isConsulting) {
         const student = await Members.findByPk(studentId)
 
@@ -193,8 +199,15 @@ const scheduleControllers = {
           return res.status(404).json({ error: 'Student not found' })
         }
       }
-
-      return res.json({ scheduleWithVideoUrl, scheduleName, scheduleContent })
+      const postContent = { scheduleWithVideoUrl, scheduleName, scheduleContent }
+      console.log('postContent:', postContent)
+      const TTL = 864000; // 24 hours in seconds*10
+      await redisClient.set(`postContent:${scheduleId}`, JSON.stringify(postContent), {
+        EX: TTL
+      });
+      console.log('postContent:', postContent)
+      
+      return res.json(postContent);
     } catch (error) {
       console.error('Error fetching schedule:', error)
       return res.status(500).json({ error: 'Internal server error' })

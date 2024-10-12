@@ -46,7 +46,7 @@ const authControllers = {
       if (!member || !await bcrypt.compare(password, member.password)) {
         return res.status(401).json({ message: 'Invalid email or password' })
       }
-      const token = jwt.sign({ id: member.id, username: member.username, email: member.email }, SECRET_KEY, { expiresIn: '1h' })
+      const token = jwt.sign({ id: member.id, username: member.username, email: member.email, isCoach: member.is_coach }, SECRET_KEY, { expiresIn: '1h' })
       return res.json({ token })
     } catch (error) {
       console.error('Error during login process:', error)

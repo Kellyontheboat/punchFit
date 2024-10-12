@@ -110,26 +110,3 @@ process.on('SIGINT', () => {
     process.exit(0)
   })
 })
-
-// async function startServer () {
-//   try {
-//     // Run Redis connection test
-//     await testRedisConnection()
-//     await connectRedis()
-
-//     // Sync Sequelize models
-//     await sequelize.sync({ alter: false })
-
-//     // Start the server
-//     app.listen(port, () => {
-//       console.log(`Server is running on http://localhost:${port}`)
-//     })
-//   } catch (error) {
-//     console.error('Error during server startup:', error)
-//     process.exit(9000) // Exit the process with an error code
-//   }
-// }
-
-// backend / app.js
-// backend / routes / exercisesRoutes.js
-// frontend / public / exercises.html
