@@ -56,6 +56,8 @@ body {
   text-decoration: none;
   font-size: 30px;
   font-weight: 700;
+  display: flex;
+  flex-direction: row;
 }
 
 /* navbar */
@@ -545,22 +547,33 @@ a.exercise-detail {
   width: 90vw;
     margin-left: auto;
     margin-right: auto;
+    display: flex;
+    flex-direction: row;
 }
 
 #calendar {
   width: 90vw;
-  height: auto;
+  height: 50vh;
   margin-bottom: 20px;
 }
 
 .fc-toolbar-chunk
 button {
-  height: 50px;
+  height: 40px;
   justify-content:first baseline;
+  border-radius: 3px;
+}
+
+.fc .fc-toolbar.fc-header-toolbar {
+  margin-bottom: 2px;
 }
 
 #fc-dom-1 {
   font-size: 20px;
+}
+
+.fc-daygrid-day-events{
+  cursor: pointer;
 }
 
 .week-container {
@@ -621,6 +634,12 @@ h4.card-title {
   gap: 10px;
 }
 
+/* ! calendar current post */
+.current-post-wrapper {
+  width: 50vw;
+  height: 100px;
+  background-color: #568d8d;
+}
 
 /* ! exercises part page */
 .parts-placeholder {
@@ -709,6 +728,7 @@ span {
   font-size: 20px;
   font-weight: 500;
   color: #fefefe;
+  width: fit-content;
 }
 
 
@@ -791,6 +811,7 @@ span {
 }
 
 /* ! post */
+#post-container
 .post-wrapper {
   border: 1px solid #ccc;
   padding: 20px;
@@ -803,24 +824,38 @@ span {
     border-radius: 15px;
 }
 
+#consult-post-container .post-wrapper {
+  border: 1px solid #ccc;
+  width: 100%;
+  padding: 20px;
+  margin-bottom: 15px;
+  display: flex;
+  flex-direction: column;
+  border-radius: 15px;
+}
+
 .post {
   display: flex;
     flex-direction: row;
 }
 
-.post
-.schedule-name {
-  width: 100%;
-}
+/* .current-post-wrapper .post {
+  display: flex;
+  flex-direction: column;
+} */
 
 .schedule-name
 .text-post {
     margin-top: 10px;
 }
+.exercise-post {
+  width: 35%;
+}
 
 .post .module-wrap {
   margin-top: 0;
-  width: 25vw;
+  width: 100%;
+  max-width: 1000px;
 }
 
 .post
@@ -850,15 +885,20 @@ span {
 }
 
 video {
-  margin-left: 15px;
-  margin-right: 25px;
-  width: 35vw;
+  padding-left: 5px;
+  padding-right: 5px;
+  width: 100%;
   border-radius: 10px;
-} */
+} 
 
 .video-preview {
   width: 100%;
   cursor: pointer;
+}
+
+.consult-video-post,
+.video-post {
+  width: 35%;
 }
 
 .video-player {
@@ -880,10 +920,12 @@ video {
 
 #consult-post-container
  {
+  width: 250vw;
   display: flex;
   justify-content: center;
   margin-left: auto;
   margin-right: auto;
+  flex-direction: column;
 }
 
 .consult-post {
@@ -893,7 +935,8 @@ video {
 
 .room-title{
   font-size: 20px;
-  font-weight: 550;
+  font-weight: 700;
+  margin-bottom: 15px;
 }
 
 #messages {
@@ -923,10 +966,14 @@ hr {
   margin: 5px;
 }
 
+.consult-exercise-post {
+  width: 35%;
+}
+
 .consult-exercise-post
 .module-wrap {
   margin-top: 0;
-  width: 25vw;
+  max-width: 1000px;
 }
 
 .consult-title {
@@ -934,9 +981,11 @@ hr {
   font-weight: 300;
 }
 
+.post-wrapper
 .schedule-name {
   font-size: 18px;
   font-weight: 400;
+  width: 30%;
 }
 
 .text-post
@@ -969,14 +1018,60 @@ width: 100%;
 }
 
 .red-dot {
-  position: absolute;
-  top: 50px;
-  left: 300px;
-  width: 60px;
-  height: 60px;
+  position: relative;
+  top: 8px;
+  left: -5px; 
+  width: 10px;
+  height: 10px;
   background-color: red;
   border-radius: 50%;
   /* transform: translate(-50%, -50%); */
+}
+
+/* ! consult coach chatRoom */
+
+#consult-post-chat-container {
+  width: 90vw;
+  margin-left: auto;
+  margin-right: auto;
+  display: flex;
+  flex-direction: row;
+}
+
+#consult-student-list-container {
+  width: 50vw;
+  background-color: #333434;
+}
+
+#consult-post-container
+.post-wrapper {
+  width: auto;
+  background-color: #333434;
+}
+
+/* ! consult coach student list */
+.student-list-title {
+  font-size: 20px;
+  font-weight: 700;
+}
+
+hr.student-list {
+  width: 90%;
+}
+
+.student-list-item {
+  font-size: 18px;
+  font-weight: 500;
+  background-color: #565757;
+  padding: 5px;
+  width: 90%;
+  border-radius: 10px;
+  margin-bottom: 5px;
+  cursor: pointer;
+}
+
+.student-list-item.active {
+  background-color: #19b7d0;
 }
 /* ! footer */
 .before-footer {

@@ -105,18 +105,10 @@ export async function coachNavbar () {
     const { isCoach } = await response.json()
     console.log({ isCoach })
     const homepageContainer = document.querySelector('.homepage-link')
+    const roleSpan = document.createElement('span')
+
     if (!isCoach) {
       const navContainer = document.querySelector('.nav-item-container')
-      // const btnA = document.createElement('a')
-      // btnA.classList.add('module-link')
-      // btnA.href = '/posts'
-
-      // const consultBtn = document.createElement('span')
-      // consultBtn.id = 'post-btn'
-      // consultBtn.className = 'nav-item'
-      // consultBtn.textContent = ' Post '
-      // btnA.appendChild(consultBtn)
-      // homepageContainer.insertAdjacentElement('afterend', btnA)
 
       // module nav link
       const aModuleHref = document.createElement('a')
@@ -155,7 +147,18 @@ export async function coachNavbar () {
       navContainer.appendChild(aCalendarHref)
       navContainer.appendChild(aModuleHref)
       navContainer.appendChild(aPostHref)
+
+      roleSpan.textContent = '| Student'
+      roleSpan.classList.add('role-span')
+    } else {
+      // if isCoacn change the background color
+      //document.body.style.backgroundColor = '#808080'
+      console.log('isCoach')
+      console.log(roleSpan)
+      roleSpan.textContent = '| Coach'
     }
+    homepageContainer.appendChild(roleSpan)
+
 
     return ({ isCoach })
   } catch (error) {

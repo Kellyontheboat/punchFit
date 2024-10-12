@@ -12,7 +12,7 @@ import { addListenerDelScheduleBtn, getSchedules, getSchedulesItems } from './ap
 
 import { renderModulesBySections, renderMenuModules, renderItemsInMenuModule, renderSubmitMenuBtn } from './render/menuRender.js'
 
-import { renderConsultRoom, renderCoachConsultRoom } from './render/consultRender.js'
+import { renderConsultRoom, renderFilteredStudentList } from './render/consultRender.js'
 
 import { addListenerEditMenuBtn, addListenerSubmitMenu } from './api/menuScript.js'
 
@@ -22,7 +22,7 @@ import { addListenerModule, addListenerAddMemoBtn, addListenerModalAddMemoBtn } 
 
 import { fetchSections, addSectionListener, fetchPartsBySection, addPartListener, fetchExercisesByPart } from './api/exerciseScript.js'
 
-import { addListenerConsultBtn, initCoachSocket, coachGetNotification, coachGetPostContent } from './api/consultScript.js'
+import { addListenerConsultBtn, initUserSocket, coachGetPostContent, addSendMsgListeners } from './api/consultScript.js'
 
 document.addEventListener('DOMContentLoaded', async function () {
   // use the Template HTML
@@ -60,19 +60,15 @@ document.addEventListener('DOMContentLoaded', async function () {
     const { scheduleIds, schedules } = await getSchedules()
     await renderPosts(schedules)
     await renderExerciseInPosts()
-    addListenerConsultBtn(user)
+    await initUserSocket(user)
+    await addListenerConsultBtn(user)
   } else if (pathArray[1] === 'consult') {
     if (!isCoach) {
       window.location.href = '/training'
       return
     }
     console.log('consult page')
-    console.log(sections)
-    const { invitations, studentName } = await coachGetNotification()
-    console.log({ invitations, studentName })
-    await initCoachSocket(user, studentName)
-
-    // renderCoachConsultRoom({studentName})
+    await initUserSocket(user)
   } else if (pathArray[1] === 'schedules') {
     if (isCoach) {
       window.location.href = '/consult'
