@@ -13,7 +13,8 @@ export async function renderInviteForm (scheduleId) {
   // Create the form element
   const form = document.createElement('form')
   form.id = 'invite-form'
-
+  form.classList.add('invite-form')
+  form.dataset.scheduleId = scheduleId
   // Create hidden input for scheduleId
   const scheduleInput = document.createElement('input')
   scheduleInput.type = 'hidden'
@@ -55,7 +56,7 @@ export async function renderConsultRoom(roomId, studentName, user) {
   const consultTitle = document.createElement('div')
   consultTitle.className = 'consult-title'
   // if is the coach's consult room
-  if (NodeList.prototype.isPrototypeOf(container)) {
+  if (NodeList.prototype.isPrototypeOf(container) && user.isCoach) {
 
     if (container.length !== 0) {
       container = container[container.length - 1]

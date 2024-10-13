@@ -1,6 +1,6 @@
 import { navHTML, hrHTML, injectHTML } from './render/htmlTemplates.js'
 
-import { showLoginModal, navScheduleBtn, updateLoginButton, initializeModals, coachNavbar } from './render/navRender.js'
+import { showLoginModal, navScheduleBtn, updateLoginButton, initializeModals, coachNavbar, addListenerIndexLoginBtn } from './render/navRender.js'
 
 import { addTrainingRecordBtn, renderSections, renderPartsBySection, renderExercisesByPart, exerciseCardModal, sectionCheckBox, partContainerStickOnTop } from './render/exerciseRender.js'
 
@@ -34,9 +34,17 @@ document.addEventListener('DOMContentLoaded', async function () {
   const pageType = pathArray[3]
 
   const { user, isAuthenticated } = await checkLoginStatus()// user:id username email
+
+  let isCoach;
   if (isAuthenticated) {
-    updateLoginButton()
+    updateLoginButton();
+    ({ isCoach } = await coachNavbar(user));
+  } else {
+    if(window.location.pathname !== '/') {
+      window.location.href = '/'
+    }
   }
+
 
   // !Nav btn
   loginBtn()
@@ -44,8 +52,7 @@ document.addEventListener('DOMContentLoaded', async function () {
   navScheduleBtn(isAuthenticated)
   loginformSubmission() // click submit then login
   registerformSubmission()
-
-  const { isCoach } = await coachNavbar()
+ 
   console.log({ isCoach })
 
   // !section part
@@ -126,12 +133,22 @@ document.addEventListener('DOMContentLoaded', async function () {
     addListenerModalAddMemoBtn(data)
     partContainerStickOnTop()
   } else {
-    if (isCoach) {
-      window.location.href = '/consult'
-    }
-    // if homepage
+    
+    // // if homepage
+    // if (isAuthenticated) {
+    //   if (isCoach) {
+    //     window.location.href = '/consult'
+    //   } else {
+    //     window.location.href = '/training'
+    //   }
+    // } else {
+    //   console.log('index page not authenticated')
+      addListenerIndexLoginBtn()
+    document.querySelector('.before-footer').style.backgroundColor = '#0c0c0c';
+    document.body.style.backgroundColor = '#0c0c0c';
+    //} 
     addTrainingRecordBtn(isAuthenticated)
     addListenerModule(isAuthenticated)
-    // await renderSections(sections) for rendering section module move to /module
+
   }
 })

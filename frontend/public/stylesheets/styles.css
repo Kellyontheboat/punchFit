@@ -12,7 +12,7 @@ body {
 }
 
 #submit-menu {
-  margin-top: 20px;
+  margin-top: 0px;
   margin-bottom: 5px;
   font-size: 25px;
 }
@@ -36,6 +36,113 @@ body {
   align-items: center;
   text-align: center;
 
+}
+
+.main-container {
+  position: relative;
+  height: 60vh;
+}
+
+.video-section {
+  background-color: #0c0c0c;
+  padding-top: 4rem;
+
+}
+
+.video-row {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 2rem;
+  margin-left: auto;
+  margin-right: auto;
+  width: 90vw;
+}
+
+.video-container {
+  width: 50%;
+  padding: 1rem;
+}
+
+.text-container {
+  width: 50%;
+  padding: 1rem;
+}
+
+.index-video-container {
+  width: 70%;
+}
+
+
+.index-video-container video {
+  width: 100%;
+  height: auto;
+}
+
+
+
+.index-img {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: url('https://www.wholelifechallenge.com/wp-content/uploads/2017/07/gym-scam.jpg');
+  background-size: cover;
+  background-position: bottom;
+  background-repeat: no-repeat;
+  z-index: 1;
+}
+
+.index-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  /* Adjust opacity as needed */
+  z-index: 2;
+}
+
+.nav-container,
+.nav-separator {
+  position: relative;
+  z-index: 4;
+}
+
+.index-welcome {
+  position: relative;
+  z-index: 3;
+}
+
+.index-welcome {
+  width: 90vw;
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 20vh;
+  font-weight: 200;
+  color: rgb(247, 211, 82);
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.index-login-btn {
+  width: fit-content;
+  cursor: pointer;
+  padding: 10px 40px;
+  color: #505050;
+  background-color: rgb(247, 211, 82);
+  border: none;
+  border-radius: 20px;
+  font-size: 20px;
+}
+
+.index-title {
+  width: fit-content;
+  font-size: 80px;
 }
 
 .navbar-container {
@@ -75,6 +182,17 @@ body {
   font-size: 30px;
 }
 
+.role-span {
+  font-weight: 100;
+  color: rgb(247, 211, 82);
+  font-size: 20px;
+  margin-left: 10px;
+  display: flex;
+  align-items: flex-end;
+  padding-bottom: 5px;
+  width: max-content;
+}
+
 .navbar a {
   text-decoration: none;
 }
@@ -104,6 +222,7 @@ body {
 #logout-btn {
   font-weight: 300;
 }
+
 /* ! modal */
 .modal-content {
   background-color: #333434;
@@ -112,15 +231,13 @@ body {
 .custom-raw-popup {
   display: none;
   position: fixed;
-  z-index: 1;
   left: 0;
   top: 0;
   width: 100%;
   height: 100%;
   overflow: auto;
-  background-color: rgb(0, 0, 0);
   background-color: rgba(0, 0, 0, 0.4);
-  z-index: 20;
+  z-index: 20000 !important;
 }
 
 .popup-content {
@@ -135,6 +252,7 @@ body {
   align-items: center;
   box-sizing: border-box;
   position: relative;
+  z-index: 4;
 }
 
 #loginPopup .popup-content {
@@ -252,6 +370,12 @@ button {
   margin-left: auto;
 }
 
+.select-post-container {
+  margin-top: 0px;
+  font-size: 20px;
+  font-weight: 400;
+}
+
 .make-log {
   width: 350px;
   height: 50px;
@@ -271,8 +395,6 @@ button {
   font-size: 25px;
   width: 90vw;
   height: 70px;
-  margin-top: 10px;
-  margin-bottom: 15px;
 }
 
 .welcome.btn div {
@@ -288,8 +410,10 @@ button {
   justify-content: center;
 }
 
+
+
 .section-img-container {
-  width: 80vw;
+  width: 90vw;
   margin-left: auto;
   margin-right: auto;
   display: flex;
@@ -298,9 +422,12 @@ button {
 }
 
 .row.section-img {
+  width: 90vw;
+  margin-left: auto;
+  margin-right: auto;
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  grid-template-rows: 350px 350px;
+  grid-template-rows: 35vh 35vh;
   grid-auto-rows: 1fr;
   gap: 15px;
 }
@@ -332,7 +459,7 @@ button {
   background-position: center;
   display: flex;
   align-items: flex-end;
-  border: 2px solid #ddd;
+  border: 0.5px solid #ddd;
   border-radius: 15px;
   position: relative;
 
@@ -388,7 +515,7 @@ button {
 }
 
 .module-wrap {
-  margin-top: 20px;
+  margin-bottom: 20px;
   max-width: 450px;
 }
 
@@ -413,10 +540,16 @@ a.exercise-detail {
   height: 20px;
 }
 
+.menu-module-container .list-group {
+  min-height: 250px;
+  overflow-y: auto;
+}
+
 .list-group-item {
   padding: 5px;
   height: 55px;
   font-size: 15px;
+  background-color: rgb(247, 211, 82);
 }
 
 .btn-danger {
@@ -509,12 +642,13 @@ a.exercise-detail {
 
 .edit-menu-module {
   width: 100px;
-  margin-top: 20px;
+  /* margin-top: 10px; */
   margin-left: auto;
-  margin-right: auto;
-  margin-bottom: 5px;
-  width: 50px;
-  height: 25px;
+  /* margin-right: auto; */
+  /* margin-bottom: 5px; */
+  width: 200px;
+  height: 36px;
+  font-size: 20px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -530,8 +664,17 @@ a.exercise-detail {
 #postForm {
   display: flex;
   flex-direction: column;
-  padding: 5px;
+  padding: 0px 5px;
   width: 100%;
+}
+
+#postForm .input-group-text,
+#postForm .form-control {
+  font-size: 20px;
+}
+
+#postForm textarea {
+  height: 300px;
 }
 
 #captionInput {
@@ -545,10 +688,10 @@ a.exercise-detail {
 /* !calendar */
 .calendar-container {
   width: 90vw;
-    margin-left: auto;
-    margin-right: auto;
-    display: flex;
-    flex-direction: row;
+  margin-left: auto;
+  margin-right: auto;
+  display: flex;
+  flex-direction: row;
 }
 
 #calendar {
@@ -557,10 +700,9 @@ a.exercise-detail {
   margin-bottom: 20px;
 }
 
-.fc-toolbar-chunk
-button {
+.fc-toolbar-chunk button {
   height: 40px;
-  justify-content:first baseline;
+  justify-content: first baseline;
   border-radius: 3px;
 }
 
@@ -572,8 +714,16 @@ button {
   font-size: 20px;
 }
 
-.fc-daygrid-day-events{
+.fc-daygrid-day-events {
   cursor: pointer;
+}
+
+.fc .fc-button {
+  padding: 3px 10px;
+}
+
+.fc table {
+  font-size: 18px;
 }
 
 .week-container {
@@ -704,27 +854,24 @@ h4.card-title {
 
 .menu-wrapper {
   display: flex;
-    flex-direction: column;
-    width: 90vw;
-    margin-left: auto;
-    margin-right: auto;
-    margin-top: 20px;
-    padding: 15px;
-    background-color: #909090;
-    border-radius: 10px;
+  flex-direction: column;
+  width: 90vw;
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 20px;
+  padding: 15px;
+  background-color: #909090;
+  border-radius: 10px;
 }
 
-.menu-wrapper
-.schedule-name
-span {
+.menu-wrapper .schedule-name span {
   background-color: #757575;
-  border:none ;
+  border: none;
   width: 10vw;
-  
+
 }
-.menu-wrapper 
-.schedule-name 
-.input-group-text {
+
+.menu-wrapper .schedule-name .input-group-text {
   font-size: 20px;
   font-weight: 500;
   color: #fefefe;
@@ -734,14 +881,14 @@ span {
 
 .menu {
   display: flex;
-    flex-direction: row;
+  flex-direction: row;
 }
 
 .menu-upload {
   background-color: #bfbfbf;
   width: 98%;
-    margin-top: 20px;
-    margin-left: auto;
+  margin-top: 0px;
+  margin-left: auto;
 }
 
 .menu-module-form-container {
@@ -757,19 +904,17 @@ span {
   margin-right: auto;
 }
 
-.menu-wrapper
-.module-wrap {
+.menu-wrapper .module-wrap {
   max-width: 100%;
 }
 
-.module-page{
+.module-page {
   display: flex;
   justify-content: center;
 }
 
-.module-page
-.module-wrap {
-  max-width:100%;
+.module-page .module-wrap {
+  max-width: 100%;
 }
 
 .module-page .menu-module-container {
@@ -777,31 +922,27 @@ span {
   width: 90vw;
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(520px, 1fr));
-  gap: 20px;
+  gap: 25px;
 }
 
 .menu-wrapper .menu-module-container {
   display: flex;
-    flex-direction: column;
-    width: 40vw;
-    margin-left: 0;
-    margin-right: 0;
+  flex-direction: column;
+  width: 40vw;
+  margin-left: 0;
+  margin-right: 0;
 }
 
 .menu-section-item {
   margin-left: auto;
   margin-right: auto;
-  height: 30px;
+  height: 50px;
   display: flex;
   align-items: center;
   /* Vertically center the content */
   background-color: #757575;
-  padding: 5px;
-  font-size: 18px;
-}
-
-.list-group-item {
-  background-color: rgb(247, 211, 82);
+  padding: 10px;
+  font-size: 20px;
 }
 
 .module-editing.list-group {
@@ -811,8 +952,7 @@ span {
 }
 
 /* ! post */
-#post-container
-.post-wrapper {
+#post-container .post-wrapper {
   border: 1px solid #ccc;
   padding: 20px;
   margin-bottom: 15px;
@@ -820,8 +960,8 @@ span {
   margin-left: auto;
   margin-right: auto;
   display: flex;
-    flex-direction: column;
-    border-radius: 15px;
+  flex-direction: column;
+  border-radius: 15px;
 }
 
 #consult-post-container .post-wrapper {
@@ -836,7 +976,7 @@ span {
 
 .post {
   display: flex;
-    flex-direction: row;
+  flex-direction: row;
 }
 
 /* .current-post-wrapper .post {
@@ -844,10 +984,10 @@ span {
   flex-direction: column;
 } */
 
-.schedule-name
-.text-post {
-    margin-top: 10px;
+.schedule-name .text-post {
+  margin-top: 10px;
 }
+
 .exercise-post {
   width: 35%;
 }
@@ -858,8 +998,7 @@ span {
   max-width: 1000px;
 }
 
-.post
-.list-group {
+.post .list-group {
   margin-top: 0;
   border-radius: 10px;
 }
@@ -889,7 +1028,7 @@ video {
   padding-right: 5px;
   width: 100%;
   border-radius: 10px;
-} 
+}
 
 .video-preview {
   width: 100%;
@@ -907,7 +1046,7 @@ video {
 }
 
 /* ! consult */
-.show-more-post{
+.show-more-post {
   display: flex;
   justify-content: center;
   margin-left: auto;
@@ -918,8 +1057,7 @@ video {
   font-size: 20px;
 }
 
-#consult-post-container
- {
+#consult-post-container {
   width: 250vw;
   display: flex;
   justify-content: center;
@@ -933,7 +1071,7 @@ video {
   flex-direction: row;
 }
 
-.room-title{
+.room-title {
   font-size: 20px;
   font-weight: 700;
   margin-bottom: 15px;
@@ -949,7 +1087,7 @@ video {
   min-height: 100px;
 }
 
-#messages li{
+#messages li {
   padding: 8px;
   list-style-type: none;
   background: none;
@@ -961,8 +1099,7 @@ video {
   content: none;
 }
 
-#messages 
-hr {
+#messages hr {
   margin: 5px;
 }
 
@@ -970,8 +1107,7 @@ hr {
   width: 35%;
 }
 
-.consult-exercise-post
-.module-wrap {
+.consult-exercise-post .module-wrap {
   margin-top: 0;
   max-width: 1000px;
 }
@@ -981,15 +1117,13 @@ hr {
   font-weight: 300;
 }
 
-.post-wrapper
-.schedule-name {
+.post-wrapper .schedule-name {
   font-size: 18px;
   font-weight: 400;
   width: 30%;
 }
 
-.text-post
-p {
+.text-post p {
   font-size: 16px;
   font-weight: 300;
   min-height: 200px;
@@ -1006,7 +1140,7 @@ p {
 }
 
 .svg-outer-container {
-width: 100%;
+  width: 100%;
   text-align: center;
 }
 
@@ -1020,7 +1154,7 @@ width: 100%;
 .red-dot {
   position: relative;
   top: 8px;
-  left: -5px; 
+  left: -5px;
   width: 10px;
   height: 10px;
   background-color: red;
@@ -1040,11 +1174,9 @@ width: 100%;
 
 #consult-student-list-container {
   width: 50vw;
-  background-color: #333434;
 }
 
-#consult-post-container
-.post-wrapper {
+#consult-post-container .post-wrapper {
   width: auto;
   background-color: #333434;
 }
@@ -1073,6 +1205,7 @@ hr.student-list {
 .student-list-item.active {
   background-color: #19b7d0;
 }
+
 /* ! footer */
 .before-footer {
   width: 100%;

@@ -10,15 +10,13 @@ export async function addListenerConsultBtn (user) {
 
   consultBtns.forEach(btn => btn.addEventListener('click', async (event) => {
     const scheduleId = event.currentTarget.dataset.id
-    const inviteForm = document.querySelector(`#invite-form input[name="scheduleId"][value="${scheduleId}"]`)?.closest('#invite-form');
-    console.log(inviteForm)
     if (btn.innerText === 'Consult Coach') {
       btn.innerText = 'Cancel'
       btn.classList.add('cancel-consult-btn')
       console.log(scheduleId)
       //addListenerCancelConsultBtn(scheduleId)
       await renderInviteForm(scheduleId)
-      submitInviteForm(user, socket)
+      submitInviteForm(user, scheduleId)
     } else { // if the btn innerText is Cancel been clicked
       btn.innerText = 'Consult Coach'
       if (inviteForm) {
@@ -29,14 +27,21 @@ export async function addListenerConsultBtn (user) {
   )
 }
 
-export async function submitInviteForm(user) {
-  const inviteForm = document.getElementById('invite-form');
-  inviteForm.addEventListener('submit', async (event) => {
+let inviteFormListener = null;
+
+export async function submitInviteForm(user, scheduleId) {
+  const inviteForm = document.querySelector(`.invite-form[data-schedule-id="${scheduleId}"]`)
+  console.log(inviteForm,"inviteForm")
+  // Remove existing listener if any
+  if (inviteFormListener) {
+    inviteForm.removeEventListener('submit', inviteFormListener);
+  }
+
+  //inviteForm.addEventListener('submit', async (event) => {
+  inviteFormListener = async (event) => {
     event.preventDefault()
     const submitBtn = document.querySelector('.share-btn')
-    const consultBtn = document.querySelector('.consult')
     submitBtn.style.display = 'none'
-    consultBtn.style.display = 'none'
 
     const formData = new FormData(event.target)
     const data = {
@@ -60,27 +65,6 @@ export async function submitInviteForm(user) {
       const { student_id, coach_id, schedule_id } = invitation;
       const roomId = `${student_id}_${coach_id}_${schedule_id}`;
 
-      //add studentName if not exist
-      //const studentListContainer = document.getElementById('consult-student-list-container');
-      //console.log(studentListContainer)
-      // if (studentListContainer) {
-      //   const existingStudentItems = studentListContainer.querySelectorAll('.student-list-item');
-      //   let studentExists = false;
-      //   for (let item of existingStudentItems) {
-      //     if (item.textContent.trim() === studentName) {
-      //       studentExists = true;
-      //       break; //once found, break the loop
-      //     }
-      //   }
-
-      //   if (!studentExists) {
-      //     const newStudentItem = document.createElement('div');
-      //     newStudentItem.className = 'student-list-item';
-      //     newStudentItem.dataset.studentId = student_id;
-      //     newStudentItem.textContent = studentName;
-      //     studentListContainer.appendChild(newStudentItem);
-      //   }
-      // }
       await renderConsultRoom(roomId, studentName, user);
 
       if (socket) {
@@ -94,8 +78,7 @@ export async function submitInviteForm(user) {
         socket.emit('joinRoom', roomId, (response) => {
           console.log(`Joined new room emit callback: ${roomId}`, response);
         });
-        sendMessage(roomId, "教練想諮詢有關本次訓練！", user)
-
+        sendMessage(roomId, "Hi教練，想諮詢有關本次訓練！", user)
 
       } else {
         console.error('Socket is not initialized');
@@ -103,7 +86,9 @@ export async function submitInviteForm(user) {
     } catch (error) {
       console.error('Error sending invitation:', error);
     }
-  });
+  };
+  inviteForm.addEventListener('submit', inviteFormListener);
+
 }
 
 export async function coachGetPostItems (roomId) {
@@ -246,6 +231,8 @@ async function handleCoachNotification(data, user, socket) {
     socket.emit('joinRoom', (roomId), (response) => {
       console.log(`Joined new room emit: ${roomId}`, response);
     });
+    const messages = [{text: "Hi教練，想諮詢有關本次訓練！", sender_id: `${roomId.split('_')[0]}`, user: {id: `${roomId.split('_')[1]}`}}]
+    renderMessages(roomId, messages, user)
   } else {
     console.error('Socket is not initialized');
   }

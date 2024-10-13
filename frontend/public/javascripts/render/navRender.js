@@ -77,6 +77,14 @@ export function navScheduleBtn (isAuthenticated) {
   })
 }
 
+export function addListenerIndexLoginBtn () {
+  const loginBtn = document.querySelector('.index-login-btn')
+  console.log(loginBtn)
+  loginBtn.addEventListener('click', () => {
+    showLoginModal()
+  })
+}
+
 export async function updateLoginButton () {
   const loginButton = document.getElementById('login-register-btn')
   if (loginButton) {
@@ -97,12 +105,13 @@ async function hideModals () {
   registerModal.style.display = 'none'
 }
 
-export async function coachNavbar () {
+export async function coachNavbar (user) {
+  console.log(user)
   try {
-    const response = await fetch('/api/user-role', {
-      headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
-    })
-    const { isCoach } = await response.json()
+    // const response = await fetch('/api/user-role', {
+    //   headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
+    // })
+    const { isCoach } = { isCoach: user.isCoach }
     console.log({ isCoach })
     const homepageContainer = document.querySelector('.homepage-link')
     const roleSpan = document.createElement('span')
@@ -120,15 +129,15 @@ export async function coachNavbar () {
       moduleSpan.className = 'nav-item'
       moduleSpan.textContent = ' Module.'
 
-      // calendar nav link
+      // PunchIn nav link
       const aCalendarHref = document.createElement('a')
       aCalendarHref.classList.add('module-link')
-      aCalendarHref.href = '/schedules'
+      aCalendarHref.href = '/training'
 
       const calendarSpan = document.createElement('span')
       calendarSpan.id = 'my-calendar-btn'
       calendarSpan.className = 'nav-item'
-      calendarSpan.textContent = ' Calendar.'
+      calendarSpan.textContent = ' PunchIn.'
 
       // post nav link
       const aPostHref = document.createElement('a')
@@ -148,18 +157,18 @@ export async function coachNavbar () {
       navContainer.appendChild(aModuleHref)
       navContainer.appendChild(aPostHref)
 
-      roleSpan.textContent = '| Student'
+      roleSpan.textContent = `| Hi, Student ${user.username}`
       roleSpan.classList.add('role-span')
     } else {
       // if isCoacn change the background color
-      //document.body.style.backgroundColor = '#808080'
-      console.log('isCoach')
-      console.log(roleSpan)
-      roleSpan.textContent = '| Coach'
+      document.body.style.backgroundColor = '#808080'
+      document.querySelector('.before-consult').style.backgroundColor = '#808080'
+      roleSpan.classList.add('role-span')
+      roleSpan.textContent = `| Hi, Coach ${user.username}`
     }
     homepageContainer.appendChild(roleSpan)
 
-
+    console.log({ isCoach })
     return ({ isCoach })
   } catch (error) {
     console.error('Error updating navbar:', error)
