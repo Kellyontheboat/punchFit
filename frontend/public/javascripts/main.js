@@ -39,6 +39,10 @@ document.addEventListener('DOMContentLoaded', async function () {
   if (isAuthenticated) {
     updateLoginButton();
     ({ isCoach } = await coachNavbar(user));
+    if (isCoach && pathArray[1] !== 'consult') {
+      console.log('coach','pathArray')
+      window.location.href = '/consult'
+    }
   } else {
     if(window.location.pathname !== '/') {
       window.location.href = '/'
@@ -50,7 +54,15 @@ document.addEventListener('DOMContentLoaded', async function () {
   loginBtn()
   initializeModals()
   navScheduleBtn(isAuthenticated)
-  loginformSubmission() // click submit then login
+  await loginformSubmission() // clickListener submit then login
+  // if(loginResponse){
+  //   if (user.isCoach) {
+  //     window.location.href = '/consult'
+  //   } else {
+  //     window.location.href = '/training'
+  //   }
+  // }
+
   registerformSubmission()
  
   console.log({ isCoach })
@@ -133,17 +145,8 @@ document.addEventListener('DOMContentLoaded', async function () {
     addListenerModalAddMemoBtn(data)
     partContainerStickOnTop()
   } else {
-    
-    // // if homepage
-    // if (isAuthenticated) {
-    //   if (isCoach) {
-    //     window.location.href = '/consult'
-    //   } else {
-    //     window.location.href = '/training'
-    //   }
-    // } else {
-    //   console.log('index page not authenticated')
-      addListenerIndexLoginBtn()
+    document.querySelector('.index-login-btn').remove()
+    addListenerIndexLoginBtn()
     document.querySelector('.before-footer').style.backgroundColor = '#0c0c0c';
     document.body.style.backgroundColor = '#0c0c0c';
     //} 

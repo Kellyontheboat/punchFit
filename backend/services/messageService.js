@@ -130,6 +130,7 @@ async function saveMessageToRoom(message) {
   messages.push(newMessage);
   // Set the messages in Redis with a TTL
   const TTL = 864000; // 24 hours*10 in seconds
+  console.log(`Setting messages for room ${key}: ${JSON.stringify(messages)}`);
   await redisClient.set(key, JSON.stringify(messages), { EX: TTL });  
   return newMessage;
 }

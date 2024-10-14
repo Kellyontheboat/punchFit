@@ -47,7 +47,7 @@ const authControllers = {
         return res.status(401).json({ message: 'Invalid email or password' })
       }
       const token = jwt.sign({ id: member.id, username: member.username, email: member.email, isCoach: member.is_coach }, SECRET_KEY, { expiresIn: '1h' })
-      return res.json({ token })
+      return res.json({ token, isCoach: member.is_coach })
     } catch (error) {
       console.error('Error during login process:', error)
       res.status(500).json({ message: 'Internal server error' })

@@ -353,59 +353,66 @@ export async function clearConsultRoomUnread(user) {
   const allPosts = document.querySelectorAll('.post-wrapper');
   allPosts.forEach(post => {
     post.addEventListener('click', async () => {
-      post.style.border = '';
-      post.style.backgroundColor = '';
-      post.classList.remove('unread')
-
+      
       console.log(post)
       if (!post.querySelector('#messages')) {
         return
       }
-      console.log(post.querySelector('#messages').dataset.roomId)
-      const roomId = post.querySelector('#messages').dataset.roomId
 
-      if (roomId) {
-        console.log('Clicked post roomId:', roomId);
-        await deleteUnreadRoomId(roomId)
-      } else {
-        console.log('No roomId found for this post');
-      }
+      if(post.classList.contains('unread')){
+        console.log(post.querySelector('#messages').dataset.roomId)
+        const roomId = post.querySelector('#messages').dataset.roomId
 
-      // when clear consultRoom unread, check if student still(need red dot) has unread post
-      if (user.isCoach) {
-        const clickedStudentId = roomId.split('_')[0]
-        // Get all visible post-wrappers
-        const visiblePostWrappers = document.querySelectorAll('.post-wrapper[style*="display: block"]');
-        // Check if any visible post-wrapper has the 'unread' class
-        const hasUnread = Array.from(visiblePostWrappers).some(wrapper => wrapper.classList.contains('unread'));
+        if (roomId) {
+          console.log('Clicked post roomId:', roomId);
+          await deleteUnreadRoomId(roomId)
+        } else {
+          console.log('No roomId found for this post');
+        }
+        post.classList.remove('unread')
+        post.style.border = '';
+        post.style.backgroundColor = '';
 
-        // If no visible post-wrapper has 'unread' class, hide the red dot
-        if (!hasUnread) {
-          const studentListItem = document.querySelector(`.student-list-item[data-student-id="${clickedStudentId}"]`);
-          if (studentListItem) {
-            const redDot = studentListItem.querySelector('.red-dot');
-            if (redDot) {
-              redDot.style.display = 'none';
+        // when clear consultRoom unread, check if student still(need red dot) has unread post
+        if (user.isCoach) {
+          console.log(roomId)
+          const clickedStudentId = roomId.split('_')[0]
+          // Get all visible post-wrappers
+          const visiblePostWrappers = document.querySelectorAll('.post-wrapper[style*="display: block"]');
+          // Check if any visible post-wrapper has the 'unread' class
+          const hasUnread = Array.from(visiblePostWrappers).some(wrapper => wrapper.classList.contains('unread'));
+
+          // If no visible post-wrapper has 'unread' class, hide the red dot
+          if (!hasUnread) {
+            const studentListItem = document.querySelector(`.student-list-item[data-student-id="${clickedStudentId}"]`);
+            if (studentListItem) {
+              const redDot = studentListItem.querySelector('.red-dot');
+              if (redDot) {
+                redDot.style.display = 'none';
+              }
+            }
+          }
+        } else { //if user is student, clear calendar event notification
+          const scheduleId = roomId.split('_')[2]
+
+          const calendarEl = document.getElementById('calendar');
+          const eventElement = calendarEl.querySelector(`[data-schedule-id="${scheduleId}"]`);
+          console.log(eventElement, "eventElement")
+
+          if (eventElement) {
+            eventElement.style.backgroundColor = '#3788d8';
+
+            const titleElement = eventElement.querySelector('.fc-event-title');
+            if (titleElement) {
+              // Remove the bell icon if it exists
+              titleElement.innerText = titleElement.innerText.replace(' 🔔', '');
             }
           }
         }
-      } else { //if user is student, clear calendar event notification
-        const scheduleId = roomId.split('_')[2]
-
-        const calendarEl = document.getElementById('calendar');
-        const eventElement = calendarEl.querySelector(`[data-schedule-id="${scheduleId}"]`);
-        console.log(eventElement, "eventElement")
-
-        if (eventElement) {
-          eventElement.style.backgroundColor = '#3788d8';
-
-          const titleElement = eventElement.querySelector('.fc-event-title');
-          if (titleElement) {
-            // Remove the bell icon if it exists
-            titleElement.innerText = titleElement.innerText.replace(' 🔔', '');
-          }
-        }
       }
+      
+
+      
       
     })
   });

@@ -6,7 +6,7 @@ export const navHTML = `
 
     <div class="navbar-item-container">
     <a href="/" class="homepage-link">
-      <span class="nav-title">PunchFit  打卡健身</span>
+      <span class="nav-title">PunchFit</span>
     </a>
     </div>
 
