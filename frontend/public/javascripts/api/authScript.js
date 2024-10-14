@@ -40,8 +40,17 @@ export async function checkLoginStatus () {
 export function loginBtn () {
   const loginBtn = document.getElementById('login-register-btn')
   if (loginBtn) {
-    loginBtn.onclick = function () {
-      showLoginModal()
+    loginBtn.onclick = async function () {
+      showLoginModal();
+      addListenerPublicCoachAccount()
+      const testAccounts = await getTestAccount();
+      if (testAccounts.length === 0) {
+        return
+      }
+      const testEmail = testAccounts[0].testEmail
+      document.getElementById('email').value = testEmail
+      document.getElementById('password').value = testAccounts[0].testPassword
+
     }
   }
 }
@@ -86,6 +95,9 @@ export async function loginformSubmission () {
 
           if (errorData.message === 'Invalid email or password') {
             msgSpan.innerText = 'Email or Password is wrong'
+            msgSpan.style.color = 'red'
+          } else if (errorData.message === 'This account is already online') {
+            msgSpan.innerText = 'This account is already online.Try another one or register a new account.'
             msgSpan.style.color = 'red'
           }
         }
@@ -160,3 +172,40 @@ export async function registerformSubmission () {
     }
   })
 };
+
+export async function getTestAccount(){
+  const response = await fetch('/api/testAccount', {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json'
+    }
+  })
+  const data = await response.json()
+  console.log('getTestAccount data', data)
+  return data
+}
+
+export async function removeTestAccountOnline(user){
+  const token = localStorage.getItem('token')
+  console.log('token', token)
+  const response = await fetch('/api/testAccount', {
+    method: 'PUT',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${token}`
+    },
+    body: JSON.stringify({ user })
+  })
+  const data = await response.json()
+  console.log('removeTestAccountOnline data', data)
+  return data
+}
+
+export function addListenerPublicCoachAccount(){
+  const coachLogin = document.querySelector('.public-coach-login')
+  coachLogin.addEventListener('click', (event) => {
+    console.log('coachLogin')
+    document.getElementById('email').value = "coachJenny@gmail.com"
+    document.getElementById('password').value = "coachJenny123456"
+  })
+}

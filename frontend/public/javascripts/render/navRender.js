@@ -1,3 +1,5 @@
+import { removeTestAccountOnline } from '../api/authScript.js'
+
 let loginModal
 let registerModal
 let loginBtn
@@ -85,15 +87,16 @@ export function addListenerIndexLoginBtn () {
   })
 }
 
-export async function updateLoginButton () {
+export async function updateLoginButton (user) {
   const loginButton = document.getElementById('login-register-btn')
   if (loginButton) {
     loginButton.innerText = 'Logout.'
     loginButton.id = 'logout-btn'
   }
   const logoutBtn = document.getElementById('logout-btn')
-  logoutBtn.addEventListener('click', (event) => {
+  logoutBtn.addEventListener('click', async (event) => {
     event.preventDefault()
+    await removeTestAccountOnline(user) 
     localStorage.removeItem('token')
     hideModals() // Hide any open modals before reloading
     setTimeout(() => location.reload(), 100) // Delay reload to ensure modals are hidden

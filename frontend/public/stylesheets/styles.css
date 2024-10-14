@@ -278,6 +278,18 @@ body {
   text-align: center;
 }
 
+#login-msg {
+  padding: 10px;
+}
+
+.public-coach-login {
+  margin-bottom: 10px;
+  font-size: 20px;
+  font-weight: 400;
+  color: rgb(247, 211, 82);
+  cursor: pointer;
+}
+
 .popup-title-container {
   display: flex;
   justify-content: center;

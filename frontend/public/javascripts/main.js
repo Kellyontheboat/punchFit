@@ -37,7 +37,7 @@ document.addEventListener('DOMContentLoaded', async function () {
 
   let isCoach;
   if (isAuthenticated) {
-    updateLoginButton();
+    updateLoginButton(user);
     ({ isCoach } = await coachNavbar(user));
     if (isCoach && pathArray[1] !== 'consult') {
       console.log('coach','pathArray')

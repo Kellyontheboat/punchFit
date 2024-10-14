@@ -34,7 +34,9 @@ export const navHTML = `
           </div>
         </form>
         <span id="login-msg" class="login-popup-item"></span>
+        
         <span class="login-popup-item" id="register-popup-btn">Don't have an account yet? <br>Click here to sign up.</span>
+        <span id="coach-login" class="public-coach-login">Online-Coach Account Login</span>
 
       </div>
     </div>
