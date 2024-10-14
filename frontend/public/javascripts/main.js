@@ -1,6 +1,6 @@
 import { navHTML, hrHTML, injectHTML } from './render/htmlTemplates.js'
 
-import { showLoginModal, navScheduleBtn, updateLoginButton, initializeModals, coachNavbar, addListenerIndexLoginBtn } from './render/navRender.js'
+import { showLoginModal, navScheduleBtn, updateLoginButton, initializeModals, coachNavbar, addListenerIndexLoginBtn, scrollVideoAutoPlay } from './render/navRender.js'
 
 import { addTrainingRecordBtn, renderSections, renderPartsBySection, renderExercisesByPart, exerciseCardModal, sectionCheckBox, partContainerStickOnTop } from './render/exerciseRender.js'
 
@@ -40,7 +40,6 @@ document.addEventListener('DOMContentLoaded', async function () {
     updateLoginButton(user);
     ({ isCoach } = await coachNavbar(user));
     if (isCoach && pathArray[1] !== 'consult') {
-      console.log('coach','pathArray')
       window.location.href = '/consult'
     }
   } else {
@@ -55,17 +54,8 @@ document.addEventListener('DOMContentLoaded', async function () {
   initializeModals()
   navScheduleBtn(isAuthenticated)
   await loginformSubmission() // clickListener submit then login
-  // if(loginResponse){
-  //   if (user.isCoach) {
-  //     window.location.href = '/consult'
-  //   } else {
-  //     window.location.href = '/training'
-  //   }
-  // }
-
+  
   registerformSubmission()
- 
-  console.log({ isCoach })
 
   // !section part
   addSectionListener()
@@ -152,6 +142,7 @@ document.addEventListener('DOMContentLoaded', async function () {
     //} 
     addTrainingRecordBtn(isAuthenticated)
     addListenerModule(isAuthenticated)
+    scrollVideoAutoPlay()
 
   }
 })

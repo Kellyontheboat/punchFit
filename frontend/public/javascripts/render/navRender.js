@@ -82,9 +82,13 @@ export function navScheduleBtn (isAuthenticated) {
 export function addListenerIndexLoginBtn () {
   const loginBtn = document.querySelector('.index-login-btn')
   console.log(loginBtn)
+  if (loginBtn) {
   loginBtn.addEventListener('click', () => {
     showLoginModal()
-  })
+    })
+  } else {
+    console.log('no loginBtn')
+  }
 }
 
 export async function updateLoginButton (user) {
@@ -176,4 +180,31 @@ export async function coachNavbar (user) {
   } catch (error) {
     console.error('Error updating navbar:', error)
   }
+}
+
+export function scrollVideoAutoPlay () {
+  console.log('scrollVideoAutoPlay')
+    const videos = document.querySelectorAll('video');
+
+    const options = {
+      root: null, // Use the viewport as the root
+      rootMargin: '0px',
+      threshold: 0.5 // Trigger when 50% of the video is visible
+    };
+
+    const handlePlay = (entries, observer) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.play();
+        } else {
+          entry.target.pause();
+        }
+      });
+    };
+
+    const observer = new IntersectionObserver(handlePlay, options);
+
+    videos.forEach(video => {
+      observer.observe(video);
+    });
 }
