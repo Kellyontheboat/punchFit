@@ -564,6 +564,17 @@ a.exercise-detail {
   height: 20px;
 }
 
+#progress-saveSuccessAlert {
+  font-size: 23px;
+  background-color: #dfe1e1;
+  color:#51635b;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 300px;
+}
+
 .menu-module-container .list-group {
   min-height: 250px;
   overflow-y: auto;

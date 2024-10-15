@@ -96,7 +96,7 @@ export async function renderSubmitMenuBtn () {
   const menuContainer = document.querySelector('.menu-wrapper')
   const SubmitMenuBtn = document.createElement('button')
 
-  SubmitMenuBtn.innerText = 'Save into Schedule'
+  SubmitMenuBtn.innerText = 'Submit Post'
   SubmitMenuBtn.classList.add('btn', 'btn-primary')
   SubmitMenuBtn.id = 'submit-menu'
   SubmitMenuBtn.type = 'button'
