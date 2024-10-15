@@ -1,7 +1,8 @@
 import { renderInviteForm, renderConsultRoom, renderConsultPostContent, renderExerciseInConsult, renderFirstStudentPost, renderFilteredStudentList, renderNotificationDot, renderConsultRoomUnread, clearConsultRoomUnread } from '../render/consultRender.js'
-
+import { getCookie } from './authScript.js'
 let socket;
 
+const csrfToken = getCookie('XSRF-TOKEN')
 const token = localStorage.getItem('token')
 
 export async function addListenerConsultBtn (user) {
@@ -54,7 +55,8 @@ export async function submitInviteForm(user, scheduleId) {
         method: 'POST',
         headers: {
           Authorization: `Bearer ${token}`,
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
+          'X-CSRF-Token': csrfToken
         },
         body: JSON.stringify(data)
       });
@@ -345,7 +347,8 @@ export async function deleteUnreadRoomId(roomId) {
   const response = await fetch(`/api/unreadRoomIds/${roomId}`, {
     method: 'DELETE',
     headers: {
-      Authorization: `Bearer ${token}`
+      Authorization: `Bearer ${token}`,
+      'X-CSRF-Token': csrfToken
     }
   })
 

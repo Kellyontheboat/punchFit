@@ -1,4 +1,7 @@
 import { showLoginModal } from '../render/navRender.js'
+
+const csrfToken = getCookie('XSRF-TOKEN')
+
 export async function checkLoginStatus () {
   const token = localStorage.getItem('token')
   if (token) {
@@ -75,7 +78,8 @@ export async function loginformSubmission () {
         const response = await fetch('/api/user/auth', {
           method: 'PUT',
           headers: {
-            'Content-Type': 'application/json'
+            'Content-Type': 'application/json',
+            'X-CSRF-Token': csrfToken
           },
           body: JSON.stringify(data)
         })
@@ -145,7 +149,8 @@ export async function registerformSubmission () {
       const response = await fetch('/api/user', {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
+          'X-CSRF-Token': csrfToken
         },
         body: JSON.stringify(data)
       })
@@ -192,7 +197,8 @@ export async function removeTestAccountOnline(user){
     method: 'PUT',
     headers: {
       'Content-Type': 'application/json',
-      Authorization: `Bearer ${token}`
+      Authorization: `Bearer ${token}`,
+      'X-CSRF-Token': csrfToken
     },
     body: JSON.stringify({ user })
   })
@@ -208,4 +214,10 @@ export function addListenerPublicCoachAccount(){
     document.getElementById('email').value = "coachJenny@gmail.com"
     document.getElementById('password').value = "coachJenny123456"
   })
+}
+
+export function getCookie(name) {
+  const value = `; ${document.cookie}`;
+  const parts = value.split(`; ${name}=`);
+  if (parts.length === 2) return parts.pop().split(';').shift();
 }

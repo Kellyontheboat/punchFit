@@ -1,15 +1,18 @@
+import { getCookie } from './authScript.js'
+
 const token = localStorage.getItem('token')
-
+const csrfToken = getCookie('XSRF-TOKEN')
 export async function postSchedule ({ formData }) { // scheduleName, date,
-  const token = localStorage.getItem('token')
-
+  
+  console.log(csrfToken)
   console.log(formData)
   console.log(formData.captionInput)
   try {
     const response = await fetch('/api/schedules', {
       method: 'POST',
       headers: {
-        Authorization: `Bearer ${token}`
+        Authorization: `Bearer ${token}`,
+        'X-CSRF-Token': csrfToken
       },
       body: formData // scheduleFormData
     })
@@ -69,7 +72,8 @@ export async function addItemsIntoSchedule ({ sectionIds, scheduleId }) {
       method: 'POST',
       headers: {
         Authorization: `Bearer ${token}`,
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
+        'X-CSRF-Token': csrfToken
       },
       body: JSON.stringify(data)
     })
@@ -152,7 +156,8 @@ export async function updateScheduleItems (updatedItems, itemsToDelete) {
       method: 'PUT',
       headers: {
         Authorization: `Bearer ${token}`,
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
+        'X-CSRF-Token': csrfToken
       },
       body: JSON.stringify({ updatedItems, itemsToDelete })
     })
@@ -211,7 +216,8 @@ export async function deleteSchedule (scheduleId) {
       method: 'DELETE',
       headers: {
         Authorization: `Bearer ${token}`,
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
+        'X-CSRF-Token': csrfToken
       }
     })
 

@@ -122,7 +122,9 @@ export async function submitMenu () {
   try {
     // Post the schedule along with form data
     const scheduleId = await postSchedule({ formData })
-
+    if (!scheduleId) {
+      throw new Error('Failed to create schedule')
+    }
     // Add items into the schedule
     const params = new URLSearchParams(window.location.search)
     const sectionIds = params.get('sectionIds') ? params.get('sectionIds').split(',').map(Number) : []

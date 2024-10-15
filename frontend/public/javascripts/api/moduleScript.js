@@ -1,11 +1,13 @@
 import { checkLoginStatus } from './authScript.js'
 import { renderExerciseToModuleContainer } from '../render/moduleRender.js'
 import { exerciseCardModal } from '../render/exerciseRender.js'
+import { getCookie } from './authScript.js'
 
 // create new module by clicking add new
 // Btn to create new module using sectionId+memberId
 const sectionId = parseInt(window.location.pathname.split('/')[2], 10)
 const token = localStorage.getItem('token')
+const csrfToken = getCookie('XSRF-TOKEN')
 
 export async function createModule () {
   const data = {
@@ -17,7 +19,8 @@ export async function createModule () {
       method: 'POST',
       headers: {
         Authorization: `Bearer ${token}`,
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
+        'X-CSRF-Token': csrfToken
       },
       body: JSON.stringify(data)
     })
@@ -293,7 +296,8 @@ export async function addListenerSaveModuleBtn () {
         method: 'PATCH',
         headers: {
           'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`
+          Authorization: `Bearer ${token}`,
+          'X-CSRF-Token': csrfToken
         },
         body: JSON.stringify(requestBody)
       })
