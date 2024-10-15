@@ -141,6 +141,7 @@ body {
   align-items: center;
 }
 
+.index-coach-login-btn,
 .index-login-btn {
   width: fit-content;
   cursor: pointer;
@@ -150,6 +151,18 @@ body {
   border: none;
   border-radius: 20px;
   font-size: 20px;
+  margin-top: 10px;
+}
+
+.index-coach-login-btn{
+  background-color: rgb(206, 205, 204);
+}
+
+.index-login-btn-container {
+  display: flex;
+  flex-direction: row;
+  width: 420px;
+  justify-content: space-between;
 }
 
 .index-title {

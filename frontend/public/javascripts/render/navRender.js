@@ -79,18 +79,6 @@ export function navScheduleBtn (isAuthenticated) {
   })
 }
 
-export function addListenerIndexLoginBtn () {
-  const loginBtn = document.querySelector('.index-login-btn')
-  console.log(loginBtn)
-  if (loginBtn) {
-  loginBtn.addEventListener('click', () => {
-    showLoginModal()
-    })
-  } else {
-    console.log('no loginBtn')
-  }
-}
-
 export async function updateLoginButton (user) {
   const loginButton = document.getElementById('login-register-btn')
   if (loginButton) {

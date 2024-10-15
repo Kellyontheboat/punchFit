@@ -42,19 +42,41 @@ export async function checkLoginStatus () {
 
 export function loginBtn () {
   const loginBtn = document.getElementById('login-register-btn')
-  if (loginBtn) {
-    loginBtn.onclick = async function () {
-      showLoginModal();
-      addListenerPublicCoachAccount()
-      const testAccounts = await getTestAccount();
-      if (testAccounts.length === 0) {
-        return
-      }
-      const testEmail = testAccounts[0].testEmail
+  const loginBtn2 = document.querySelector('.index-login-btn')
+  const loginBtn3 = document.querySelector('.index-coach-login-btn')
+  const coachLoginBtn = document.getElementById('coach-login')
+
+  const handleLoginClick = async function () {
+    showLoginModal();
+    addListenerPublicCoachAccount()
+    const testAccounts = await getTestAccount();
+    if (testAccounts.length === 0) {
+      return
+    }
+    const testEmail = testAccounts[0].testEmail
+    if (this === loginBtn3) {
+      document.getElementById('email').value = "coachJenny@gmail.com"
+      document.getElementById('password').value = "coachJenny123456"
+    } else {
       document.getElementById('email').value = testEmail
       document.getElementById('password').value = testAccounts[0].testPassword
-
     }
+    
+    if (this !== loginBtn) {
+      coachLoginBtn.style.display = 'none'
+    }
+  }
+
+  if (loginBtn) {
+    loginBtn.onclick = handleLoginClick;
+  }
+
+  if (loginBtn2) {
+    loginBtn2.onclick = handleLoginClick;
+  }
+
+  if (loginBtn3) {
+    loginBtn3.onclick = handleLoginClick;
   }
 }
 

@@ -1,6 +1,6 @@
 import { navHTML, hrHTML, injectHTML } from './render/htmlTemplates.js'
 
-import { showLoginModal, navScheduleBtn, updateLoginButton, initializeModals, coachNavbar, addListenerIndexLoginBtn, scrollVideoAutoPlay } from './render/navRender.js'
+import { showLoginModal, navScheduleBtn, updateLoginButton, initializeModals, coachNavbar, scrollVideoAutoPlay } from './render/navRender.js'
 
 import { addTrainingRecordBtn, renderSections, renderPartsBySection, renderExercisesByPart, exerciseCardModal, sectionCheckBox, partContainerStickOnTop } from './render/exerciseRender.js'
 
@@ -28,6 +28,7 @@ document.addEventListener('DOMContentLoaded', async function () {
   // use the Template HTML
   await injectHTML('.nav-container', navHTML)
   await injectHTML('.nav-separator', hrHTML)
+  loginBtn()
 
   const pathArray = window.location.pathname.split('/')
   console.log(pathArray)
@@ -50,7 +51,7 @@ document.addEventListener('DOMContentLoaded', async function () {
 
 
   // !Nav btn
-  loginBtn()
+  
   initializeModals()
   navScheduleBtn(isAuthenticated)
   await loginformSubmission() // clickListener submit then login
@@ -135,13 +136,14 @@ document.addEventListener('DOMContentLoaded', async function () {
     addListenerModalAddMemoBtn(data)
     partContainerStickOnTop()
   } else {
-    document.querySelector('.index-login-btn').remove()
-    addListenerIndexLoginBtn()
+    if (isAuthenticated) {
+      document.querySelector('.index-login-btn').remove()
+    }
     document.querySelector('.before-footer').style.backgroundColor = '#0c0c0c';
     document.body.style.backgroundColor = '#0c0c0c';
     //} 
-    addTrainingRecordBtn(isAuthenticated)
-    addListenerModule(isAuthenticated)
+    //addTrainingRecordBtn(isAuthenticated)
+    //addListenerModule(isAuthenticated)
     scrollVideoAutoPlay()
 
   }
