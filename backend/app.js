@@ -1,11 +1,40 @@
 const express = require('express')
+const cookieParser = require('cookie-parser');
+const csrfProtection = require('./middleware/csrf');
+const helmet = require('helmet');
 const http = require('http')
-// const helmet = require('helmet')
-const { testRedisConnection, redisClient, connectRedis } = require('./services/redisService')
+const { redisClient, connectRedis } = require('./services/redisService')
 const { initializeSocket } = require('./services/socketService')
 
 const path = require('path')
 const app = express()
+app.use(cookieParser());
+// Apply CSRF protection to routes that modify data
+app.use('/api', csrfProtection, (req, res, next) => {
+  res.cookie('XSRF-TOKEN', req.csrfToken()); // Send CSRF token to client
+  next();
+});
+// Use Helmet to set security headers
+// Configure Helmet to set a custom Content Security Policy
+app.use(
+  helmet.contentSecurityPolicy({
+    directives: {
+      defaultSrc: ["'self'", 'https://d348uiae81km7c.cloudfront.net'],
+      scriptSrc: ["'self'", "https://code.jquery.com", 'https://cdn.jsdelivr.net/npm/fullcalendar@6.1.15/index.global.min.js',
+], // Allow jQuery from CDN
+      styleSrc: ["'self'", "'unsafe-inline'",
+        'https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css',
+        'https://cdn.jsdelivr.net/npm/fullcalendar@6.1.15/main.min.css',], // Allow inline styles
+      imgSrc: ["'self'", "data:", "https://images.unsplash.com", "https://i.pinimg.com", "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/", "https://d348uiae81km7c.cloudfront.net",], // Allow images from specific sources
+      connectSrc: ["'self'", "https://your-api-domain.com"],
+      frameSrc: [
+        "'self'",
+        "https://giphy.com", // Allow framing from Giphy
+      ],
+    },
+  })
+);
+
 
 const { sequelize } = require('./models')
 
@@ -16,13 +45,6 @@ const scheduleRoutes = require('./routes/scheduleRoutes')
 const invitationRoutes = require('./routes/invitationRoutes')
 
 const port = 3000
-
-// const cspDirectives = "default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https://raw.githubusercontent.com;";
-
-// app.use((req, res, next) => {
-//   res.setHeader("Content-Security-Policy", cspDirectives);
-//   next();
-// });
 
 app.use(express.json())
 // Serve static files from the frontend/public directory
@@ -79,7 +101,7 @@ app.get('/consult', (req, res) => {
 
 async function startServer () {
   try {
-    await testRedisConnection()
+    //await testRedisConnection()
     await connectRedis()
 
     await sequelize.sync({ alter: false })
@@ -110,26 +132,3 @@ process.on('SIGINT', () => {
     process.exit(0)
   })
 })
-
-// async function startServer () {
-//   try {
-//     // Run Redis connection test
-//     await testRedisConnection()
-//     await connectRedis()
-
-//     // Sync Sequelize models
-//     await sequelize.sync({ alter: false })
-
-//     // Start the server
-//     app.listen(port, () => {
-//       console.log(`Server is running on http://localhost:${port}`)
-//     })
-//   } catch (error) {
-//     console.error('Error during server startup:', error)
-//     process.exit(9000) // Exit the process with an error code
-//   }
-// }
-
-// backend / app.js
-// backend / routes / exercisesRoutes.js
-// frontend / public / exercises.html

@@ -3,7 +3,7 @@ services:
     build:
       context: .
     #command: ["dockerize", "-wait", "tcp://db:3306", "-timeout", "120s", "node", "app.js"]
-    command: ["dockerize", "-wait", "tcp://database-1.cncsyck2gfd6.ap-northeast-1.rds.amazonaws.com:3306", "-timeout", "120s", "node", "backend/app.js"]
+    command: [ "dockerize", "-wait", "tcp://database-1.cncsyck2gfd6.ap-northeast-1.rds.amazonaws.com:3306", "-timeout", "120s", "node", "backend/app.js" ]
     env_file:
       - .env
     ports:
@@ -16,7 +16,7 @@ services:
   server:
     build:
       context: .
-    command: ["dockerize", "-wait", "tcp://database-1.cncsyck2gfd6.ap-northeast-1.rds.amazonaws.com:3306", "-timeout", "120s", "node", "backend/app.js"]
+    command: [ "dockerize", "-wait", "tcp://database-1.cncsyck2gfd6.ap-northeast-1.rds.amazonaws.com:3306", "-timeout", "120s", "node", "backend/app.js" ]
     env_file:
       - .env
     volumes:

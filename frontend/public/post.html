@@ -7,9 +7,12 @@
   <title>Post</title>
   <link href="./stylesheets/bootstrap.min.css" rel="stylesheet">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.15/main.min.css">
   
   <link rel="stylesheet" href="./stylesheets/styles.css">
   <script src="/socket.io/socket.io.js"></script>
+  <script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.15/index.global.min.js'></script>
+  <script type="module" src="/javascripts/render/scheduleRender.js"></script>
   <script type="module" src="/javascripts/main.js" defer></script>
   
 </head>
@@ -22,15 +25,33 @@
     <!-- templateJs -->
   </div>
 
-  <div class="welcome">
+  <!-- <div class="welcome">
     Your Latest Posts:
+  </div> -->
+
+  <!-- ! calendar -->
+  <div class="calendar-container">
+  
+    <div id="calendar"></div>
+    <!-- <div class="current-post-wrapper"></div> -->
+    
+  
   </div>
+
+  <div class="welcome select-post-container">
+    Your Posts:
+  </div>
+
 
   <div id="post-container">
     
     <!-- js generate -->
-    
+  
   </div>
+
+
+
+
 
 
   <script src="/javascripts/bootstrap.bundle.min.js"></script>

@@ -1,3 +1,5 @@
+import { removeTestAccountOnline } from '../api/authScript.js'
+
 let loginModal
 let registerModal
 let loginBtn
@@ -77,15 +79,16 @@ export function navScheduleBtn (isAuthenticated) {
   })
 }
 
-export async function updateLoginButton () {
+export async function updateLoginButton (user) {
   const loginButton = document.getElementById('login-register-btn')
   if (loginButton) {
     loginButton.innerText = 'Logout.'
     loginButton.id = 'logout-btn'
   }
   const logoutBtn = document.getElementById('logout-btn')
-  logoutBtn.addEventListener('click', (event) => {
+  logoutBtn.addEventListener('click', async (event) => {
     event.preventDefault()
+    await removeTestAccountOnline(user) 
     localStorage.removeItem('token')
     hideModals() // Hide any open modals before reloading
     setTimeout(() => location.reload(), 100) // Delay reload to ensure modals are hidden
@@ -97,26 +100,19 @@ async function hideModals () {
   registerModal.style.display = 'none'
 }
 
-export async function coachNavbar () {
+export async function coachNavbar (user) {
+  console.log(user)
   try {
-    const response = await fetch('/api/user-role', {
-      headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
-    })
-    const { isCoach } = await response.json()
+    // const response = await fetch('/api/user-role', {
+    //   headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
+    // })
+    const { isCoach } = { isCoach: user.isCoach }
     console.log({ isCoach })
     const homepageContainer = document.querySelector('.homepage-link')
+    const roleSpan = document.createElement('span')
+
     if (!isCoach) {
       const navContainer = document.querySelector('.nav-item-container')
-      // const btnA = document.createElement('a')
-      // btnA.classList.add('module-link')
-      // btnA.href = '/posts'
-
-      // const consultBtn = document.createElement('span')
-      // consultBtn.id = 'post-btn'
-      // consultBtn.className = 'nav-item'
-      // consultBtn.textContent = ' Post '
-      // btnA.appendChild(consultBtn)
-      // homepageContainer.insertAdjacentElement('afterend', btnA)
 
       // module nav link
       const aModuleHref = document.createElement('a')
@@ -128,15 +124,15 @@ export async function coachNavbar () {
       moduleSpan.className = 'nav-item'
       moduleSpan.textContent = ' Module.'
 
-      // calendar nav link
+      // PunchIn nav link
       const aCalendarHref = document.createElement('a')
       aCalendarHref.classList.add('module-link')
-      aCalendarHref.href = '/schedules'
+      aCalendarHref.href = '/training'
 
       const calendarSpan = document.createElement('span')
       calendarSpan.id = 'my-calendar-btn'
       calendarSpan.className = 'nav-item'
-      calendarSpan.textContent = ' Calendar.'
+      calendarSpan.textContent = ' PunchIn.'
 
       // post nav link
       const aPostHref = document.createElement('a')
@@ -155,10 +151,48 @@ export async function coachNavbar () {
       navContainer.appendChild(aCalendarHref)
       navContainer.appendChild(aModuleHref)
       navContainer.appendChild(aPostHref)
-    }
 
+      roleSpan.textContent = `| Hi, Student ${user.username}`
+      roleSpan.classList.add('role-span')
+    } else {
+      // if isCoacn change the background color
+      document.body.style.backgroundColor = '#808080'
+      document.querySelector('.before-consult').style.backgroundColor = '#808080'
+      roleSpan.classList.add('role-span')
+      roleSpan.textContent = `| Hi, Coach ${user.username}`
+    }
+    homepageContainer.appendChild(roleSpan)
+
+    console.log({ isCoach })
     return ({ isCoach })
   } catch (error) {
     console.error('Error updating navbar:', error)
   }
+}
+
+export function scrollVideoAutoPlay () {
+  console.log('scrollVideoAutoPlay')
+    const videos = document.querySelectorAll('video');
+
+    const options = {
+      root: null, // Use the viewport as the root
+      rootMargin: '0px',
+      threshold: 0.5 // Trigger when 50% of the video is visible
+    };
+
+    const handlePlay = (entries, observer) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.play();
+        } else {
+          entry.target.pause();
+        }
+      });
+    };
+
+    const observer = new IntersectionObserver(handlePlay, options);
+
+    videos.forEach(video => {
+      observer.observe(video);
+    });
 }

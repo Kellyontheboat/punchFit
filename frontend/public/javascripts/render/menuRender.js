@@ -30,6 +30,10 @@ export async function renderMenuModules (modules, sectionIds) {
     moduleTitle.dataset.sectionId = sectionId
     moduleTitle.innerText = `${sectionName}`
 
+    const editBtn = document.createElement('button')
+    editBtn.classList.add('btn', 'btn-primary', 'edit-menu-module')
+    editBtn.innerText = 'Edit'
+
     console.log(modules)
     // // Tie the module.id to moduleDiv if a module exists under this sectionId
     console.log(sectionId)
@@ -49,6 +53,7 @@ export async function renderMenuModules (modules, sectionIds) {
     }
 
     moduleWrap.appendChild(moduleTitle)
+    moduleTitle.appendChild(editBtn)
     moduleWrap.appendChild(moduleDiv)
     moduleContainer.appendChild(moduleWrap)
   })
@@ -62,10 +67,6 @@ export async function renderItemsInMenuModule (itemContainers) {
     const listGroup = document.createElement('ul')
     listGroup.classList.add('list-group')
     container.appendChild(listGroup)
-
-    const editBtn = document.createElement('button')
-    editBtn.classList.add('btn', 'btn-primary', 'edit-menu-module')
-    editBtn.innerText = 'Edit'
 
     const items = await getExerciseInModule(moduleId)
     // Clear the container before rendering items
@@ -86,10 +87,8 @@ export async function renderItemsInMenuModule (itemContainers) {
         detailDiv.innerText = `${reps} reps / ${sets} sets / ${weight} kg`
         listGroup.appendChild(listItem)
         listItem.appendChild(detailDiv)
-        listGroup.appendChild(editBtn)
       })
     }
-    listGroup.appendChild(editBtn)
   }
 }
 
@@ -97,7 +96,7 @@ export async function renderSubmitMenuBtn () {
   const menuContainer = document.querySelector('.menu-wrapper')
   const SubmitMenuBtn = document.createElement('button')
 
-  SubmitMenuBtn.innerText = 'Save into Schedule'
+  SubmitMenuBtn.innerText = 'Submit Post'
   SubmitMenuBtn.classList.add('btn', 'btn-primary')
   SubmitMenuBtn.id = 'submit-menu'
   SubmitMenuBtn.type = 'button'

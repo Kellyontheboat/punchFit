@@ -2,12 +2,22 @@ import { getSchedules, getSchedulesItems } from '../api/scheduleScript.js'
 
 export async function renderPosts (posts) {
   const postContainer = document.getElementById('post-container')
+  let postWrapper
+  posts.forEach((post, index) => {
 
-  posts.forEach(post => {
-    // Create a post wrapper
-    const postWrapper = document.createElement('div')
-    postWrapper.classList.add('post-wrapper')
-
+    //if (index === 0) {
+      // For the first post, use the existing current-post-wrapper
+      postWrapper = document.querySelector('.current-post-wrapper');
+      //if (!postWrapper) {
+        //console.error('No .current-post-wrapper found for the first post');
+        //return;
+      //}
+    //} else {
+      // Create a post wrapper
+      postWrapper = document.createElement('div')
+      postWrapper.classList.add('post-wrapper')
+    //}
+    
     // Create a container for each post
     const postElement = document.createElement('div')
     postElement.classList.add('post')
@@ -54,7 +64,9 @@ export async function renderPosts (posts) {
     // Append the post to the container
 
     postWrapper.appendChild(postElement)
-    postContainer.appendChild(postWrapper)
+    //if (index !== 0) {
+      postContainer.appendChild(postWrapper)
+    //}
   })
 }
 

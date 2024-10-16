@@ -1,6 +1,6 @@
 import { navHTML, hrHTML, injectHTML } from './render/htmlTemplates.js'
 
-import { showLoginModal, navScheduleBtn, updateLoginButton, initializeModals, coachNavbar } from './render/navRender.js'
+import { showLoginModal, navScheduleBtn, updateLoginButton, initializeModals, coachNavbar, scrollVideoAutoPlay } from './render/navRender.js'
 
 import { addTrainingRecordBtn, renderSections, renderPartsBySection, renderExercisesByPart, exerciseCardModal, sectionCheckBox, partContainerStickOnTop } from './render/exerciseRender.js'
 
@@ -12,7 +12,7 @@ import { addListenerDelScheduleBtn, getSchedules, getSchedulesItems } from './ap
 
 import { renderModulesBySections, renderMenuModules, renderItemsInMenuModule, renderSubmitMenuBtn } from './render/menuRender.js'
 
-import { renderConsultRoom, renderCoachConsultRoom } from './render/consultRender.js'
+import { renderConsultRoom, renderFilteredStudentList } from './render/consultRender.js'
 
 import { addListenerEditMenuBtn, addListenerSubmitMenu } from './api/menuScript.js'
 
@@ -22,31 +22,41 @@ import { addListenerModule, addListenerAddMemoBtn, addListenerModalAddMemoBtn } 
 
 import { fetchSections, addSectionListener, fetchPartsBySection, addPartListener, fetchExercisesByPart } from './api/exerciseScript.js'
 
-import { addListenerConsultBtn, initCoachSocket, coachGetNotification, coachGetPostContent } from './api/consultScript.js'
+import { addListenerConsultBtn, initUserSocket, coachGetPostContent, addSendMsgListeners } from './api/consultScript.js'
 
 document.addEventListener('DOMContentLoaded', async function () {
   // use the Template HTML
   await injectHTML('.nav-container', navHTML)
   await injectHTML('.nav-separator', hrHTML)
+  loginBtn()
 
   const pathArray = window.location.pathname.split('/')
   console.log(pathArray)
   const pageType = pathArray[3]
 
   const { user, isAuthenticated } = await checkLoginStatus()// user:id username email
+
+  let isCoach;
   if (isAuthenticated) {
-    updateLoginButton()
+    updateLoginButton(user);
+    ({ isCoach } = await coachNavbar(user));
+    if (isCoach && pathArray[1] !== 'consult') {
+      window.location.href = '/consult'
+    }
+  } else {
+    if(window.location.pathname !== '/') {
+      window.location.href = '/'
+    }
   }
 
+
   // !Nav btn
-  loginBtn()
+  
   initializeModals()
   navScheduleBtn(isAuthenticated)
-  loginformSubmission() // click submit then login
+  await loginformSubmission() // clickListener submit then login
+  
   registerformSubmission()
-
-  const { isCoach } = await coachNavbar()
-  console.log({ isCoach })
 
   // !section part
   addSectionListener()
@@ -60,19 +70,15 @@ document.addEventListener('DOMContentLoaded', async function () {
     const { scheduleIds, schedules } = await getSchedules()
     await renderPosts(schedules)
     await renderExerciseInPosts()
-    addListenerConsultBtn(user)
+    await initUserSocket(user)
+    await addListenerConsultBtn(user)
   } else if (pathArray[1] === 'consult') {
     if (!isCoach) {
       window.location.href = '/training'
       return
     }
     console.log('consult page')
-    console.log(sections)
-    const { invitations, studentName } = await coachGetNotification()
-    console.log({ invitations, studentName })
-    await initCoachSocket(user, studentName)
-
-    // renderCoachConsultRoom({studentName})
+    await initUserSocket(user)
   } else if (pathArray[1] === 'schedules') {
     if (isCoach) {
       window.location.href = '/consult'
@@ -130,12 +136,15 @@ document.addEventListener('DOMContentLoaded', async function () {
     addListenerModalAddMemoBtn(data)
     partContainerStickOnTop()
   } else {
-    if (isCoach) {
-      window.location.href = '/consult'
+    if (isAuthenticated) {
+      document.querySelector('.index-login-btn').remove()
     }
-    // if homepage
-    addTrainingRecordBtn(isAuthenticated)
-    addListenerModule(isAuthenticated)
-    // await renderSections(sections) for rendering section module move to /module
+    document.querySelector('.before-footer').style.backgroundColor = '#0c0c0c';
+    document.body.style.backgroundColor = '#0c0c0c';
+    //} 
+    //addTrainingRecordBtn(isAuthenticated)
+    //addListenerModule(isAuthenticated)
+    scrollVideoAutoPlay()
+
   }
 })

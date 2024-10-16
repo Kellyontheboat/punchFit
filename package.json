@@ -20,11 +20,13 @@
     "@fullcalendar/timegrid": "^6.1.15",
     "bcrypt": "^5.1.1",
     "bcryptjs": "^2.4.3",
+    "cookie-parser": "^1.4.7",
+    "csurf": "^1.11.0",
     "dompurify": "^3.1.6",
     "dotenv": "^16.4.5",
     "express": "^4.19.2",
     "express-validator": "^7.1.0",
-    "helmet": "^7.1.0",
+    "helmet": "^7.2.0",
     "jsonwebtoken": "^9.0.2",
     "multer": "^1.4.5-lts.1",
     "mysql2": "^3.10.3",
@@ -33,7 +35,8 @@
     "sequelize-auto": "^0.8.8",
     "sequelize-cli": "^6.6.2",
     "socket.io": "^4.7.5",
-    "socket.io-client": "^4.7.5"
+    "socket.io-client": "^4.7.5",
+    "socket.io-redis": "^6.1.1"
   },
   "devDependencies": {
     "@eslint/js": "^9.8.0",

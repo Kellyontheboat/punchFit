@@ -1,4 +1,7 @@
 import { showLoginModal } from '../render/navRender.js'
+
+const csrfToken = getCookie('XSRF-TOKEN')
+
 export async function checkLoginStatus () {
   const token = localStorage.getItem('token')
   if (token) {
@@ -39,10 +42,41 @@ export async function checkLoginStatus () {
 
 export function loginBtn () {
   const loginBtn = document.getElementById('login-register-btn')
-  if (loginBtn) {
-    loginBtn.onclick = function () {
-      showLoginModal()
+  const loginBtn2 = document.querySelector('.index-login-btn')
+  const loginBtn3 = document.querySelector('.index-coach-login-btn')
+  const coachLoginBtn = document.getElementById('coach-login')
+
+  const handleLoginClick = async function () {
+    showLoginModal();
+    addListenerPublicCoachAccount()
+    const testAccounts = await getTestAccount();
+    if (testAccounts.length === 0) {
+      return
     }
+    const testEmail = testAccounts[0].testEmail
+    if (this === loginBtn3) {
+      document.getElementById('email').value = "coachJenny@gmail.com"
+      document.getElementById('password').value = "coachJenny123456"
+    } else {
+      document.getElementById('email').value = testEmail
+      document.getElementById('password').value = testAccounts[0].testPassword
+    }
+    
+    if (this !== loginBtn) {
+      coachLoginBtn.style.display = 'none'
+    }
+  }
+
+  if (loginBtn) {
+    loginBtn.onclick = handleLoginClick;
+  }
+
+  if (loginBtn2) {
+    loginBtn2.onclick = handleLoginClick;
+  }
+
+  if (loginBtn3) {
+    loginBtn3.onclick = handleLoginClick;
   }
 }
 
@@ -66,7 +100,8 @@ export async function loginformSubmission () {
         const response = await fetch('/api/user/auth', {
           method: 'PUT',
           headers: {
-            'Content-Type': 'application/json'
+            'Content-Type': 'application/json',
+            'X-CSRF-Token': csrfToken
           },
           body: JSON.stringify(data)
         })
@@ -74,14 +109,21 @@ export async function loginformSubmission () {
         if (response.ok) {
           const responseData = await response.json()
           localStorage.setItem('token', responseData.token)
-          console.log('Login successfully!')
-          window.location.href = '/training'
+          const isCoach = responseData.isCoach
+          if (isCoach) {
+            window.location.href = '/consult'
+          } else {
+            window.location.href = '/training'
+          }
         } else {
           const errorData = await response.json()
           console.log(errorData)
 
           if (errorData.message === 'Invalid email or password') {
             msgSpan.innerText = 'Email or Password is wrong'
+            msgSpan.style.color = 'red'
+          } else if (errorData.message === 'This account is already online') {
+            msgSpan.innerText = 'This account is already online.Try another one or register a new account.'
             msgSpan.style.color = 'red'
           }
         }
@@ -129,7 +171,8 @@ export async function registerformSubmission () {
       const response = await fetch('/api/user', {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
+          'X-CSRF-Token': csrfToken
         },
         body: JSON.stringify(data)
       })
@@ -156,3 +199,47 @@ export async function registerformSubmission () {
     }
   })
 };
+
+export async function getTestAccount(){
+  const response = await fetch('/api/testAccount', {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json'
+    }
+  })
+  const data = await response.json()
+  console.log('getTestAccount data', data)
+  return data
+}
+
+export async function removeTestAccountOnline(user){
+  const token = localStorage.getItem('token')
+  console.log('token', token)
+  const response = await fetch('/api/testAccount', {
+    method: 'PUT',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${token}`,
+      'X-CSRF-Token': csrfToken
+    },
+    body: JSON.stringify({ user })
+  })
+  const data = await response.json()
+  console.log('removeTestAccountOnline data', data)
+  return data
+}
+
+export function addListenerPublicCoachAccount(){
+  const coachLogin = document.querySelector('.public-coach-login')
+  coachLogin.addEventListener('click', (event) => {
+    console.log('coachLogin')
+    document.getElementById('email').value = "coachJenny@gmail.com"
+    document.getElementById('password').value = "coachJenny123456"
+  })
+}
+
+export function getCookie(name) {
+  const value = `; ${document.cookie}`;
+  const parts = value.split(`; ${name}=`);
+  if (parts.length === 2) return parts.pop().split(';').shift();
+}

@@ -47,14 +47,21 @@ export async function addListenerSubmitMenu () {
   }
 
   SubmitMenuBtn.addEventListener('click', async function (event) {
+    const progressAlert = document.getElementById('progress-saveSuccessAlert')
+    progressAlert.classList.remove('d-none')
     console.log('start to submit menu')
     event.preventDefault() // Prevent the default form submission behavior
 
+    SubmitMenuBtn.disabled = true;
+    SubmitMenuBtn.textContent = 'Uploading...';
+
+    try {
     const scheduleName = await submitMenu()
     if (!scheduleName) return
 
     const lastUrl = sessionStorage.getItem('lastUrl')
     const saveSuccessAlert = document.getElementById('saveSuccessAlert')
+    progressAlert.classList.add('d-none')
     saveSuccessAlert.classList.remove('d-none')
 
     // Redirect after a short delay
@@ -68,35 +75,15 @@ export async function addListenerSubmitMenu () {
         window.location.href = '/posts'
       }
     }, 1500)
-  })
+    } catch (error) {
+      console.error('Error during submission:', error);
+    } finally {
+      // Re-enable the submit button after the process is complete
+      SubmitMenuBtn.disabled = false;
+      SubmitMenuBtn.textContent = 'Submit Post'; // Reset button text
+    }
+  });
 }
-
-// export async function addListenerSubmitMenu () {
-//   const SubmitMenuBtn = await renderSubmitMenuBtn()
-//   SubmitMenuBtn.addEventListener('click', async function (event) {
-//     console.log("start to submit menu")
-//     event.preventDefault()
-//     const scheduleName = await submitMenu()
-//     if (!scheduleName) return
-
-//     const lastUrl = sessionStorage.getItem('lastUrl')
-
-//     const saveSuccessAlert = document.getElementById('saveSuccessAlert')
-//     saveSuccessAlert.classList.remove('d-none')
-
-//     // Redirect after a short delay
-//     setTimeout(() => {
-//       if (lastUrl) {
-//         console.log("menu lastUrl")
-//         sessionStorage.removeItem('lastUrl')
-//         window.location.href = lastUrl
-//       } else {
-//         console.log("menu redirect")
-//         window.location.href = '/schedules'
-//       }
-//     }, 1500)
-//   })
-// }
 
 // Handle file input and caption
 export async function submitMenu () {
@@ -105,7 +92,14 @@ export async function submitMenu () {
   const file = fileInput.files[0]
   const caption = captionInput.value
 
-  if (file && !file.type.startsWith('video/')) {
+  // Handle schedule name
+  const scheduleName = document.getElementById('schedule-name-input').value
+  if (!scheduleName || !file) {
+    alert('Schedule name and file cannot be empty!')
+    return
+  }
+
+  if (!file || !file.type.startsWith('video/')) {
     alert('Please upload a video file.')
     return null
   }
@@ -118,13 +112,8 @@ export async function submitMenu () {
 
   const formData = new FormData()
   if (file) formData.append('video', file)
-  formData.append('captionInput', caption)
-
-  // Handle schedule name
-  const scheduleName = document.getElementById('schedule-name-input').value
-  if (!scheduleName) {
-    alert('Schedule name cannot be empty!')
-    return
+  if (caption) {
+    formData.append('captionInput', caption)
   }
 
   formData.append('scheduleName', scheduleName)
@@ -133,7 +122,9 @@ export async function submitMenu () {
   try {
     // Post the schedule along with form data
     const scheduleId = await postSchedule({ formData })
-
+    if (!scheduleId) {
+      throw new Error('Failed to create schedule')
+    }
     // Add items into the schedule
     const params = new URLSearchParams(window.location.search)
     const sectionIds = params.get('sectionIds') ? params.get('sectionIds').split(',').map(Number) : []
@@ -146,63 +137,3 @@ export async function submitMenu () {
 
   return scheduleName
 }
-
-// export async function submitMenu() {
-//   const fileInput = document.getElementById('formFile');
-//   const captionInput = document.getElementById('captionInput');
-//   const file = fileInput.files[0];
-//   const caption = captionInput.value;
-
-//   if (file && !file.type.startsWith('video/')) {
-//     alert('Please upload a video file.');
-//     return;
-//   }
-
-//   const formData = new FormData();
-//   if (file) formData.append('video', file);
-//   formData.append('captionInput', caption);
-
-//   // Handle schedule name
-//   const scheduleName = document.getElementById('schedule-name-input').value;
-//   if (!scheduleName) {
-//     alert('Schedule name cannot be empty!');
-//     return;
-//   }
-
-//   const today = new Date();
-//   const currentDate = today.toLocaleDateString('en-CA');
-
-//   try {
-//     // Post the schedule along with form data
-//     const scheduleId = await postSchedule({ scheduleName, date: currentDate, formData });
-
-//     // Add items into the schedule
-//     const params = new URLSearchParams(window.location.search);
-//     const sectionIds = params.get('sectionIds') ? params.get('sectionIds').split(',').map(Number) : [];
-
-//     await addItemsIntoSchedule({ sectionIds, scheduleId });
-//   } catch (error) {
-//     console.error('Error:', error);
-//   }
-// }
-
-// submit to Schedule
-// export async function submitMenu () {
-//   const params = new URLSearchParams(window.location.search)
-//   const sectionIds = params.get('sectionIds') ? params.get('sectionIds').split(',').map(Number) : []
-//   const today = new Date()
-//   const currentDate = today.toLocaleDateString('en-CA')
-//   console.log(currentDate)
-//   const scheduleName = document.getElementById('schedule-name-input').value
-
-//   if (!scheduleName) {
-//     alert('Schedule name cannot be empty!')
-//     return
-//   }
-
-//   const scheduleId = await postSchedule({ scheduleName, date: currentDate })
-//   console.log(scheduleId)
-//   addItemsIntoSchedule({ sectionIds, scheduleId })
-//   console.log(sectionIds)
-//   return scheduleName
-// }
