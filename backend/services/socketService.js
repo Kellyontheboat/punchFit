@@ -4,6 +4,7 @@ const redisConfig = require('../config/redisConfig')
 const { redisClient } = require('../services/redisService'); //, redisPubClient, redisSubClient
 const { getSchedulesForUser, getMessagesForRoom, saveMessageToRoom, getPostItems, getPostContent } = require('../services/messageService');
 const jwt = require('jsonwebtoken');
+const sanitizeHtml = require('sanitize-html');
 
 let io;
 const userSocketMap = new Map();
@@ -72,6 +73,20 @@ function initializeSocket(server) {
     // Handle chat messages
     socket.on('chatMessage', async (message) => {
       try {
+        // Validate message length
+        if (typeof message.text !== 'string' || message.text.length > 200) {
+          throw new Error('Invalid message length');
+        }
+
+        // Sanitize message content
+        const sanitizedMessageText = sanitizeHtml(message.text, {
+          allowedTags: [], // Disallow all HTML tags
+          allowedAttributes: {}
+        });
+
+        // Update the message with sanitized content
+        message.text = sanitizedMessageText;
+
         console.log('message received:', message);
         await saveMessageToRoom(message) // save into DB and Redis
 

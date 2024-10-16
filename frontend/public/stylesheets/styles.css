@@ -303,6 +303,7 @@ body {
   text-align: center;
 }
 
+#register-msg,
 #login-msg {
   padding: 10px;
 }

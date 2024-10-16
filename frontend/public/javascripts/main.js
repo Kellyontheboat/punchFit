@@ -43,12 +43,15 @@ document.addEventListener('DOMContentLoaded', async function () {
     if (isCoach && pathArray[1] !== 'consult') {
       window.location.href = '/consult'
     }
+    if(window.location.pathname === '/') {
+      document.querySelector('.index-login-btn').remove()
+      document.querySelector('.index-coach-login-btn').remove()
+    }
   } else {
     if(window.location.pathname !== '/') {
       window.location.href = '/'
     }
   }
-
 
   // !Nav btn
   
@@ -136,15 +139,8 @@ document.addEventListener('DOMContentLoaded', async function () {
     addListenerModalAddMemoBtn(data)
     partContainerStickOnTop()
   } else {
-    if (isAuthenticated) {
-      document.querySelector('.index-login-btn').remove()
-    }
     document.querySelector('.before-footer').style.backgroundColor = '#0c0c0c';
     document.body.style.backgroundColor = '#0c0c0c';
-    //} 
-    //addTrainingRecordBtn(isAuthenticated)
-    //addListenerModule(isAuthenticated)
     scrollVideoAutoPlay()
-
   }
 })
