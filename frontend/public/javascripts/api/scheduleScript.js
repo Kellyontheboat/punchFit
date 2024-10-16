@@ -20,6 +20,9 @@ export async function postSchedule ({ formData }) { // scheduleName, date,
     if (!response.ok) {
       console.error('Failed to upload:', response.statusText)
       alert('Failed to upload. Please try again.')
+      const progressAlert = document.getElementById('progress-saveSuccessAlert')
+      progressAlert.classList.add('d-none')
+
       return null
     }
     const scheduleData = await response.json()

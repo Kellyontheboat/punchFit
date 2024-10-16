@@ -190,7 +190,6 @@ export function initUserSocket(user) {
     console.log('Received chat message:', message);
     appendMessage(message.roomId, message, user);
 
-    //
     if (message.user.id !== user.id){
       let unreadRoomIds = []
       unreadRoomIds.push(message.roomId)
@@ -319,12 +318,20 @@ function sendMessageHandler(event, user) {
 }
 
 function sendMessage(roomId, text, user) {
+  if (text > 200) {
+    alert('Message is too long. Please limit your message to 200 characters.');
+    return;
+  }
   if(!socket) {
     socket = io({
       auth: { token }
     });
   }
     console.log('Sending message:', { roomId, text });
+  if (text.length > 200) {
+    alert('Message is too long. Please limit your message to 200 characters.');
+    return;
+  }
   socket.emit('chatMessage', { roomId, text, user });
 }
 

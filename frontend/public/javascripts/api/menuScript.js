@@ -67,6 +67,13 @@ export async function addListenerSubmitMenu () {
       return
     }
 
+    const maxScheduleNameLength = 10;
+    const maxCaptionLength = 500;
+    if ((document.getElementById('schedule-name-input').value.length > maxScheduleNameLength) || (document.getElementById('captionInput').value.length > maxCaptionLength)) {
+      alert('Schedule name cannot exceed 10 and caption cannot exceed 500 characters!')
+      return
+    }
+
     SubmitMenuBtn.disabled = true;
     SubmitMenuBtn.textContent = 'Uploading...';
     const progressAlert = document.getElementById('progress-saveSuccessAlert')
@@ -79,7 +86,6 @@ export async function addListenerSubmitMenu () {
 
     const lastUrl = sessionStorage.getItem('lastUrl')
     const saveSuccessAlert = document.getElementById('saveSuccessAlert')
-    progressAlert.classList.add('d-none')
     saveSuccessAlert.classList.remove('d-none')
 
     // Redirect after a short delay
@@ -94,6 +100,7 @@ export async function addListenerSubmitMenu () {
       }
     }, 1500)
     } catch (error) {
+      progressAlert.classList.add('d-none')
       console.error('Error during submission:', error);
     } finally {
       // Re-enable the submit button after the process is complete

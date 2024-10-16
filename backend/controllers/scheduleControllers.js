@@ -8,6 +8,7 @@ const crypto = require('crypto')
 const generateFileName = (bytes = 32) => crypto.randomBytes(bytes).toString('hex')
 // const { uploadFile } = require('../services/s3.js')
 const upload = require('../middleware/upload.js') // Import the updated upload middleware
+const sanitizeHtml = require('sanitize-html');
 
 const { multipartUpload } = require('../services/s3.js')
 
@@ -26,14 +27,17 @@ const scheduleControllers = {
       return res.status(400).json({ error: 'Schedule name and date are required.' })
     }
 
+    if (scheduleName.length > 10) {
+      return res.status(400).json({ error: 'Schedule name should not exceed 10 characters.' })
+    }
+
+    if (captionInput && captionInput.length > 500) {
+      return res.status(400).json({ error: 'Caption should not exceed 500 characters.' })
+    }
+
     let videoName = null
     if (file) {
       videoName = generateFileName()
-      // try {
-      //   await uploadFile(videoName, file.buffer, file.mimetype)
-      // } catch (error) {
-      //   return res.status(500).json({ error: 'Failed to upload video' })
-      // }
       try {
         // Call multipartUpload instead of uploadFile for large file uploads
         await multipartUpload(videoName, file.buffer, file.mimetype)
@@ -45,12 +49,24 @@ const scheduleControllers = {
     }
 
     try {
+      // Sanitize the caption input
+      const sanitizedCaption = sanitizeHtml(captionInput, {
+        allowedTags: [], // Disallow all HTML tags
+        allowedAttributes: {}
+      });
+
+      // Sanitize the schedule name input
+      const sanitizedScheduleName = sanitizeHtml(scheduleName, {
+        allowedTags: [], // Disallow all HTML tags
+        allowedAttributes: {}
+      });
+
       const newSchedule = await Schedules.create({
-        schedule_name: scheduleName,
+        schedule_name: sanitizedScheduleName,
         schedule_date: date,
         member_id: memberId,
         video: videoName,
-        content: captionInput
+        content: sanitizedCaption
       })
 
       res.json({ success: true, schedule_id: newSchedule.id }) // Return the schedule_id
