@@ -79,20 +79,6 @@ const invitationControllers = {
       throw error;
     }
   },
-
-  updateInvitationStatus: async (req, res) => {
-    try {
-      const invitationId = req.params.id
-      const { status } = req.body
-      const [updated] = await Invitations.update({ status }, { where: { id: invitationId } })
-      if (updated) {
-        const updatedInvitation = await Invitations.findByPk(invitationId)
-        res.json(updatedInvitation)
-      }
-    } catch (error) {
-      res.status(500).json({ error: 'Error updating invitation' })
-    }
-  },
   deleteUnreadRoomId: async (req, res) => {
     const { roomId } = req.params
     const memberId = req.memberId

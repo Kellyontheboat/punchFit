@@ -14,6 +14,12 @@ export async function createModule () {
     section_id: sectionId
   }
 
+  // Client-side validation
+  if (!Number.isInteger(data.section_id) || data.section_id < 1 || data.section_id > 7) {
+    alert('Invalid section ID. It must be an integer between 1 and 7.');
+    return;
+  }
+  
   try {
     const response = await fetch('/api/modules', {
       method: 'POST',

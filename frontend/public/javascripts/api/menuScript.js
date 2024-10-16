@@ -47,13 +47,31 @@ export async function addListenerSubmitMenu () {
   }
 
   SubmitMenuBtn.addEventListener('click', async function (event) {
-    const progressAlert = document.getElementById('progress-saveSuccessAlert')
-    progressAlert.classList.remove('d-none')
-    console.log('start to submit menu')
+    
     event.preventDefault() // Prevent the default form submission behavior
+    if ( (document.getElementById('schedule-name-input').value === '' || document.getElementById('formFile').value === '')){
+      alert('Schedule name and file cannot be empty!')
+      return
+    }
+
+    const fileInput = document.getElementById('formFile')
+    const file = fileInput.files[0]
+    if (!file || !file.type.startsWith('video/')) {
+      alert('Please upload a video file.')
+      return
+    }
+
+    const MAX_FILE_SIZE = 50 * 1024 * 1024
+    if (file.size > MAX_FILE_SIZE) {
+      alert('File is too large. Maximum allowed size is 50MB.')
+      return
+    }
 
     SubmitMenuBtn.disabled = true;
     SubmitMenuBtn.textContent = 'Uploading...';
+    const progressAlert = document.getElementById('progress-saveSuccessAlert')
+    progressAlert.classList.remove('d-none')
+    console.log('start to submit menu')
 
     try {
     const scheduleName = await submitMenu()
@@ -94,21 +112,6 @@ export async function submitMenu () {
 
   // Handle schedule name
   const scheduleName = document.getElementById('schedule-name-input').value
-  if (!scheduleName || !file) {
-    alert('Schedule name and file cannot be empty!')
-    return
-  }
-
-  if (!file || !file.type.startsWith('video/')) {
-    alert('Please upload a video file.')
-    return null
-  }
-
-  const MAX_FILE_SIZE = 50 * 1024 * 1024
-  if (file.size > MAX_FILE_SIZE) {
-    alert('File is too large. Maximum allowed size is 50MB.')
-    return
-  }
 
   const formData = new FormData()
   if (file) formData.append('video', file)
@@ -129,7 +132,14 @@ export async function submitMenu () {
     const params = new URLSearchParams(window.location.search)
     const sectionIds = params.get('sectionIds') ? params.get('sectionIds').split(',').map(Number) : []
 
-    await addItemsIntoSchedule({ sectionIds, scheduleId })
+    // Client-side validation: Ensure sectionIds are numbers between 1 and 7
+    const isValidSectionIds = sectionIds.every(id => Number.isInteger(id) && id >= 1 && id <= 7);
+
+    if (!isValidSectionIds) {
+      alert('Invalid section IDs. Please ensure they are numbers between 1 and 7.');
+    } else {
+      await addItemsIntoSchedule({ sectionIds, scheduleId });
+    }
   } catch (error) {
     console.error('Error:', error)
     return null

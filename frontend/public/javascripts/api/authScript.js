@@ -1,6 +1,8 @@
 import { showLoginModal } from '../render/navRender.js'
 
 const csrfToken = getCookie('XSRF-TOKEN')
+const publicTestCoachEmail = "coachJenny@gmail.com"
+const publicTestCoachPassword = "coachJenny123456"
 
 export async function checkLoginStatus () {
   const token = localStorage.getItem('token')
@@ -42,8 +44,8 @@ export async function checkLoginStatus () {
 
 export function loginBtn () {
   const loginBtn = document.getElementById('login-register-btn')
-  const loginBtn2 = document.querySelector('.index-login-btn')
-  const loginBtn3 = document.querySelector('.index-coach-login-btn')
+  const indexStudentLoginBtn = document.querySelector('.index-login-btn')
+  const indexCoachLoginBtn = document.querySelector('.index-coach-login-btn')
   const coachLoginBtn = document.getElementById('coach-login')
 
   const handleLoginClick = async function () {
@@ -53,13 +55,14 @@ export function loginBtn () {
     if (testAccounts.length === 0) {
       return
     }
-    const testEmail = testAccounts[0].testEmail
-    if (this === loginBtn3) {
-      document.getElementById('email').value = "coachJenny@gmail.com"
-      document.getElementById('password').value = "coachJenny123456"
+    const randomIndex = Math.floor(Math.random() * testAccounts.length);
+    const testAccount = testAccounts[randomIndex];
+    if (this === indexCoachLoginBtn) {
+      document.getElementById('email').value = publicTestCoachEmail;
+      document.getElementById('password').value = publicTestCoachPassword;
     } else {
-      document.getElementById('email').value = testEmail
-      document.getElementById('password').value = testAccounts[0].testPassword
+      document.getElementById('email').value = testAccount.testEmail;
+      document.getElementById('password').value = testAccount.testPassword;
     }
     
     if (this !== loginBtn) {
@@ -71,12 +74,12 @@ export function loginBtn () {
     loginBtn.onclick = handleLoginClick;
   }
 
-  if (loginBtn2) {
-    loginBtn2.onclick = handleLoginClick;
+  if (indexStudentLoginBtn) {
+    indexStudentLoginBtn.onclick = handleLoginClick;
   }
 
-  if (loginBtn3) {
-    loginBtn3.onclick = handleLoginClick;
+  if (indexCoachLoginBtn) {
+    indexCoachLoginBtn.onclick = handleLoginClick;
   }
 }
 
@@ -167,6 +170,19 @@ export async function registerformSubmission () {
       return
     }
 
+    if(data.name.length > 20){
+      registerMessage.innerText = 'Name must be less than 20 characters.';
+      registerMessage.style.color = 'red';
+      return;
+    }
+
+    // Validate password length
+    if ((data.password.length < 6) || (data.password.length > 20)) {
+      registerMessage.innerText = 'Password must be at least 6 characters long and less than 20 characters.';
+      registerMessage.style.color = 'red';
+      return;
+    }
+
     try {
       const response = await fetch('/api/user', {
         method: 'POST',
@@ -233,8 +249,8 @@ export function addListenerPublicCoachAccount(){
   const coachLogin = document.querySelector('.public-coach-login')
   coachLogin.addEventListener('click', (event) => {
     console.log('coachLogin')
-    document.getElementById('email').value = "coachJenny@gmail.com"
-    document.getElementById('password').value = "coachJenny123456"
+    document.getElementById('email').value = publicTestCoachEmail
+    document.getElementById('password').value = publicTestCoachPassword
   })
 }
 

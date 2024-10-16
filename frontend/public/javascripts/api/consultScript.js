@@ -49,6 +49,14 @@ export async function submitInviteForm(user, scheduleId) {
       scheduleId: formData.get('scheduleId')
     };
 
+    // Convert scheduleId to number and perform client-side validation
+    data.scheduleId = Number(data.scheduleId);
+    if (!data.scheduleId || Number.isNaN(data.scheduleId)) {
+      alert('Invalid schedule ID. Please ensure it is a valid number.');
+      submitBtn.style.display = 'block';
+      return;
+    }
+    
     try {
       // Wait for the response before proceeding
       const response = await fetch('/api/invitations', {

@@ -35,32 +35,6 @@ export async function postSchedule ({ formData }) { // scheduleName, date,
   }
 }
 
-// export async function postSchedule ({ scheduleName, date }) {
-//   const token = localStorage.getItem('token')
-//   const data = { scheduleName, date }
-//   console.log(date)
-//   try {
-//     const response = await fetch('/api/schedules', {
-//       method: 'POST',
-//       headers: {
-//         Authorization: `Bearer ${token}`,
-//         'Content-Type': 'application/json'
-//       },
-//       body: JSON.stringify(data)
-//     })
-
-//     if (!response.ok) {
-//       throw new Error('Failed to add schedule')
-//     }
-//     const scheduleData = await response.json()
-//     const scheduleId = scheduleData.schedule_id
-//     console.log(scheduleId)
-//     return scheduleId // send to addItemsIntoSchedule
-//   } catch (error) {
-//     console.error('Error:', error)
-//   }
-// }
-
 // sectionIds>modules>exercises
 export async function addItemsIntoSchedule ({ sectionIds, scheduleId }) {
   console.log({ sectionIds, scheduleId })
