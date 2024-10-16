@@ -65,7 +65,3 @@ https://github.com/user-attachments/assets/669fcf43-176e-414d-9d65-07c27abdba3c
 ## License
 
 This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
-
----
-
-This README provides a comprehensive overview of the PunchFit project, emphasizing the technical aspects relevant to a backend engineer. It highlights the use of real-time communication, security measures, and the integration of various technologies to build a robust fitness platform.
