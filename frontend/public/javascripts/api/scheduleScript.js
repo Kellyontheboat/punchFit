@@ -3,10 +3,7 @@ import { getCookie } from './authScript.js'
 const token = localStorage.getItem('token')
 const csrfToken = getCookie('XSRF-TOKEN')
 export async function postSchedule ({ formData }) { // scheduleName, date,
-  
-  console.log(csrfToken)
-  console.log(formData)
-  console.log(formData.captionInput)
+
   try {
     const response = await fetch('/api/schedules', {
       method: 'POST',
@@ -18,7 +15,6 @@ export async function postSchedule ({ formData }) { // scheduleName, date,
     })
 
     if (!response.ok) {
-      console.error('Failed to upload:', response.statusText)
       alert('Failed to upload. Please try again.')
       const progressAlert = document.getElementById('progress-saveSuccessAlert')
       progressAlert.classList.add('d-none')
@@ -28,11 +24,9 @@ export async function postSchedule ({ formData }) { // scheduleName, date,
     const scheduleData = await response.json()
     if (scheduleData.success) {
       const scheduleId = scheduleData.schedule_id
-      console.log(scheduleId)
       return scheduleId
     }
   } catch (error) {
-    console.error('Error:', error)
     alert('Error uploading. Please try again.')
     return null
   }
@@ -40,11 +34,9 @@ export async function postSchedule ({ formData }) { // scheduleName, date,
 
 // sectionIds>modules>exercises
 export async function addItemsIntoSchedule ({ sectionIds, scheduleId }) {
-  console.log({ sectionIds, scheduleId })
   const token = localStorage.getItem('token')
   try {
     const data = { sectionIds, scheduleId }
-    console.log(sectionIds)
     const response = await fetch('/api/scheduleItems', {
       method: 'POST',
       headers: {
@@ -143,7 +135,6 @@ export async function updateScheduleItems (updatedItems, itemsToDelete) {
       throw new Error('Failed to update schedule items')
     }
 
-    console.log('Schedule items updated successfully')
   } catch (error) {
     console.error('Error updating schedule items:', error)
   }
@@ -167,7 +158,6 @@ export async function addListenerDelScheduleBtn () {
       // Show confirmation dialog
       const confirmed = window.confirm('Are you sure you want to delete this record?')
       if (confirmed) {
-        console.log('Delete button clicked:', scheduleId)
         await handleDeleteSchedule(scheduleId)
         // Close the modal after successful deletion
         const modalInstance = bootstrap.Modal.getInstance(scheduleItemModal)
@@ -182,9 +172,8 @@ export async function addListenerDelScheduleBtn () {
 }
 
 async function handleDeleteSchedule (scheduleId) {
-  console.log('start to delete')
   const data = await deleteSchedule(scheduleId)
-  console.log(data)
+  return data
 }
 
 export async function deleteSchedule (scheduleId) {
@@ -204,13 +193,11 @@ export async function deleteSchedule (scheduleId) {
     }
 
     const result = await response.json()
-    console.log(result)
 
     if (result.success) {
       const event = window.calendar.getEventById(scheduleId)
       if (event) {
         event.remove()
-        console.log(`Event with Schedule ID: ${scheduleId} deleted successfully.`)
       } else {
         console.warn(`Event with Schedule ID: ${scheduleId} not found in calendar.`)
       }

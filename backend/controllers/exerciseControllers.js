@@ -14,7 +14,6 @@ const exerciseControllers = {
   getBodyPartsBySections: async (req, res) => {
     try {
       const sectionId = req.params.sectionId
-      console.log(sectionId)
       const bodyParts = await Parts.findAll({
         where: {
           sections_id: sectionId
@@ -22,11 +21,9 @@ const exerciseControllers = {
         order: [['id', 'ASC']],
         raw: true
       })
-      console.log(bodyParts)
       res.json(bodyParts)
     } catch (error) {
-      console.error('Error retrieving body parts:', error)
-      res.status(500).json({ error: 'An error occurred while retrieving body parts.' })
+      res.status(500).json({ error: `${error.message}. An error occurred while retrieving body parts.` })
     }
   },
   getExercisesByPart: async (req, res) => {
@@ -61,57 +58,10 @@ const exerciseControllers = {
 
       res.json(result)
     } catch (error) {
-      console.error('Error retrieving exercises:', error)
-      res.status(500).json({ error: 'An error occurred while retrieving exercises.' })
+      res.status(500).json({ error: `${error.message}. An error occurred while retrieving exercises.` })
     }
   }
 
 }
 
 module.exports = exerciseControllers
-
-// getExercisesByBodyPart: async (req, res) => {
-//   const { bodyPart } = req.query // Read the query parameter
-//   console.log(bodyPart)
-
-//   if (!bodyPart) {
-//     return res.status(400).json({ error: 'Body part is required' });
-//   }
-
-//   try {
-//     const part = await Part.findOne({
-//       where: { name: bodyPart },
-//       include: [{
-//         model: Exercise,
-//         as: 'exercises',
-//         attributes: ['name']
-//       }]
-//     });
-
-//     if (!part) {
-//       return res.status(404).json({ error: 'Body part not found' });
-//     }
-
-//     const exercises = part.exercises.map(exercise => exercise.name);
-//     res.json({ bodyPart, exercises });
-//   } catch (error) {
-//     console.error(error);
-//     res.status(500).json({ error: 'Internal server error' });
-//   }
-
-// }
-
-// const messages = await Message.findAll({
-//   order: [['createdAt', 'DESC']],
-//   raw: true // Use raw:true to get plain js object directly
-// })
-
-// // Add imgUrl to each plain message
-// const messagesWithImgUrl = await Promise.all(messages.map(async (message) => {
-//   message.imgUrl = 'https://d348uiae81km7c.cloudfront.net/' + message.img
-//   return message
-// }))
-
-// res.json(messagesWithImgUrl)
-
-// bodyPart:core.arm.chest.gluteal.leg.back.shoulder

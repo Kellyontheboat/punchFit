@@ -5,18 +5,9 @@ export async function renderPosts (posts) {
   let postWrapper
   posts.forEach((post, index) => {
 
-    //if (index === 0) {
-      // For the first post, use the existing current-post-wrapper
       postWrapper = document.querySelector('.current-post-wrapper');
-      //if (!postWrapper) {
-        //console.error('No .current-post-wrapper found for the first post');
-        //return;
-      //}
-    //} else {
-      // Create a post wrapper
       postWrapper = document.createElement('div')
       postWrapper.classList.add('post-wrapper')
-    //}
     
     // Create a container for each post
     const postElement = document.createElement('div')

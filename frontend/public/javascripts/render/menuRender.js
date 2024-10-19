@@ -6,7 +6,6 @@ export async function renderModulesBySections () {
 
   const { modules } = await getModulesBySections(sectionIds)
   const menuModules = modules
-  console.log(menuModules)
   renderMenuModules(menuModules, sectionIds)
 }
 
@@ -34,11 +33,7 @@ export async function renderMenuModules (modules, sectionIds) {
     editBtn.classList.add('btn', 'btn-primary', 'edit-menu-module')
     editBtn.innerText = 'Edit'
 
-    console.log(modules)
-    // // Tie the module.id to moduleDiv if a module exists under this sectionId
-    console.log(sectionId)
     const sectionIdNumber = Number(sectionId)
-    console.log(modules)
     // Find the module with the matching section_id
     const module = modules.find(module => module.section_id === sectionIdNumber)
 

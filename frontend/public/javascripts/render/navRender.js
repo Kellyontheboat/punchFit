@@ -101,13 +101,8 @@ async function hideModals () {
 }
 
 export async function coachNavbar (user) {
-  console.log(user)
   try {
-    // const response = await fetch('/api/user-role', {
-    //   headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
-    // })
     const { isCoach } = { isCoach: user.isCoach }
-    console.log({ isCoach })
     const homepageContainer = document.querySelector('.homepage-link')
     const roleSpan = document.createElement('span')
 
@@ -163,7 +158,6 @@ export async function coachNavbar (user) {
     }
     homepageContainer.appendChild(roleSpan)
 
-    console.log({ isCoach })
     return ({ isCoach })
   } catch (error) {
     console.error('Error updating navbar:', error)
@@ -171,7 +165,6 @@ export async function coachNavbar (user) {
 }
 
 export function scrollVideoAutoPlay () {
-  console.log('scrollVideoAutoPlay')
     const videos = document.querySelectorAll('video');
 
     const options = {

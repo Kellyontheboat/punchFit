@@ -1,4 +1,3 @@
-const Sequelize = require('sequelize')
 module.exports = function (sequelize, DataTypes) {
   const Messages = sequelize.define('Messages', {
     id: {
@@ -14,7 +13,7 @@ module.exports = function (sequelize, DataTypes) {
     },
     sender_id: {
       type: DataTypes.STRING,
-      allowNull: false,
+      allowNull: false
     },
     message_text: {
       type: DataTypes.TEXT,
@@ -24,11 +23,11 @@ module.exports = function (sequelize, DataTypes) {
     timestamp: {
       type: DataTypes.DATE,
       defaultValue: DataTypes.NOW,
-      allowNull: false,
+      allowNull: false
     },
     read: {
       type: DataTypes.TINYINT(1),
-      defaultValue: 0,
+      defaultValue: 0
     }
   }, {
     sequelize,
@@ -50,5 +49,4 @@ module.exports = function (sequelize, DataTypes) {
     Messages.belongsTo(models.Members, { as: 'member', foreignKey: 'sender_id' })
   }
   return Messages
-
 }

@@ -59,11 +59,9 @@ export async function renderSections ({ sections, sectionsId }) {
 export function sectionCheckBox () {
   document.querySelectorAll('.section-card').forEach(card => {
     card.addEventListener('click', function () {
-      console.log('Card clicked')
       const checkbox = card.querySelector('.section-checkbox')
       if (checkbox) {
         checkbox.checked = !checkbox.checked // Toggle the checkbox state
-        console.log('Checkbox state:', checkbox.checked)
 
         // Trigger change event manually
         checkbox.dispatchEvent(new Event('change'))
@@ -111,7 +109,6 @@ export async function renderExercisesByPart ({ data, exercises, exercisesId, exe
   rowDiv.classList.add('row', 'g-3')
 
   exercises.forEach((exercise, index) => {
-    console.log(exercise)
     // Create a Bootstrap column for each exercise card
     const colDiv = document.createElement('div')
     colDiv.classList.add('col-md-4', 'col-sm-6')
@@ -173,7 +170,6 @@ export async function renderExercisesByPart ({ data, exercises, exercisesId, exe
 }
 
 export async function exerciseCardModal (data) {
-  console.log(data)
 
   const exerciseCardModal = document.querySelector('#exerciseModal')
 

@@ -6,7 +6,6 @@ export async function renderInviteForm (scheduleId) {
   const container = document.querySelector(`.post[data-id="${scheduleId}"]`)
 
   if (!container) {
-    console.error('Container element not found')
     return
   }
 
@@ -39,16 +38,11 @@ export async function renderInviteForm (scheduleId) {
 // student:get scheduleId directly
 export async function renderConsultRoom(roomId, studentName, user) {
   const scheduleId = roomId.split('_')[2]
-  console.log(scheduleId)
   let container = document.querySelector(`.post[data-id="${scheduleId}"]`) || document.querySelectorAll('.consult-post')
   
   if (!container) {
-    console.error('Container element not found')
     return
   }
-
-  console.log(container)
-  console.log('start rendering consultRoom')
   // Create consult room elements
   const consultRoomDiv = document.createElement('div')
   consultRoomDiv.className = 'consult-room'
@@ -61,7 +55,6 @@ export async function renderConsultRoom(roomId, studentName, user) {
     if (container.length !== 0) {
       container = container[container.length - 1]
     }
-    console.log(container)
     consultTitle.textContent = 'Reply:'
     // add roomTitle
     const roomTitle = document.createElement('div')
@@ -71,7 +64,6 @@ export async function renderConsultRoom(roomId, studentName, user) {
     // hide all postWrapper(let the filtered one show)
     postWrapper.forEach(post => post.style.display = 'none')
     postWrapper[postWrapper.length - 1].insertAdjacentElement('afterbegin', roomTitle)
-    console.log(roomId)
     const studentId = roomId.split('_')[0]
     // Check if postWrapper is a NodeList and has elements
     // renderPostContent first(postWrapper created) then renderConsultRoom
@@ -135,19 +127,15 @@ export async function renderConsultRoom(roomId, studentName, user) {
 
 // source:coachGetPostContent(scheduleId)
 export async function renderConsultPostContent (post) {
-  console.log(post)
   const postContainer = document.getElementById('consult-post-container')
   // Create a post wrapper
   const newPostWrapper = document.createElement('div')
   newPostWrapper.classList.add('post-wrapper')
   postContainer.appendChild(newPostWrapper)
-  console.log(newPostWrapper)
 
   const allPostWrapper = document.querySelectorAll('.post-wrapper')
-  console.log(allPostWrapper)
 
   const postWrapper = allPostWrapper[allPostWrapper.length - 1]
-  console.log(postWrapper)
   // Create a container for each post
   const postElement = document.createElement('div')
   postElement.classList.add('consult-post')
@@ -241,21 +229,16 @@ export async function renderExerciseInConsult (scheduleItems) {
 }
 
 export async function renderFirstStudentPost () {
-  console.log('renderFirstStudentPost')
   const firstStudentItem = document.querySelector('.student-list-item')
-  console.log(firstStudentItem)
   if (firstStudentItem) {
     firstStudentItem.classList.add('active')
     const currentStudentId = firstStudentItem.dataset.studentId
     const currentStudentPosts = document.querySelectorAll(`.post-wrapper[data-student-id="${currentStudentId}"]`)
-    console.log(currentStudentPosts)
     currentStudentPosts.forEach(item => item.style.display = 'block')
-    console.log(currentStudentPosts)
   }
 }
 
 export async function renderFilteredStudentList(studentId) {
-  console.log('renderFilteredStudentList');
   // Hide all posts first
   const allPosts = document.querySelectorAll('.post-wrapper');
   allPosts.forEach(post => post.style.display = 'none');
@@ -271,13 +254,11 @@ export async function renderNotificationDot(unreadRoomIds) {
   let studentListItems = []
 
   studentIds.forEach(id => {
-    console.log(allItems,"allItems")
     const item = allItems.find(item => item.dataset.studentId === id)
     if (item) {
       studentListItems.push(item)
     }
   })
-  console.log(studentListItems)
   allItems.forEach(item => {
     // Create a new redDot for each item
     const redDot = document.createElement('div');
@@ -289,21 +270,17 @@ export async function renderNotificationDot(unreadRoomIds) {
       item.insertAdjacentElement('afterbegin', redDot);
     }
   });
-  console.log(studentListItems)
   studentListItems.forEach(item => {
     item.querySelector('.red-dot').style.display = 'block';
   })
 }
 
 export async function renderConsultRoomUnread(unreadRoomIds, user) { //render for user
-  console.log('renderConsultRoomUnread', unreadRoomIds)
   const unreadScheduleIds = unreadRoomIds.map(roomId => roomId.split('_')[2])
-  console.log(unreadScheduleIds)
 
   //student's post
   unreadScheduleIds.forEach(scheduleId => {
     const post = document.querySelector(`.post[data-id="${scheduleId}"]`)
-    console.log(post)
 
     if (post) { // a way to check if user is student
       const postWrapper = post.closest('.post-wrapper');
@@ -315,13 +292,11 @@ export async function renderConsultRoomUnread(unreadRoomIds, user) { //render fo
       const calendar = window.calendar; // Use the globally accessible calendar instance
 
       if (!calendar) {
-        console.error('Calendar not initialized');
         return;
       }
 
       const calendarEl = document.getElementById('calendar');
       const eventElement = calendarEl.querySelector(`[data-schedule-id="${scheduleId}"]`);
-      console.log(eventElement,"eventElement")
 
       if (eventElement) {
         eventElement.style.backgroundColor = '#FF00FF';
@@ -349,22 +324,18 @@ export async function renderConsultRoomUnread(unreadRoomIds, user) { //render fo
 //addListenerPost(user) clear unread consultRoom background and border
 export async function clearConsultRoomUnread(user) {
 
-  console.log('clearConsultRoomUnread')
   const allPosts = document.querySelectorAll('.post-wrapper');
   allPosts.forEach(post => {
     post.addEventListener('click', async () => {
       
-      console.log(post)
       if (!post.querySelector('#messages')) {
         return
       }
 
       if(post.classList.contains('unread')){
-        console.log(post.querySelector('#messages').dataset.roomId)
         const roomId = post.querySelector('#messages').dataset.roomId
 
         if (roomId) {
-          console.log('Clicked post roomId:', roomId);
           await deleteUnreadRoomId(roomId)
         } else {
           console.log('No roomId found for this post');
@@ -375,7 +346,6 @@ export async function clearConsultRoomUnread(user) {
 
         // when clear consultRoom unread, check if student still(need red dot) has unread post
         if (user.isCoach) {
-          console.log(roomId)
           const clickedStudentId = roomId.split('_')[0]
           // Get all visible post-wrappers
           const visiblePostWrappers = document.querySelectorAll('.post-wrapper[style*="display: block"]');
@@ -397,7 +367,6 @@ export async function clearConsultRoomUnread(user) {
 
           const calendarEl = document.getElementById('calendar');
           const eventElement = calendarEl.querySelector(`[data-schedule-id="${scheduleId}"]`);
-          console.log(eventElement, "eventElement")
 
           if (eventElement) {
             eventElement.style.backgroundColor = '#3788d8';
@@ -418,31 +387,3 @@ export async function clearConsultRoomUnread(user) {
   });
 
 }
-//export async function renderConsultRoom
-// export async function renderSelectedStudentListItem(studentId) {
-//   console.log('renderSelectedStudentListItem');
-//   const studentListContainer = document.getElementById('student-list-container');
-//   const studentListItems = studentListContainer.querySelectorAll('.student-list-item');
-
-//   studentListItems.forEach(item => {
-//     if (item.dataset.studentId === studentId) {
-//       item.classList.add('selected');
-//     }
-//   });
-// }
-
-// export async function renderCoachConsultRoom(studentName, incomeNotification) {
-//   if (window.location.pathname === '/consult') {
-//     console.log(incomeNotification)
-//     // Render chat room
-//     const itemData = await coachGetPostItems(incomeNotification.scheduleId)
-//     const post = await coachGetPostContent(incomeNotification.scheduleId)
-//     console.log(post)
-//     //await renderConsultPostContent(post)
-//     console.log(itemData)
-//     const items = itemData.items
-//     //await renderExerciseInConsult(items)
-//     //await renderConsultRoom(incomeNotification.scheduleId, incomeNotification.roomId, studentName, user)
-//   }
-// }
-

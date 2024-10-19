@@ -1,40 +1,39 @@
 const express = require('express')
-const cookieParser = require('cookie-parser');
-const csrfProtection = require('./middleware/csrf');
-const helmet = require('helmet');
+const cookieParser = require('cookie-parser')
+const csrfProtection = require('./middleware/csrf')
+const helmet = require('helmet')
 const http = require('http')
 const { redisClient, connectRedis } = require('./services/redisService')
 const { initializeSocket } = require('./services/socketService')
 
 const path = require('path')
 const app = express()
-app.use(cookieParser());
+app.use(cookieParser())
 // Apply CSRF protection to routes that modify data
 app.use('/api', csrfProtection, (req, res, next) => {
-  res.cookie('XSRF-TOKEN', req.csrfToken()); // Send CSRF token to client
-  next();
-});
+  res.cookie('XSRF-TOKEN', req.csrfToken()) // Send CSRF token to client
+  next()
+})
 // Use Helmet to set security headers
 // Configure Helmet to set a custom Content Security Policy
 app.use(
   helmet.contentSecurityPolicy({
     directives: {
       defaultSrc: ["'self'", 'https://d348uiae81km7c.cloudfront.net'],
-      scriptSrc: ["'self'", "https://code.jquery.com", 'https://cdn.jsdelivr.net/npm/fullcalendar@6.1.15/index.global.min.js',
-], // Allow jQuery from CDN
+      scriptSrc: ["'self'", 'https://code.jquery.com', 'https://cdn.jsdelivr.net/npm/fullcalendar@6.1.15/index.global.min.js'
+      ], // Allow jQuery from CDN
       styleSrc: ["'self'", "'unsafe-inline'",
         'https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css',
-        'https://cdn.jsdelivr.net/npm/fullcalendar@6.1.15/main.min.css',], // Allow inline styles
-      imgSrc: ["'self'", "data:", "https://images.unsplash.com", "https://i.pinimg.com", "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/", "https://d348uiae81km7c.cloudfront.net",], // Allow images from specific sources
-      connectSrc: ["'self'", "https://your-api-domain.com"],
+        'https://cdn.jsdelivr.net/npm/fullcalendar@6.1.15/main.min.css'], // Allow inline styles
+      imgSrc: ["'self'", 'data:', 'https://images.unsplash.com', 'https://i.pinimg.com', 'https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/', 'https://d348uiae81km7c.cloudfront.net'], // Allow images from specific sources
+      connectSrc: ["'self'", 'https://your-api-domain.com'],
       frameSrc: [
         "'self'",
-        "https://giphy.com", // Allow framing from Giphy
-      ],
-    },
+        'https://giphy.com' // Allow framing from Giphy
+      ]
+    }
   })
-);
-
+)
 
 const { sequelize } = require('./models')
 
@@ -101,7 +100,7 @@ app.get('/consult', (req, res) => {
 
 async function startServer () {
   try {
-    //await testRedisConnection()
+    // await testRedisConnection()
     await connectRedis()
 
     await sequelize.sync({ alter: false })

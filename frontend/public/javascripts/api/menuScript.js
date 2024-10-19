@@ -19,7 +19,6 @@ export async function getModulesBySections (sectionIds) {
   modules.forEach(module => {
     moduleId.push(module.id)
   })
-  console.log({ modules, moduleId })
   return { modules, moduleId }
 }
 
@@ -42,7 +41,6 @@ export async function addListenerSubmitMenu () {
   const SubmitMenuBtn = await renderSubmitMenuBtn()
 
   if (!SubmitMenuBtn) {
-    console.error('Submit button not found')
     return
   }
 
@@ -78,7 +76,6 @@ export async function addListenerSubmitMenu () {
     SubmitMenuBtn.textContent = 'Uploading...';
     const progressAlert = document.getElementById('progress-saveSuccessAlert')
     progressAlert.classList.remove('d-none')
-    console.log('start to submit menu')
 
     try {
     const scheduleName = await submitMenu()
@@ -91,17 +88,14 @@ export async function addListenerSubmitMenu () {
     // Redirect after a short delay
     setTimeout(() => {
       if (lastUrl) {
-        console.log('menu lastUrl')
         sessionStorage.removeItem('lastUrl')
         window.location.href = lastUrl
       } else {
-        console.log('menu redirect')
         window.location.href = '/posts'
       }
     }, 1500)
     } catch (error) {
       progressAlert.classList.add('d-none')
-      console.error('Error during submission:', error);
     } finally {
       // Re-enable the submit button after the process is complete
       SubmitMenuBtn.disabled = false;
@@ -148,7 +142,6 @@ export async function submitMenu () {
       await addItemsIntoSchedule({ sectionIds, scheduleId });
     }
   } catch (error) {
-    console.error('Error:', error)
     return null
   }
 
