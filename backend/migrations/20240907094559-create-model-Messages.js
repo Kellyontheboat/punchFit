@@ -1,4 +1,4 @@
-'use strict';
+'use strict'
 
 module.exports = {
   up: async (queryInterface, Sequelize) => {
@@ -7,33 +7,33 @@ module.exports = {
         type: Sequelize.INTEGER,
         autoIncrement: true,
         primaryKey: true,
-        allowNull: false,
+        allowNull: false
       },
       roomNumber: {
         type: Sequelize.STRING,
-        allowNull: false,
+        allowNull: false
       },
       sender_id: {
         type: Sequelize.STRING,
-        allowNull: false,
+        allowNull: false
       },
       message_text: {
         type: Sequelize.TEXT,
-        allowNull: false,
+        allowNull: false
       },
       timestamp: {
         type: Sequelize.DATE,
         defaultValue: Sequelize.NOW,
-        allowNull: false,
+        allowNull: false
       },
       read: {
         type: Sequelize.BOOLEAN,
-        defaultValue: false,
-      },
-    });
+        defaultValue: false
+      }
+    })
   },
 
   down: async (queryInterface, Sequelize) => {
-    await queryInterface.dropTable('Messages');
-  },
-};
+    await queryInterface.dropTable('Messages')
+  }
+}

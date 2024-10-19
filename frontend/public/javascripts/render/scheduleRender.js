@@ -6,7 +6,6 @@ let calendar
 
 document.addEventListener('DOMContentLoaded', async function () {
   const { user, isAuthenticated, token } = await checkLoginStatus()
-  console.log(user)
 
   if (!isAuthenticated) {
     console.log('User is not authenticated')
@@ -14,7 +13,6 @@ document.addEventListener('DOMContentLoaded', async function () {
     const token = localStorage.getItem('token')
 
     async function renderCalendar (schedules) {
-      console.log(schedules)
       const calendarEl = document.getElementById('calendar')
       calendar = new FullCalendar.Calendar(calendarEl, {
         initialView: 'dayGridMonth',
@@ -47,7 +45,6 @@ document.addEventListener('DOMContentLoaded', async function () {
         eventClick: async function (info) {
           const scheduleId = info.event.extendedProps.scheduleId
           const scheduleItems = await getSchedulesItems(scheduleId)
-          console.log(scheduleItems)
           showScheduleItemsModal(scheduleItems, scheduleId)
         }
       })
@@ -63,19 +60,16 @@ document.addEventListener('DOMContentLoaded', async function () {
 })
 
 async function showScheduleItemsModal (scheduleItems, scheduleId) {
-  console.log(scheduleItems, scheduleId)
   const postContainer = document.getElementById('post-container');
   const postWrappers = postContainer.querySelectorAll('.post-wrapper');
 
   for (let wrapper of postWrappers) {
     const postElement = wrapper.querySelector('.post');
     if (postElement && postElement.dataset.id === scheduleId.toString()) {
-      console.log('Match found:', postElement);
       // Remove the wrapper from its current position
       wrapper.remove();
       // Insert it at the beginning of the container
       postContainer.insertAdjacentElement('afterbegin', wrapper);
-      console.log('Moved wrapper to front');
       break; // Exit the loop once we've moved the matching wrapper
     }
   }

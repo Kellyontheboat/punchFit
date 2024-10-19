@@ -17,19 +17,16 @@ export async function checkLoginStatus () {
       })
 
       if (!response.ok) {
-        console.error('Response status:', response.status, response.statusText)
 
         throw new Error('Network response was not ok')
       }
       const userData = await response.json()
-      console.log('zzzzz', userData)
       return {
         isAuthenticated: true,
         user: userData.data, // id, username, email
         token
       }
     } catch (error) {
-      console.error('Error fetching user data:', error)
       return {
         isAuthenticated: false,
         user: null
@@ -120,8 +117,6 @@ export async function loginformSubmission () {
           }
         } else {
           const errorData = await response.json()
-          console.log(errorData)
-
           if (errorData.message === 'Invalid email or password') {
             msgSpan.innerText = 'Email or Password is wrong'
             msgSpan.style.color = 'red'
@@ -131,7 +126,6 @@ export async function loginformSubmission () {
           }
         }
       } catch (error) {
-        console.error('Error logging in:', error)
         msgSpan.innerText = 'Error!Please try later.'
         msgSpan.style.color = 'red'
       }
@@ -210,7 +204,6 @@ export async function registerformSubmission () {
         }
       }
     } catch (error) {
-      console.error('Error:', error)
       alert('Error!Please try again.')
     }
   })
@@ -224,13 +217,11 @@ export async function getTestAccount(){
     }
   })
   const data = await response.json()
-  console.log('getTestAccount data', data)
   return data
 }
 
 export async function removeTestAccountOnline(user){
   const token = localStorage.getItem('token')
-  console.log('token', token)
   const response = await fetch('/api/testAccount', {
     method: 'PUT',
     headers: {
@@ -241,14 +232,12 @@ export async function removeTestAccountOnline(user){
     body: JSON.stringify({ user })
   })
   const data = await response.json()
-  console.log('removeTestAccountOnline data', data)
   return data
 }
 
 export function addListenerPublicCoachAccount(){
   const coachLogin = document.querySelector('.public-coach-login')
   coachLogin.addEventListener('click', (event) => {
-    console.log('coachLogin')
     document.getElementById('email').value = publicTestCoachEmail
     document.getElementById('password').value = publicTestCoachPassword
   })

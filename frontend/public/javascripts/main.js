@@ -1,28 +1,26 @@
 import { navHTML, hrHTML, injectHTML } from './render/htmlTemplates.js'
 
-import { showLoginModal, navScheduleBtn, updateLoginButton, initializeModals, coachNavbar, scrollVideoAutoPlay } from './render/navRender.js'
+import { navScheduleBtn, updateLoginButton, initializeModals, coachNavbar, scrollVideoAutoPlay } from './render/navRender.js'
 
-import { addTrainingRecordBtn, renderSections, renderPartsBySection, renderExercisesByPart, exerciseCardModal, sectionCheckBox, partContainerStickOnTop } from './render/exerciseRender.js'
+import { renderPartsBySection, renderExercisesByPart, sectionCheckBox, partContainerStickOnTop } from './render/exerciseRender.js'
 
-import { renderModules, renderItemsInModule, renderEditModule } from './render/moduleRender.js'
+import { renderItemsInModule, renderEditModule } from './render/moduleRender.js'
 
 import { renderPosts, renderExerciseInPosts } from './render/postRender.js'
 
-import { addListenerDelScheduleBtn, getSchedules, getSchedulesItems } from './api/scheduleScript.js'
+import { addListenerDelScheduleBtn, getSchedules } from './api/scheduleScript.js'
 
-import { renderModulesBySections, renderMenuModules, renderItemsInMenuModule, renderSubmitMenuBtn } from './render/menuRender.js'
-
-import { renderConsultRoom, renderFilteredStudentList } from './render/consultRender.js'
+import { renderModulesBySections, renderItemsInMenuModule } from './render/menuRender.js'
 
 import { addListenerEditMenuBtn, addListenerSubmitMenu } from './api/menuScript.js'
 
 import { checkLoginStatus, loginformSubmission, registerformSubmission, loginBtn } from './api/authScript.js'
 
-import { addListenerModule, addListenerAddMemoBtn, addListenerModalAddMemoBtn } from './api/moduleScript.js' // addListenerModuleBtn,
+import { addListenerAddMemoBtn, addListenerModalAddMemoBtn } from './api/moduleScript.js' // addListenerModuleBtn,
 
 import { fetchSections, addSectionListener, fetchPartsBySection, addPartListener, fetchExercisesByPart } from './api/exerciseScript.js'
 
-import { addListenerConsultBtn, initUserSocket, coachGetPostContent, addSendMsgListeners } from './api/consultScript.js'
+import { addListenerConsultBtn, initUserSocket } from './api/consultScript.js'
 
 document.addEventListener('DOMContentLoaded', async function () {
   // use the Template HTML
@@ -31,7 +29,6 @@ document.addEventListener('DOMContentLoaded', async function () {
   loginBtn()
 
   const pathArray = window.location.pathname.split('/')
-  console.log(pathArray)
   const pageType = pathArray[3]
 
   const { user, isAuthenticated } = await checkLoginStatus()// user:id username email
@@ -80,18 +77,13 @@ document.addEventListener('DOMContentLoaded', async function () {
       window.location.href = '/training'
       return
     }
-    console.log('consult page')
     await initUserSocket(user)
   } else if (pathArray[1] === 'schedules') {
     if (isCoach) {
       window.location.href = '/consult'
     }
-    console.log(sections)
     addListenerDelScheduleBtn()
-    // const { scheduleIds, schedules } = await getSchedules()
-    // await renderPosts(schedules)
-    // await renderExerciseInPosts()
-    // addListenerConsultBtn(user)
+    
   } else if (pathArray[1] === 'module') {
     if (isCoach) {
       window.location.href = '/consult'
@@ -131,7 +123,6 @@ document.addEventListener('DOMContentLoaded', async function () {
 
     const { data, exercises, exercisesId, exercisesImgs } = await fetchExercisesByPart(firstPartId)
     await renderExercisesByPart({ data, exercises, exercisesId, exercisesImgs, user })
-    // exerciseCardModal(data)
 
     renderPartsBySection({ parts, partsId })
     addPartListener(user)

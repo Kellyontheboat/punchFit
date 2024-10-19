@@ -8,13 +8,11 @@ export async function renderModules (user, isAuthenticated) {
   try {
     const modules = await getModules(isAuthenticated)
     if (!modules) {
-      console.error('Modules is undefined:', modules)
       return
     }
 
     // render each module in modules which has already been created
     // only the created modules have id
-    console.log(modules)
     modules.forEach(module => {
       const sectionId = module.section_id
       const moduleId = module.id
@@ -22,7 +20,6 @@ export async function renderModules (user, isAuthenticated) {
       const moduleWrap = document.querySelector(`.section-item[data-id="${sectionId}"]`)
         .closest('.section-container')
         .querySelector('.part-module-wrap')
-      console.log(moduleWrap)
       if (moduleWrap) {
         const moduleSpace = moduleWrap.querySelector('.module-item')
         if (moduleSpace) {
@@ -86,7 +83,6 @@ export async function renderEditModule (isAuthenticated) {
   collapseBtn.classList.add('collapse-btn')
   collapseBtn.textContent = '<  >'
   moduleWrap.appendChild(collapseBtn)
-  console.log(moduleDiv, collapseBtn)
   collapseBtn.addEventListener('click', () => {
     moduleWrap.classList.toggle('collapsed')
   })
@@ -99,7 +95,6 @@ export async function renderEditModule (isAuthenticated) {
 // only render when the module is already exist
 export async function renderItemsInModule (itemContainers) {
   for (const container of itemContainers) {
-    console.log(container)
     const moduleId = container.dataset.id
     if (!moduleId) continue
 
@@ -199,7 +194,6 @@ export function renderExerciseToModuleContainer ({ funcModuleId, exerciseId, exe
   let moduleContainer = document.querySelector(`[data-id="${funcModuleId}"].part-module-editing`)
 
   if (!moduleContainer) {
-    console.log("no module container,create new")
     const existingElement = document.querySelector('.list-group')
     const newListGroup = document.createElement('div')
     newListGroup.classList.add('part-module-editing', 'list-group')
@@ -233,7 +227,6 @@ export function renderExerciseToModuleContainer ({ funcModuleId, exerciseId, exe
 
   const saveBtn = listGroup.querySelector('.save-menu-module')
   if (saveBtn) {
-    console.log(listGroup)
     listGroup.insertBefore(listItem, saveBtn)
   } else {
     listGroup.appendChild(listItem)

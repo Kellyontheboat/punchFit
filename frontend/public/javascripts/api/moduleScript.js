@@ -19,7 +19,7 @@ export async function createModule () {
     alert('Invalid section ID. It must be an integer between 1 and 7.');
     return;
   }
-  
+
   try {
     const response = await fetch('/api/modules', {
       method: 'POST',
@@ -39,7 +39,6 @@ export async function createModule () {
     const result = await response.json()
 
     if (result.success) {
-      console.log('Module created successfully:', result)
       const moduleId = result.module.id
       return moduleId
     } else {
@@ -70,7 +69,6 @@ export async function getModules (isAuthenticated) {
     }
 
     const modules = await response.json()
-    console.log(modules)
     return modules // array
   } catch (error) {
     console.error('Error:', error)
@@ -138,7 +136,6 @@ export async function getModulesBySections (sectionIds) {
   })
 
   const modules = await response.json()
-  console.log(modules)
   const moduleId = modules.map(module => module.id)
   return { modules, moduleId }
 }
@@ -148,7 +145,6 @@ export async function addExerciseToModule (exerciseId, exerciseName) {
   let funcModuleId = ''
   const { moduleId, modules } = await getModuleBySection(sectionId)
   const moduleEdit = document.querySelector('.part-module-editing')
-  console.log(modules)
   if (modules.length === 0 && !moduleEdit) {
     funcModuleId = await createModule()
   } else {
@@ -172,17 +168,14 @@ export async function addExerciseToModule (exerciseId, exerciseName) {
 // add Exercise into memo
 export async function addListenerAddMemoBtn () {
   const addBtn = document.querySelectorAll('.add-into-memo')
-  console.log(addBtn)
 
   addBtn.forEach((btn, index) => {
-    console.log(btn)
-    console.log(btn.closest('.card'))
+
     const exerciseId = btn.closest('.card').getAttribute('data-id')
 
     btn.addEventListener('click', () => {
       const cardBody = btn.closest('.card-body')
       const exerciseName = cardBody.querySelector('.card-title').innerText
-      console.log('start to add exercise into module')
       addExerciseToModule(exerciseId, exerciseName)
     })
   })
@@ -192,7 +185,6 @@ let selectedExerciseId = null
 let selectedExerciseName = null
 
 export async function addListenerModalAddMemoBtn (data) {
-  console.log(data)
   const exerciseDetailBtns = document.querySelectorAll('.exercise-detail')
 
   exerciseDetailBtns.forEach((btn) => {
@@ -204,11 +196,8 @@ export async function addListenerModalAddMemoBtn (data) {
       const card = btn.closest('.card')
       selectedExerciseName = card.querySelector('.card-title').innerText
 
-      console.log('Exercise ID:', selectedExerciseId)
-      console.log('Exercise Name:', selectedExerciseName)
       const selectedExerciseData = data.find(exercise => exercise.id === selectedExerciseIdInt)
-      console.log(data)
-      console.log(selectedExerciseData)
+
       exerciseCardModal(selectedExerciseData)
     })
   })
@@ -228,9 +217,6 @@ export async function addListenerModalAddMemoBtn (data) {
 
 function handleModalAddBtnClick () {
   if (selectedExerciseId && selectedExerciseName) {
-    console.log('Exercise ID:', selectedExerciseId)
-    console.log('Exercise Name:', selectedExerciseName)
-    console.log('Start to add exercise into module')
     addExerciseToModule(selectedExerciseId, selectedExerciseName)
   } else {
     console.log('No exercise selected')
@@ -276,26 +262,22 @@ export async function collectModuleData () {
       weight: parseFloat(weight),
       moduleId // This is the module ID for creating new items
     })
-    console.log(updatedItems)
   })
 
   return { moduleId, updatedItems, updatedItemIds }
 }
 
 export async function addListenerSaveModuleBtn () {
-  console.log('save module')
   const saveBtn = document.querySelector('.save-menu-module')
   if (!saveBtn) return
 
   saveBtn.addEventListener('click', async function () {
     const { moduleId, updatedItems, updatedItemIds } = await collectModuleData() // Collect data from the module-editing section
-    console
     const requestBody = {
       updatedItems,
       existingItemIds: updatedItemIds // Send the current item IDs to the backend
     }
 
-    console.log('Saving module with data:', requestBody)
 
     try {
       const response = await fetch(`/api/modules/${moduleId}/exercises`, {
@@ -310,7 +292,6 @@ export async function addListenerSaveModuleBtn () {
 
       const result = await response.json()
       if (result.success) {
-        console.log('Exercises updated successfully')
         const lastUrl = sessionStorage.getItem('lastUrl')
 
         const saveSuccessAlert = document.getElementById('saveSuccessAlert')

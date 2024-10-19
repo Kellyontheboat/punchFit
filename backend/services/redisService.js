@@ -15,7 +15,7 @@ redisClient.on('error', (err) => {
 // Connect to Redis when the application starts
 async function connectRedis () {
   try {
-    await redisClient.connect();
+    await redisClient.connect()
     // await Promise.all([
     //   redisClient.connect(),
     //   redisPubClient.connect(),
@@ -42,4 +42,4 @@ async function testRedisConnection () {
 }
 // // Ensure to connect Redis when your application starts
 // connectRedis()
-module.exports = { testRedisConnection, redisClient, connectRedis } //redisPubClient, redisSubClient
+module.exports = { testRedisConnection, redisClient, connectRedis } // redisPubClient, redisSubClient

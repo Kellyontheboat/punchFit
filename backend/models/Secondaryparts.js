@@ -1,4 +1,3 @@
-const Sequelize = require('sequelize')
 module.exports = function (sequelize, DataTypes) {
   const Secondaryparts = sequelize.define('Secondaryparts', {
     id: {

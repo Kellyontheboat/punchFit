@@ -6,7 +6,6 @@ const csrfToken = getCookie('XSRF-TOKEN')
 const token = localStorage.getItem('token')
 
 export async function addListenerConsultBtn (user) {
-  console.log(user)
   const consultBtns = document.querySelectorAll('.consult')
 
   consultBtns.forEach(btn => btn.addEventListener('click', async (event) => {
@@ -14,8 +13,6 @@ export async function addListenerConsultBtn (user) {
     if (btn.innerText === 'Consult Coach') {
       btn.innerText = 'Cancel'
       btn.classList.add('cancel-consult-btn')
-      console.log(scheduleId)
-      //addListenerCancelConsultBtn(scheduleId)
       await renderInviteForm(scheduleId)
       submitInviteForm(user, scheduleId)
     } else { // if the btn innerText is Cancel been clicked
@@ -32,7 +29,6 @@ let inviteFormListener = null;
 
 export async function submitInviteForm(user, scheduleId) {
   const inviteForm = document.querySelector(`.invite-form[data-schedule-id="${scheduleId}"]`)
-  console.log(inviteForm,"inviteForm")
   // Remove existing listener if any
   if (inviteFormListener) {
     inviteForm.removeEventListener('submit', inviteFormListener);
@@ -78,11 +74,10 @@ export async function submitInviteForm(user, scheduleId) {
       await renderConsultRoom(roomId, studentName, user);
 
       if (socket) {
-        console.log('Socket connection status:', socket.connected);
         
         // Set up a listener for the joinRoomResponse event
         socket.on('joinRoomResponse', (response) => {
-          console.log(`Received joinRoomResponse for room ${response.roomId}:`, response);
+          console.log('joinRoomResponse', response)
         });
 
         socket.emit('joinRoom', roomId, (response) => {
@@ -111,7 +106,6 @@ export async function coachGetPostItems (roomId) {
   })
 
   const postItems = await response1.json()
-  console.log('postItems:', postItems)
   return postItems
 }
 
@@ -124,37 +118,29 @@ export async function coachGetPostContent (roomId) {
     }
   })
   const postContent = await response2.json()
-  console.log('postContent:', postContent)
   return postContent
 }
 
 export function initUserSocket(user) {
-  console.log('initUserSocket', user)
   if (!socket) {
     socket = io({
       auth: { token }
     });
 
   socket.on('connect', () => {
-    console.log('Connected to server');
     socket.emit('userOnline');
-    //handleUserRooms(user)
   });
 
     socket.on('allRoomMessages', async ({roomsData, unreadRoomIds}) => { //roomsData: [{ roomId: schedule.roomId, messages }]
-      console.log('Received all room messages:', roomsData, unreadRoomIds);
 
     for (const { roomId, messages, studentName } of roomsData) {
 
       if (user.isCoach) {
-      console.log('roomId:', roomId, 'messages:', messages)
 
       const itemData = await coachGetPostItems(roomId);
       const post = await coachGetPostContent(roomId);
 
-      console.log('post:', post)
       await renderConsultPostContent(post);
-      console.log('itemData:', itemData.items)
       await renderExerciseInConsult(itemData.items);
         await renderConsultRoom(roomId, studentName, user);
         await renderMessages(roomId, messages, user);
@@ -166,9 +152,6 @@ export function initUserSocket(user) {
     }
 
       if (user.isCoach) {
-
-        //const notificationData = await coachGetNotification() 
-        //console.log('notificationData', notificationData)
         await renderFirstStudentPost()
         addListenerStudentList()
         renderNotificationDot(unreadRoomIds) //studentList
@@ -181,13 +164,11 @@ export function initUserSocket(user) {
   });
 
   socket.emit('joinRoom', (roomId) => {
-    console.log(`Joined new room: ${roomId}`);
     renderConsultRoom(roomId, user.username, user.id);
     renderMessages(roomId, messages, user);
   });
 
   socket.on('chatMessage', (message) => {
-    console.log('Received chat message:', message);
     appendMessage(message.roomId, message, user);
 
     if (message.user.id !== user.id){
@@ -203,14 +184,10 @@ export function initUserSocket(user) {
   });
 
     socket.on('notification', async(data) => {
-      console.log('Notification received:', data);
-      console.log('user role', user)
       if (user.isCoach) {
-        console.log('user is coach')
         await handleCoachNotification(data, user, socket); // prepare post content
         let unreadRoomIds = []
         unreadRoomIds.push(data.roomId)
-        console.log('notification data', data)
         renderNotificationDot(unreadRoomIds)
         renderConsultRoomUnread(unreadRoomIds, user)
       }
@@ -225,7 +202,6 @@ export function initUserSocket(user) {
 
 // prepare post content and render for coach
 async function handleCoachNotification(data, user, socket) {
-  console.log('handleCoachNotification', data)
   const { scheduleId, roomId, studentName } = data;
   const itemData = await coachGetPostItems(data.roomId);
   const post = await coachGetPostContent(data.roomId);
@@ -235,7 +211,6 @@ async function handleCoachNotification(data, user, socket) {
   const studentId = document.querySelector('.student-list-item.active')?.dataset.studentId
   renderFilteredStudentList(studentId)//render back the post none by renderConsultRoom
   clearConsultRoomUnread(user)
-  console.log('handleCoachNotification socket', socket)
   if (socket) {
     socket.emit('joinRoom', (roomId), (response) => {
       console.log(`Joined new room emit: ${roomId}`, response);
@@ -250,29 +225,21 @@ async function handleCoachNotification(data, user, socket) {
 async function renderMessages(roomId, messages, user) {
   const messagesList = document.querySelector(`#messages[data-room-id="${roomId}"]`);
   if (!messagesList) return;
-  console.log(messagesList)
   messagesList.innerHTML = '';
-  console.log(user)
   messages.forEach(message => appendMessage(roomId, message, user));
 }
 
 // handle chat message
 function appendMessage(roomId, message, user) {
-  console.log(message, user.id)
   const messagesList = document.querySelector(`#messages[data-room-id="${roomId}"]`);
-  console.log(messagesList)
   if (!messagesList) {
-    console.error(`Message list not found for room ${roomId}`);
     return;
   }
-  console.log(messagesList)
   const messageElement = document.createElement('li');
   const hr = document.createElement('hr')
-  console.log(message.sender_id)
 
   // Check if the message is from the current user
   if ((message.sender_id || message.user.id) === user.id) {
-
     messageElement.textContent = `You: ${message.message_text || message.text}`
     messageElement.style.textAlign = 'right'
   } else {
@@ -284,7 +251,6 @@ function appendMessage(roomId, message, user) {
 }
 
 export function addSendMsgListeners(user) {
-  console.log('addSendMsgListeners', user);
   document.querySelectorAll('.send-message-btn').forEach(button => {
     // Remove any existing listener to prevent duplicates
     button.removeEventListener('click', button.sendMessageHandler);
@@ -297,7 +263,6 @@ function sendMessageHandler(event, user) {
   const button = event.target;
   const chatRoom = button.closest('.chat-room');
   if (!chatRoom) {
-    console.error('Chat room not found');
     return;
   }
 
@@ -305,7 +270,6 @@ function sendMessageHandler(event, user) {
   const messageInput = chatRoom.querySelector('.message-input');
 
   if (!roomId) {
-    console.error('Room ID not found');
     return;
   }
 
@@ -327,7 +291,7 @@ function sendMessage(roomId, text, user) {
       auth: { token }
     });
   }
-    console.log('Sending message:', { roomId, text });
+
   if (text.length > 200) {
     alert('Message is too long. Please limit your message to 200 characters.');
     return;
@@ -345,7 +309,6 @@ function handleStudentClick(event) {
   const studentItem = event.target.closest('.student-list-item');
   if (studentItem) {
     const clickedStudentId = studentItem.dataset.studentId;
-    console.log('Clicked student ID:', clickedStudentId);
 
     // Remove 'active' class from all student items
     const allStudentItems = document.querySelectorAll('.student-list-item');
@@ -370,7 +333,6 @@ export async function deleteUnreadRoomId(roomId) {
 }
 
 export async function coachGetNotification() {
-  console.log('check if coach got notification')
   try {
     const response = await fetch('/api/invitations', {
       method: 'GET',
@@ -380,39 +342,9 @@ export async function coachGetNotification() {
     })
 
     const invitationContent = await response.json()
-    //const invitationContent = invitationData
-    console.log('coachGetNotification', invitationContent)
     return invitationContent
-    // const { invitations, studentNames, studentMemberIds } = invitationContent
-    // console.log('coachGetNotification', { invitations, studentNames, studentMemberIds })
-    // return ({ invitations, studentNames, studentMemberIds })
+
   } catch (error) {
     console.error('Error fetching notifications:', error)
   }
 }
-
-// export async function displayNotification(message) {
-//   const redDot = document.querySelector('.red-dot')
-//   redDot.style.display = 'block'
-//   const welcomeContainer = document.querySelector('.welcome')
-//   welcomeContainer.innerText = 'Consultation request:'
-
-//   addListenerNotification()
-// }
-
-// export async function addListenerNotification() {
-//   const notificationIcon = document.querySelector('.red-dot')
-//   notificationIcon.addEventListener('click', () => {
-//     // Hide the chat icon
-//     const svgElement = document.querySelector('svg')
-//     const redDot = document.querySelector('.red-dot')
-//     const beforeConsult = document.querySelector('.before-consult')
-//     beforeConsult.style.display = 'none'
-//     svgElement.style.display = 'none'
-//     redDot.style.display = 'none'
-
-//     // Show the consult content post from student
-//     const consultContainer = document.getElementById('consult-post-container')
-//     consultContainer.style.display = 'block'
-//   })
-// }

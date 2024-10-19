@@ -24,7 +24,6 @@ export async function fetchSections () {
 
     return { sections, sectionsId }
   } catch (error) {
-    console.error('Error fetching sections:', error)
     return { sections: [], sectionsId: [] }
   }
 }
@@ -52,7 +51,6 @@ export function addSectionListener () {
 export async function fetchPartsBySection (sectionId) {
   const response = await fetch(`/api/sections/${sectionId}/parts`)
   const data = await response.json()
-  console.log(data)
   const parts = []
   const partsId = []
 
@@ -71,7 +69,6 @@ export async function addPartListener (user) {
   partItems.forEach(item => {
     item.addEventListener('click', async () => {
       const partId = item.dataset.id
-      console.log(partId)
       const { data, exercises, exercisesId, exercisesImgs } = await fetchExercisesByPart(partId)
       renderExercisesByPart({ exercises, exercisesId, exercisesImgs, user })
       // ??after click the part the window should reload
@@ -84,7 +81,6 @@ export async function addPartListener (user) {
 export async function fetchExercisesByPart (partId) {
   const response = await fetch(`/api/parts/${partId}/exercises`)
   const data = await response.json()
-  console.log(data)
   const exercises = []
   const exercisesId = []
   const exercisesImgs = []
@@ -104,7 +100,6 @@ export async function submitSectionForm (form, checkboxes) {
       .filter(checkbox => checkbox.checked)
       .map(checkbox => checkbox.value)
 
-    console.log('Selected Sections:', selectedSections)
     window.location.href = `/menu?sectionIds=${selectedSections.join(',')}`
   })
 };
