@@ -1,4 +1,5 @@
 const { SQSClient, SendMessageCommand, ReceiveMessageCommand, DeleteMessageCommand } = require('@aws-sdk/client-sqs');
+const crypto = require('crypto');
 const dotenv = require('dotenv')
 dotenv.config()
 
@@ -13,6 +14,8 @@ const sendMessageToQueue = async (messageBody) => {
   const params = {
     QueueUrl: process.env.AWS_SQS_QUEUE_URL, 
     MessageBody: JSON.stringify(messageBody),
+    MessageGroupId: 'default',
+    MessageDeduplicationId: generateUniqueDeduplicationId(messageBody),
   };
 
   try {
@@ -52,6 +55,12 @@ const pollQueue = async () => {
   } catch (err) {
     console.error("Error receiving messages from SQS:", err);
   }
+};
+
+// generate a unique deduplication ID
+const generateUniqueDeduplicationId = (messageBody) => {
+  // You can use a hash of the message content, a UUID, or a combination of factors
+  return crypto.createHash('sha256').update(JSON.stringify(messageBody) + Date.now()).digest('hex');
 };
 
 // Continuously poll the queue
