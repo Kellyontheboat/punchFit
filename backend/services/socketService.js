@@ -18,7 +18,6 @@ function initializeSocket (server) {
     port: redisConfig.port
   }))
 
-  console.log('redisConfig', redisConfig)
   // Add authentication middleware
   io.use((socket, next) => {
     const token = socket.handshake.auth.token
@@ -40,16 +39,14 @@ function initializeSocket (server) {
   })
 
   io.on('connection', (socket) => {
-    console.log(`User ${socket.memberId} connected. Is coach: ${socket.isCoach}`)
 
     // Register the userId and socketId mapping
     userSocketMap.set(socket.memberId, socket.id)
-    console.log(`User ${socket.memberId} registered with socket ${socket.id}`)
 
     // Handle user connection
     socket.on('userOnline', async () => {
       const { schedules, unreadRoomIds } = await getSchedulesForUser(socket.memberId, socket.isCoach)
-      console.log('schedules here', socket.memberId, socket.isCoach, schedules)
+      
       const roomPromises = schedules.map(async (schedule) => {
         socket.join(schedule.roomId)
         const { messages, studentName } = await getMessagesForRoom(schedule.roomId)
@@ -59,7 +56,7 @@ function initializeSocket (server) {
       })
 
       const roomsData = await Promise.all(roomPromises)
-      console.log('roomsData allRoomMessages', roomsData)
+      
       socket.emit('allRoomMessages', { roomsData, unreadRoomIds })
       if (unreadRoomIds.length > 0) {
         redisClient.SADD(`unreadRoomIds:${socket.memberId}`, unreadRoomIds)
@@ -86,7 +83,6 @@ function initializeSocket (server) {
         // Update the message with sanitized content
         message.text = sanitizedMessageText
 
-        console.log('message received:', message)
         await saveMessageToRoom(message) // save into DB and Redis
 
         // Emit the message to the room
@@ -98,27 +94,24 @@ function initializeSocket (server) {
         } else {
           receiverId = message.roomId.split('_')[0]
         }
-        console.log('receiverId', message.roomId)
         const roomIds = []
         roomIds.push(message.roomId)
         if (roomIds.length > 0) {
           redisClient.SADD(`unreadRoomIds:${receiverId}`, roomIds)
         }
       } catch (error) {
-        console.error('Error handling chat message:', error)
+        console.error(`Error handling chat message: ${error.message}`)
       }
     })
 
     // Handle room joining
     socket.on('joinRoom', (roomId) => {
       socket.join(roomId)
-      console.log(`User joined room: ${roomId}`)
     })
 
     // Handle disconnection and remove from map
     socket.on('disconnect', () => {
       userSocketMap.delete(socket.memberId)
-      console.log(`User ${socket.memberId} disconnected`)
     })
   })
 
