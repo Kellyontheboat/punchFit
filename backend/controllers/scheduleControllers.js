@@ -1,6 +1,7 @@
 const db = require('../models')
 const { Exercises, Schedules, Modules, ScheduleItems, ModuleItems, Sections, Members } = db
 const { redisClient } = require('../services/redisService')
+const { sendMessageToQueue } = require('../services/sqsService')
 
 const crypto = require('crypto')
 const generateFileName = (bytes = 32) => crypto.randomBytes(bytes).toString('hex')
@@ -14,6 +15,19 @@ const scheduleControllers = {
     const memberId = req.memberId
     const { scheduleName, date, captionInput } = req.body
     const file = req.file // from middleware/upload.js
+
+    // Sanitize the caption input
+    const sanitizedCaption = sanitizeHtml(captionInput, {
+      allowedTags: [], // Disallow all HTML tags
+      allowedAttributes: {}
+    })
+
+    // Sanitize the schedule name input
+    const sanitizedScheduleName = sanitizeHtml(scheduleName, {
+      allowedTags: [], // Disallow all HTML tags
+      allowedAttributes: {}
+    })
+
 
     if (!scheduleName || !date) {
       return res.status(400).json({ error: 'Schedule name and date are required.' })
@@ -36,21 +50,20 @@ const scheduleControllers = {
       } catch (error) {
         return res.status(500).json({ error: `${error.message}. Failed to upload video` })
       }
+
+      // Send a message to SQS with video details
+      await sendMessageToQueue({
+        videoName,
+        memberId,
+        scheduleName: sanitizedScheduleName,
+        date,
+        captionInput: sanitizedCaption,
+      });
+
     }
 
     try {
-      // Sanitize the caption input
-      const sanitizedCaption = sanitizeHtml(captionInput, {
-        allowedTags: [], // Disallow all HTML tags
-        allowedAttributes: {}
-      })
-
-      // Sanitize the schedule name input
-      const sanitizedScheduleName = sanitizeHtml(scheduleName, {
-        allowedTags: [], // Disallow all HTML tags
-        allowedAttributes: {}
-      })
-
+      
       const newSchedule = await Schedules.create({
         schedule_name: sanitizedScheduleName,
         schedule_date: date,
