@@ -22,20 +22,16 @@ async function createMessage ({ roomId, senderId, messageText }) {
 async function getSchedulesForUser (userId, isCoach) {
   try {
     const keys = await redisClient.keys('messages:*')
-    console.log('Found keys:', keys)
     const schedules = []
     const unreadRoomIds = []
     for (const key of keys) {
       const roomId = key.split(':')[1]
       const [studentId, coachId, scheduleId] = roomId.split('_')
-      console.log(`Checking room: ${roomId}, userId: ${userId}, isCoach: ${isCoach}`)
 
       if ((isCoach && coachId === userId.toString()) || (!isCoach && studentId === userId.toString())) {
-        console.log(`User ${userId} is part of room ${roomId}`)
         // Fetch the messages to check if there are unread messages
         const messagesString = await redisClient.get(key)
         const messages = messagesString ? JSON.parse(messagesString) : []
-        console.log(`Messages for room ${roomId}:`, messages)
 
         // check if there are unread messages
         const hasUnreadMessages = messages.some(msg => {
@@ -43,11 +39,9 @@ async function getSchedulesForUser (userId, isCoach) {
           const isFromOtherUser = isCoach // if is coach, the message is from student
             ? msg.sender_id.toString() !== userId.toString()
             : msg.sender_id.toString() === coachId
-          console.log(`Message: ${msg.message_text}, isUnread: ${isUnread}, isFromOtherUser: ${isFromOtherUser}, sender_id: ${msg.sender_id}, userId: ${userId}`)
           return isUnread && isFromOtherUser
         })
 
-        console.log(`Room ${roomId} has unread messages: ${hasUnreadMessages}`)
 
         schedules.push({
           id: scheduleId,
@@ -64,7 +58,6 @@ async function getSchedulesForUser (userId, isCoach) {
       }
     }
 
-    console.log('Schedules with unread messages:', schedules, unreadRoomIds)
     return { schedules, unreadRoomIds }
   } catch (error) {
     console.error('Error retrieving schedules for user:', error)
@@ -96,8 +89,6 @@ async function getMessagesForRoom (roomId) {
   } catch (error) {
     console.error('Error retrieving notification data:', error)
   }
-  console.log(`Student name: ${studentName}`)
-  console.log(`Messages string: ${messagesString}`)
   return {
     messages: messagesString ? JSON.parse(messagesString) : [],
     studentName
@@ -127,7 +118,6 @@ async function saveMessageToRoom (message) {
   messages.push(newMessage)
   // Set the messages in Redis with a TTL
   const TTL = 864000 // 24 hours*10 in seconds
-  console.log(`Setting messages for room ${key}: ${JSON.stringify(messages)}`)
   await redisClient.set(key, JSON.stringify(messages), { EX: TTL })
   return newMessage
 }

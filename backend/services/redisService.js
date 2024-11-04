@@ -16,11 +16,6 @@ redisClient.on('error', (err) => {
 async function connectRedis () {
   try {
     await redisClient.connect()
-    // await Promise.all([
-    //   redisClient.connect(),
-    //   redisPubClient.connect(),
-    //   redisSubClient.connect()
-    // ]);
     console.log('Connected to Redis')
   } catch (error) {
     console.error(`Error connecting to Redis: ${error}`)

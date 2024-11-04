@@ -70,7 +70,7 @@ function initializeSocket (server) {
     socket.on('chatMessage', async (message) => {
       try {
         // Validate message length
-        if (typeof message.text !== 'string' || message.text.length > 200) {
+        if (typeof message.text !== 'string' || message.text.length > 200 || message.text.length < 1) {
           throw new Error('Invalid message length')
         }
 

@@ -81,7 +81,7 @@ export function loginBtn () {
 }
 
 // ! Login Form submission
-export async function loginformSubmission () {
+export async function loginformSubmission(csrfToken) {
   const signInForm = document.getElementById('signin-form-login')
   const msgSpan = document.getElementById('login-msg')
 

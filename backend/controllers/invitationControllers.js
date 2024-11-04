@@ -31,11 +31,9 @@ const invitationControllers = {
       })
 
       const roomId = `${studentId}_${coachMember.id}_${scheduleId}`
-      console.log(studentMember, 'ooooo')
       res.status(201).json({ invitation, studentName })
 
       // Notify the coach
-      console.log('Notifying user...')
       const message = 'You have a new consultation request!'
       // emit notification to the coach
       notifyUserAboutInvitation(coachMember.id, message, roomId, scheduleId, studentName, studentId)
@@ -61,7 +59,6 @@ const invitationControllers = {
       const invitations = await redisClient.sMembers(key)
 
       // await Invitations.findAll({ where: { coach_id: coachId } })
-      console.log(invitations, 'here invitations')
       if (invitations.length === 0) {
         return res.status(200).json({
           message: 'No pending invitations',
