@@ -282,7 +282,7 @@ function sendMessageHandler(event, user) {
 }
 
 function sendMessage(roomId, text, user) {
-  if (text > 200) {
+  if (text.length > 200) {
     alert('Message is too long. Please limit your message to 200 characters.');
     return;
   }
@@ -290,11 +290,6 @@ function sendMessage(roomId, text, user) {
     socket = io({
       auth: { token }
     });
-  }
-
-  if (text.length > 200) {
-    alert('Message is too long. Please limit your message to 200 characters.');
-    return;
   }
   socket.emit('chatMessage', { roomId, text, user });
 }

@@ -14,7 +14,7 @@ import { renderModulesBySections, renderItemsInMenuModule } from './render/menuR
 
 import { addListenerEditMenuBtn, addListenerSubmitMenu } from './api/menuScript.js'
 
-import { checkLoginStatus, loginformSubmission, registerformSubmission, loginBtn } from './api/authScript.js'
+import { checkLoginStatus, loginformSubmission, registerformSubmission, loginBtn, getCookie } from './api/authScript.js'
 
 import { addListenerAddMemoBtn, addListenerModalAddMemoBtn } from './api/moduleScript.js' // addListenerModuleBtn,
 
@@ -26,6 +26,13 @@ document.addEventListener('DOMContentLoaded', async function () {
   // use the Template HTML
   await injectHTML('.nav-container', navHTML)
   await injectHTML('.nav-separator', hrHTML)
+
+  // Fetch a CSRF token if it's not already set
+  if (!getCookie('XSRF-TOKEN')) {
+    await fetch('/api/get-csrf-token', { method: 'GET', credentials: 'include' });
+  }
+
+  const csrfToken = getCookie('XSRF-TOKEN');
   loginBtn()
 
   const pathArray = window.location.pathname.split('/')
@@ -54,7 +61,7 @@ document.addEventListener('DOMContentLoaded', async function () {
   
   initializeModals()
   navScheduleBtn(isAuthenticated)
-  await loginformSubmission() // clickListener submit then login
+  await loginformSubmission(csrfToken) // clickListener submit then login csrfToken
   
   registerformSubmission()
 

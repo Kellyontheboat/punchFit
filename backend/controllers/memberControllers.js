@@ -72,6 +72,10 @@ const authControllers = {
       res.status(500).json({ message: `${error.message}. Internal server error` })
     }
   },
+  getCsrfToken: (req, res) => {
+    res.cookie('XSRF-TOKEN', req.csrfToken()) // Set the CSRF token in a cookie
+    res.status(200).json({ message: 'CSRF token set' })
+  },
   authenticate: (req, res) => {
     res.json({ data: req.user })
   },

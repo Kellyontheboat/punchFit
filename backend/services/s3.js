@@ -25,7 +25,6 @@ const multipartUpload = async (fileName, fileBuffer, mimetype) => {
   }
 
   const { UploadId } = await s3Client.send(new CreateMultipartUploadCommand(createMultipartParams))
-  console.log(`UploadId: ${UploadId}`)
 
   const partSize = 5 * 1024 * 1024 // 5MB per part
   const parts = []
@@ -35,7 +34,6 @@ const multipartUpload = async (fileName, fileBuffer, mimetype) => {
     const end = Math.min(start + partSize, fileBuffer.length)
     const partBuffer = fileBuffer.slice(start, end)
 
-    console.log(`Uploading part ${partNumber}`)
     // Step 2: Upload the current part
     const uploadPartParams = {
       Bucket: bucketName,

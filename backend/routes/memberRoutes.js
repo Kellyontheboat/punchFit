@@ -8,6 +8,8 @@ const { authenticateToken } = require('../middleware/auth')
 // Define the route to handle query parameters
 router.get('/user/auth', authenticateToken, memberControllers.authenticate)
 
+router.get('/get-csrf-token', memberControllers.getCsrfToken)
+
 router.put('/user/auth', [
   body('email').isEmail().withMessage('Invalid email or password'),
   body('password').isLength({ min: 6, max: 20 }).withMessage('Invalid email or password')

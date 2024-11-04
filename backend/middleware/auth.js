@@ -15,7 +15,6 @@ function authenticateToken (req, res, next) {
 
     req.user = user // Store the user info in the request object
     req.memberId = user.id // Attach the memberId to the request
-    console.log('pass authenticationAA')
     next() // authenticate pass call the next middleware or route handler
   })
 }

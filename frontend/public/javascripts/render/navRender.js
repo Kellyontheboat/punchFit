@@ -87,11 +87,12 @@ export async function updateLoginButton (user) {
   }
   const logoutBtn = document.getElementById('logout-btn')
   logoutBtn.addEventListener('click', async (event) => {
+    console.log('logoutBtn')
     event.preventDefault()
     await removeTestAccountOnline(user) 
     localStorage.removeItem('token')
     hideModals() // Hide any open modals before reloading
-    setTimeout(() => location.reload(), 100) // Delay reload to ensure modals are hidden
+    setTimeout(() => location.reload(), 500) // Delay reload to ensure modals are hidden
   })
 }
 
