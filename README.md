@@ -1,9 +1,7 @@
 # PunchFit: Fitness Tracking and Coaching Platform
-## Website: https://www.good-msg.xyz/
+## Website: https://www.good-msg.xyz/ (Offline, project archived)
 
 Welcome to PunchFit, a comprehensive fitness tracking and coaching platform designed to enhance your workout experience. This README provides an overview of the project, its features, and the technical stack used to build it.
-
-(Videos for testing upload feature if needed：https://drive.google.com/drive/folders/1zcv2JexQrADiLTCpKqLaV_3U-MTXa0vo)
 
 ## Table of Contents
 
