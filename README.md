@@ -5,35 +5,9 @@ Welcome to PunchFit, a comprehensive fitness tracking and coaching platform desi
 
 ## Table of Contents
 
-- [Features](#features)
 - [Technical Stack](#technical-stack)
+- [Features](#features)
 - [License](#license)
-
-## Features
-
-### Punch In Feature
-- **Workout Tracking**: Seamlessly track your workouts with detailed records of repetitions, sets, and weights.
-- **Media Support**: Upload videos and personal notes to document your workout sessions.
-
-
-https://github.com/user-attachments/assets/9d6b175d-eb11-431c-ad7d-34fa939ac6ab
-
-
-### Online Coaches
-- **Expert Guidance**: Connect with expert online coaches for personalized advice.
-- **Real-Time Interaction**: Share workout content and interact with fitness experts in real-time.
-
-
-https://github.com/user-attachments/assets/3a1f4989-3542-472e-9d51-d33d09369cce
-
-
-### Personalized Routines
-- **Custom Workouts**: Build personalized exercise routines categorized by body parts.
-- **Goal-Oriented Training**: Customize exercise combinations to suit individual fitness goals.
-
-
-https://github.com/user-attachments/assets/669fcf43-176e-414d-9d65-07c27abdba3c
-
 
 ## Technical Stack
 ![structure](https://github.com/user-attachments/assets/e5f4ff89-6b77-48c2-a5e6-91f980811a9d)
@@ -61,6 +35,31 @@ https://github.com/user-attachments/assets/669fcf43-176e-414d-9d65-07c27abdba3c
 ### Frontend
 - **HTML/CSS/JavaScript**: The frontend is built using standard web technologies, with Bootstrap for responsive design.
 - **FullCalendar**: Integrated for scheduling and calendar functionalities.
+
+## Features
+
+### Punch In Feature
+- **Workout Tracking**: Seamlessly track your workouts with detailed records of repetitions, sets, and weights.
+- **Media Support**: Upload videos and personal notes to document your workout sessions.
+
+
+https://github.com/user-attachments/assets/9d6b175d-eb11-431c-ad7d-34fa939ac6ab
+
+
+### Online Coaches
+- **Expert Guidance**: Connect with expert online coaches for personalized advice.
+- **Real-Time Interaction**: Share workout content and interact with fitness experts in real-time.
+
+
+https://github.com/user-attachments/assets/3a1f4989-3542-472e-9d51-d33d09369cce
+
+
+### Personalized Routines
+- **Custom Workouts**: Build personalized exercise routines categorized by body parts.
+- **Goal-Oriented Training**: Customize exercise combinations to suit individual fitness goals.
+
+
+https://github.com/user-attachments/assets/669fcf43-176e-414d-9d65-07c27abdba3c
 
 ## License
 
